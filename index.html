@@ -225,16 +225,56 @@ body.sqmode #sv{display:none}
 .card:hover .vgrip,.card:hover .vstop{opacity:1}
 .vblk{position:absolute;inset:0;display:grid;place-content:center;gap:10px;text-align:center;padding:20px;background:var(--soft);color:var(--blue);font-size:13px}
 .vblk a{color:var(--blue);font-weight:600}
+#hint{display:none!important}
+.tb .ib{width:34px;height:32px;padding:0;display:grid;place-items:center}
+.tb .ib svg{width:18px;height:18px}
+.card.lk .rz,.card.lk .eg{display:none}
+.card.lk:hover::after{display:none;content:"";position:absolute;left:10px;top:10px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23094E99' stroke-width='2' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center/14px no-repeat;box-shadow:var(--sh);z-index:6;pointer-events:none}
+#ctx .cxb.on{background:var(--blue);color:#fff}
+.gl{position:fixed;z-index:7;pointer-events:none;background:var(--red)}
+.gl[hidden]{display:none}
+#gx{top:0;bottom:0;width:1px}#gy{left:0;right:0;height:1px}
+/* focus mode (editing a sequence) and freeze (read only) each tint the board */
+#vp{transition:background-color .25s}
+body.focus #vp{background-color:#fbefc8}
+body.frozen #vp{background-color:#d7edf0}
+#help{position:fixed;right:16px;bottom:72px;top:76px;width:min(440px,calc(100vw - 32px));z-index:20;background:#fff;border:1.5px solid var(--blue);border-radius:20px;box-shadow:var(--sh);display:flex;flex-direction:column;color:var(--ink)}
+#help[hidden]{display:none}
+#help .hh{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1.5px solid var(--line)}
+#help .hx{border:0;background:var(--soft);color:var(--blue);width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer}
+#help .hb{overflow:auto;padding:4px 18px 18px;font-size:13px;line-height:1.5}
+#help h4{margin:16px 0 4px;font-size:13px}
+#help p{margin:0;color:var(--ink)}
+#help table{width:100%;border-collapse:collapse;font-size:12.5px}
+#help td{padding:5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+#help td:first-child{color:var(--mut);width:52%;padding-right:10px}
+#help .hn{margin-top:14px;color:var(--mut);font-size:12px}
+#arl{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:0;pointer-events:none}
+#arl .aln{stroke:var(--blue);fill:none;stroke-linecap:round}
+#arl .arw.on .aln{stroke:var(--red)}
+#arl .ahit{stroke:transparent;pointer-events:stroke;cursor:pointer}
+#arl .arw:hover .aln{stroke-width:3px}
+#arl .apv{stroke-dasharray:6 5;opacity:.8}
+#arl .adot{fill:#fff;stroke:var(--blue)}
+body.armode #vp,body.armode #vp *{cursor:crosshair!important}
+body.frozen #arl .ahit{pointer-events:none}
+body.frozen .tb,body.frozen #ctx,body.frozen #help,body.frozen .gl{display:none!important}
+body.frozen .rz,body.frozen .eg,body.frozen .sqb,body.frozen .yt .play,body.frozen .vgrip,body.frozen .vstop{display:none!important}
+#unf{position:fixed;top:16px;right:16px;z-index:12;display:none;align-items:center;gap:8px;padding:8px 18px 8px 14px;border:1.5px solid var(--blue);border-radius:var(--pill);background:var(--blue);color:#fff;font:inherit;font-weight:600;cursor:pointer;box-shadow:var(--sh)}
+#unf svg{width:16px;height:16px}
+body.frozen #unf{display:flex}
 </style>
 </head>
 <body>
-<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="bf" class="ed" title="Add images or videos from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
-<div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
+<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="bf" class="ed" title="Add images or videos from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
+<div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
 <div id="bar4" class="tb"></div>
-<div id="bar3" class="tb"><button id="zo" title="Zoom out">−</button><span id="z"></span><button id="zi" title="Zoom in">+</button><button id="fb" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
+<div id="bar3" class="tb"><button id="hp" class="both ib" title="How the program works, and keyboard shortcuts"></button><i class="both"></i><button id="zo" title="Zoom out">−</button><span id="z"></span><button id="zi" title="Zoom in">+</button><button id="fb" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
 <div id="empty">Paste or drop images and videos here</div>
 <div id="st" hidden></div>
 <div id="mq" hidden></div>
+<button id="unf" title="Back to editing">Unlock</button>
+<div id="gx" class="gl" hidden></div><div id="gy" class="gl" hidden></div>
 <div id="ctx" class="tb" hidden></div>
 <div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Ctrl/⌘+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
 <div id="vp"><div id="world"></div></div>
@@ -246,7 +286,7 @@ const uid=()=>Math.random().toString(36).slice(2,9);
 const p=(cx,cy)=>({x:(cx-view.x)/view.s,y:(cy-view.y)/view.s});
 const isV=u=>/\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(u);
 
-const BD=window.BOARD,VIEW=false,PKG=!!BD,BADPF=new Set();let PID=BD&&(BD.pid||"path:"+decodeURIComponent(location.pathname)),BT=BD&&BD.t,PD=null,BNAME=BD&&BD.name||"",PRG=false;if(PKG)document.body.classList.add("pkg");
+let VIEW=false;const BD=window.BOARD,PKG=!!BD,BADPF=new Set();let PID=BD&&(BD.pid||"path:"+decodeURIComponent(location.pathname)),BT=BD&&BD.t,PD=null,BNAME=BD&&BD.name||"",PRG=false;if(PKG)document.body.classList.add("pkg");
 /* local saving (IndexedDB) */
 let dbp;try{dbp=new Promise(res=>{const r=indexedDB.open("moodboard",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)})}catch(e){dbp=Promise.resolve(null)}
 const put=async(k,v)=>{try{const d=await dbp;d&&d.transaction("kv","readwrite").objectStore("kv").put(v,k)}catch(e){}};
@@ -266,6 +306,7 @@ function restore(st){
  const next=[];
  st.s.forEach(n=>{
   const o=cur.get(n.id);
+  if(n.type==="arr"){const it=o?Object.assign(o,cl(n)):cl(n);next.push(it);arDirty=1;return}
   if(!o){const it=cl(n);next.push(it);mount(it);return}
   const same=strip(o)===strip(n);
   Object.keys(o).forEach(k=>{if(!(k in n))delete o[k]});Object.assign(o,cl(n));next.push(o);
@@ -285,14 +326,15 @@ function apply(){ctxPlace();world.style.transform=`translate(${view.x}px,${view.
 function zoomAt(cx,cy,f){const s=Math.min(4,Math.max(.03,view.s*f)),k=s/view.s;view.x=cx-(cx-view.x)*k;view.y=cy-(cy-view.y)*k;view.s=s;apply()}
 function empty(){$("#empty").style.display=items.length?"none":"grid"}
 function fit(){if(!items.length){view={x:0,y:0,s:1};return apply()}
- let a=1e9,b=1e9,c=-1e9,d=-1e9;items.forEach(i=>{const e=els.get(i.id);a=Math.min(a,i.x);b=Math.min(b,i.y);c=Math.max(c,i.x+i.w);d=Math.max(d,i.y+e.offsetHeight)});
+ let a=1e9,b=1e9,c=-1e9,d=-1e9;items.forEach(i=>{const e=els.get(i.id);if(!e)return;a=Math.min(a,i.x);b=Math.min(b,i.y);c=Math.max(c,i.x+i.w);d=Math.max(d,i.y+e.offsetHeight)});
  const s=Math.min(innerWidth/(c-a+160),innerHeight/(d-b+160),1.5);view.s=s;view.x=(innerWidth-(c-a)*s)/2-a*s;view.y=(innerHeight-(d-b)*s)/2-b*s;apply()}
 
 /* creating items */
 function mount(it){
+ if(it.type==="arr"){arDirty=1;return}
  if(cropEdit&&cropEdit.id===it.id)cropEdit=null;
  const old=els.get(it.id);old&&old.remove();
- const c=document.createElement("div");c.className="card"+(it.type==="txt"?" note":it.type==="box"?" box":"");c.dataset.id=it.id;
+ const c=document.createElement("div");c.className="card"+(it.type==="txt"?" note":it.type==="box"?" box":"")+(it.lk?" lk":"");c.dataset.id=it.id;
  c.style.cssText=`left:${it.x}px;top:${it.y}px;width:${it.w}px;z-index:${zOf(it)}`+(it.type==="box"?`;height:${it.bh}px`:"");
  if(it.type==="box"){boxCard(c,it)}else if(it.type==="seq"){seqCard(c,it)}else if(it.type==="yt"){ytCard(c,it)}else if(it.type==="txt"){
   c.innerHTML='<div class="grip"></div><div class="nt" contenteditable="true" data-ph="Write a note…"></div>';
@@ -324,10 +366,12 @@ function mount(it){
  world.append(c);els.set(it.id,c);empty();dirty();
 }
 function paintSel(){els.forEach((c,k)=>c.classList.toggle("sel",sels.has(k)))}
-function select(id){sels.clear();sel=id||null;if(id)sels.add(id);paintSel();const it=items.find(i=>i.id===id);if(it){it.z=++Z;els.get(id).style.zIndex=zOf(it)}}
+function select(id){sels.clear();sel=id||null;if(id)sels.add(id);paintSel();const it=items.find(i=>i.id===id),e=els.get(id);if(it&&e){it.z=++Z;e.style.zIndex=zOf(it)}arDirty=1}
 function add(it,file){it.id=uid();file&&files.set(it.id,file);it.z=++Z;items.push(it);mount(it);select(it.id);save()}
-function del(id){if(CX===id)ctxHide();if(cropEdit&&cropEdit.id===id)cropEdit=null;items=items.filter(i=>i.id!==id);const e=els.get(id);e&&e.remove();els.delete(id);sels.delete(id);if(sel===id)sel=[...sels].pop()||null;empty();dirty();save()}
-function newNote(cx,cy){const w=p(cx,cy);add({type:"txt",text:"",w:260,x:w.x,y:w.y});setTimeout(()=>{const e=els.get(sel);e&&e.querySelector(".nt").focus()})}
+function del(id){if(CX===id)ctxHide();if(cropEdit&&cropEdit.id===id)cropEdit=null;items=items.filter(i=>i.id!==id&&!(i.type==="arr"&&(i.a===id||i.b===id)));arDirty=1;const e=els.get(id);e&&e.remove();els.delete(id);sels.delete(id);if(sel===id)sel=[...sels].pop()||null;empty();dirty();save()}
+function newNote(cx,cy){const w=p(cx,cy);let nw=260,bd=1e18;
+ items.forEach(i=>{if(i.type==="box")return;const e=els.get(i.id);if(!e)return;const h=e.offsetHeight,dx=Math.max(i.x-w.x,0,w.x-i.x-i.w),dy=Math.max(i.y-w.y,0,w.y-i.y-h),d=dx*dx+dy*dy;if(d<bd){bd=d;nw=i.type==="seq"&&ED&&ED.id===i.id?nw:i.w}});
+ add({type:"txt",text:"",w:Math.max(120,Math.round(nw)),x:w.x,y:w.y});setTimeout(()=>{const e=els.get(sel);e&&e.querySelector(".nt").focus()})}
 function addBlob(b,pt){if(isHeic(b))return fromHeic(b,pt);const v=b.type[0]==="v";add({type:v?"vid":"img",blob:b,w:v?380:320,cap:"",x:pt.x,y:pt.y})}
 function embedOf(u){let m;
  if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i))return{yt:m[1],ar:/shorts\//i.test(u)?"9/16":"16/9"}
@@ -379,11 +423,13 @@ function ingest(dt,pt,paste){
 const mq=$("#mq");
 world.addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches(".cap,.nt"))commit()});
 vp.addEventListener("pointerdown",e=>{
+ if(ARM&&e.button===0&&!space){e.preventDefault();const c=cardAt(e);if(c){const w=p(e.clientX,e.clientY);ARD={a:c.dataset.id,pa:nearA(geo(c.dataset.id),w.x,w.y),m:w};drag={m:"arw"};vp.setPointerCapture(e.pointerId)}return}
+ if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("ahit")){const id=e.target.parentNode.dataset.id;ctxHide();if(e.shiftKey){sels.has(id)?sels.delete(id):sels.add(id)}else{sels.clear();sels.add(id);sel=id}paintSel();arDirty=1;if(!e.shiftKey)setTimeout(()=>ctxShow(id));return}
  if(BXD&&e.button===0&&!space){e.preventDefault();const a=document.activeElement;a&&a.blur&&a.blur();drag={m:"bxd",sx:e.clientX,sy:e.clientY};vp.setPointerCapture(e.pointerId);return}
  const sh=e.shiftKey&&!VIEW&&e.button===0&&!space,ae=document.activeElement;
  if(sh&&ae&&ae.isContentEditable&&ae.contains(e.target))return;
  ctxHide();
- dn={x:e.clientX,y:e.clientY,m:sh?null:e.target.closest(".vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
+ dn={x:e.clientX,y:e.clientY,m:sh||VIEW?null:e.target.closest(".vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
  const c=e.target.closest(".card"),pan=e.button===1||space||VIEW;
  if(sh){
   ae&&ae.blur();
@@ -393,7 +439,8 @@ vp.addEventListener("pointerdown",e=>{
  if(!pan&&e.target.closest('.cap,.nt,.src,.bxt[contenteditable="true"]')){c&&select(c.dataset.id);return}
  if(e.button===1)e.preventDefault();
  if(!pan&&e.target.closest(".del")){del(c.dataset.id);return}
- if(c&&!pan){
+ const lkd=c&&!pan&&(items.find(i=>i.id===c.dataset.id)||{}).lk;
+ if(c&&!pan&&!lkd){
   const id=c.dataset.id,eg=e.target.closest(".rz,.eg"),rz=!!eg;
   const bx=items.find(i=>i.id===id);
   if(!rz&&bx&&bx.type==="box"&&!(sels.has(id)&&sels.size>1)){select(id);drag={m:"mvg",box:1,id,sx:e.clientX,sy:e.clientY,its:[bx,...inBox(bx)].map(it=>({it,ox:it.x,oy:it.y}))}}
@@ -401,12 +448,15 @@ vp.addEventListener("pointerdown",e=>{
    drag={m:"mvg",id,sx:e.clientX,sy:e.clientY,its:[...sels].map(i=>items.find(o=>o.id===i)).filter(Boolean).map(it=>({it,ox:it.x,oy:it.y}))}}
   else{select(id);const it=items.find(i=>i.id===id);
    drag={m:rz?"rz":"mv",eg:eg?eg.dataset.e:"",oH:c.offsetHeight,it,sx:e.clientX,sy:e.clientY,ox:it.x,oy:it.y,ow:it.w,oh:it.bh,oew:it.ew||900,oppf:ED&&ED.ppf}}}
- else{select(null);drag={m:"pan",sx:e.clientX,sy:e.clientY,ox:view.x,oy:view.y};vp.classList.add("pan")}
+ else{if(!lkd)select(null);drag={m:"pan",sx:e.clientX,sy:e.clientY,ox:view.x,oy:view.y};vp.classList.add("pan")}
  ae&&ae.blur();
  vp.setPointerCapture(e.pointerId);
 });
 vp.addEventListener("pointermove",e=>{
- mouse={x:e.clientX,y:e.clientY};if(!drag)return;
+ mouse={x:e.clientX,y:e.clientY};
+ if(ARM){const c=cardAt(e),h=c&&c.dataset.id;if(h!==arHov){arHov=h;arDirty=1}
+  if(drag&&drag.m==="arw"&&ARD){const w=p(e.clientX,e.clientY);ARD.m=w;if(h&&h!==ARD.a){ARD.b=h;ARD.pb=nearA(geo(h),w.x,w.y)}else ARD.b=null;arDirty=1}return}
+ if(!drag)return;
  const dx=e.clientX-drag.sx,dy=e.clientY-drag.sy;
  if(drag.m==="pan"){view.x=drag.ox+dx;view.y=drag.oy+dy;apply();return}
  if(drag.m==="bxd"){const x1=Math.min(drag.sx,e.clientX),x2=Math.max(drag.sx,e.clientX),y1=Math.min(drag.sy,e.clientY),y2=Math.max(drag.sy,e.clientY);mq.hidden=false;mq.classList.add("bxd");mq.style.cssText=`left:${x1}px;top:${y1}px;width:${x2-x1}px;height:${y2-y1}px;border-radius:${28*view.s}px`;return}
@@ -414,14 +464,16 @@ vp.addEventListener("pointermove",e=>{
   const x1=Math.min(drag.sx,e.clientX),x2=Math.max(drag.sx,e.clientX),y1=Math.min(drag.sy,e.clientY),y2=Math.max(drag.sy,e.clientY);
   mq.hidden=false;mq.style.cssText=`left:${x1}px;top:${y1}px;width:${x2-x1}px;height:${y2-y1}px`;
   sels.clear();drag.base.forEach(i=>sels.add(i));
-  els.forEach((el,id)=>{const r=el.getBoundingClientRect();if(el.classList.contains("box")?r.left>=x1&&r.right<=x2&&r.top>=y1&&r.bottom<=y2:r.left<x2&&r.right>x1&&r.top<y2&&r.bottom>y1)sels.add(id)});
+  els.forEach((el,id)=>{const r=el.getBoundingClientRect();if(el.classList.contains("lk"))return;if(el.classList.contains("box")?r.left>=x1&&r.right<=x2&&r.top>=y1&&r.bottom<=y2:r.left<x2&&r.right>x1&&r.top<y2&&r.bottom>y1)sels.add(id)});
   sel=[...sels].pop()||null;paintSel();return}
- if(drag.m==="mvg"){drag.its.forEach(({it,ox,oy})=>{it.x=ox+dx/view.s;it.y=oy+dy/view.s;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
+ if(drag.m==="mvg"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);drag.its.forEach(({it,ox,oy})=>{it.x=ox+sn.x;it.y=oy+sn.y;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
  const it=drag.it,c=els.get(it.id);
- if(drag.m==="mv"){it.x=drag.ox+dx/view.s;it.y=drag.oy+dy/view.s;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
+ if(drag.m==="mv"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);it.x=drag.ox+sn.x;it.y=drag.oy+sn.y;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
  else resizeBy(drag,it,c,dx/view.s,dy/view.s);
 });
 const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,it=items.find(i=>i.id===m.closest(".card").dataset.id);dn={};if(it){if(m.classList.contains("sd"))m.closest(".card").classList.toggle("showsrc");else if(m.classList.contains("so"))openSrc(it);else if(m.classList.contains("cn"))copyName(it,m);else if(m.classList.contains("miss"))relink(it);else if(m.classList.contains("crbtn"))startCrop(it);else if(m.classList.contains("sqpl"))seqPlay(it.id);else if(m.classList.contains("sqed"))openEd(it.id);else if(m.classList.contains("vstop"))stopInline(it);else if(!m.closest(".playing"))playInline(it)}}
+ $("#gx").hidden=$("#gy").hidden=true;
+ if(drag&&drag.m==="arw"){if(ARD&&ARD.b){items.push({id:uid(),type:"arr",a:ARD.a,pa:ARD.pa,b:ARD.b,pb:ARD.pb});save()}ARD=null;drag=null;arDirty=1;return}
  if(drag&&drag.m==="bxd"){endBoxDraw(e);drag=null;return}
  if(drag){
   if(drag.m==="box")mq.hidden=true;if(dropEl)dropIn(drag);
@@ -430,7 +482,7 @@ const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,
 vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
 vp.addEventListener("wheel",e=>{if(e.ctrlKey&&pinched())return;e.preventDefault();
  if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.01));else{view.x-=e.deltaX;view.y-=e.deltaY;apply()}},{passive:false});
-vp.addEventListener("dblclick",e=>{const pt=document.elementFromPoint(e.clientX,e.clientY)||e.target,bh=!VIEW&&pt.closest&&pt.closest(".bxh");if(bh){editBox(bh.closest(".card").dataset.id);return}const sc=pt.closest&&pt.closest(".seqc");if(sc&&!pt.closest(".cap,.sqx")){openEd(sc.dataset.id);return}if(!VIEW&&pt===vp)newNote(e.clientX,e.clientY)});
+vp.addEventListener("dblclick",e=>{const pt=document.elementFromPoint(e.clientX,e.clientY)||e.target,bh=!VIEW&&pt.closest&&pt.closest(".bxh");if(bh){editBox(bh.closest(".card").dataset.id);return}const sc=pt.closest&&pt.closest(".seqc");if(sc&&!VIEW&&!pt.closest(".cap,.sqx")){openEd(sc.dataset.id);return}if(!VIEW&&pt===vp)newNote(e.clientX,e.clientY)});
 addEventListener("paste",e=>{if(VIEW||ED&&/^(INPUT|SELECT)$/.test(e.target.tagName))return;
  e.preventDefault();
  if(e.target.isContentEditable){document.execCommand("insertText",false,(t=>e.target.closest(".src")?t.replace(/\s+/g,""):t)(e.clipboardData.getData("text/plain")));return}
@@ -439,6 +491,8 @@ addEventListener("paste",e=>{if(VIEW||ED&&/^(INPUT|SELECT)$/.test(e.target.tagNa
 addEventListener("dragover",e=>e.preventDefault());
 addEventListener("drop",e=>{e.preventDefault();VIEW||ingest(e.dataTransfer,{x:e.clientX,y:e.clientY})});
 addEventListener("keydown",e=>{
+ {const hl=$("#help");if(hl&&!hl.hidden&&e.key==="Escape"){e.preventDefault();hl.hidden=true;return}}
+ if(ARM&&e.key==="Escape"){e.preventDefault();arrMode(false);return}
  if(BXD&&e.key==="Escape"){e.preventDefault();boxMode(false);return}
  if(ED){edKey(e);return}
  const ed=e.target.isContentEditable;
@@ -446,8 +500,8 @@ addEventListener("keydown",e=>{
  if(cropEdit&&!ed&&(e.key==="Enter"||e.key==="Escape")){e.preventDefault();e.key==="Enter"?applyCrop():cancelCrop();return}
  if(!ed&&!VIEW&&(e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key.toLowerCase()==="z"||e.key.toLowerCase()==="y")){e.preventDefault();(e.key.toLowerCase()==="y"||e.shiftKey)?redo():undo();return}
  if(e.key==="Shift"&&!VIEW)document.body.classList.add("selmode");
- if(!ed&&sels.size&&(e.key==="Delete"||e.key==="Backspace")){e.preventDefault();[...sels].forEach(del)}
- if(!ed&&sels.size&&(e.metaKey||e.ctrlKey)&&e.key==="d"){e.preventDefault();const nw=[];[...sels].forEach(id=>{const o=items.find(i=>i.id===id);if(o){add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));nw.push(sel)}});sels.clear();nw.forEach(i=>sels.add(i));sel=nw[nw.length-1]||null;paintSel()}
+ if(!ed&&sels.size&&(e.key==="Delete"||e.key==="Backspace")){e.preventDefault();[...sels].forEach(id=>{const i=items.find(o=>o.id===id);if(i&&!i.lk)del(id)})}
+ if(!ed&&sels.size&&(e.metaKey||e.ctrlKey)&&e.key==="d"){e.preventDefault();const nw=[];[...sels].forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr"){add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));nw.push(sel)}});sels.clear();nw.forEach(i=>sels.add(i));sel=nw[nw.length-1]||null;paintSel()}
  if(e.key==="Escape"){document.activeElement&&document.activeElement.blur();select(null)}
 });
 addEventListener("keyup",e=>{if(e.code==="Space")space=false;if(e.key==="Shift")document.body.classList.remove("selmode")});
@@ -476,17 +530,97 @@ function pinchCheck(){const p=pinched(),st=$("#st");
  if(p&&!pinchMsg){pinchMsg=true;toast("The browser view is magnified, so the toolbars are cut off. Pinch out on the trackpad (or press Ctrl/⌘ and scroll down) to bring it back to normal.",[["OK",()=>{}]])}
  if(!p&&pinchMsg){pinchMsg=false;if(st.textContent.startsWith("The browser view is magnified"))st.hidden=true}}
 window.visualViewport&&visualViewport.addEventListener("resize",pinchCheck);
+/* light snapping: while moving, the edges and centres of the moving card (or group) stick to those of the
+   other cards when they are a few pixels apart; hold Alt to move freely */
+function snapMove(D,dx,dy,off){
+ const ids=D.its?D.its.map(o=>o.it.id):[D.it.id];
+ if(!D.sp){let a=1e9,b=1e9,c=-1e9,d=-1e9;(D.its||[{it:D.it,ox:D.ox,oy:D.oy}]).forEach(({it,ox,oy})=>{const e=els.get(it.id),h=e?e.offsetHeight:0,w=it.type==="seq"&&ED&&ED.id===it.id?e.offsetWidth:it.w;a=Math.min(a,ox);b=Math.min(b,oy);c=Math.max(c,ox+w);d=Math.max(d,oy+h)});
+  const T=[];items.forEach(i=>{if(ids.includes(i.id))return;const e=els.get(i.id);if(!e)return;const w=e.offsetWidth,h=e.offsetHeight;T.push({xs:[i.x,i.x+w/2,i.x+w],ys:[i.y,i.y+h/2,i.y+h]})});
+  D.sp={x:a,y:b,w:c-a,h:d-b,T}}
+ const S=D.sp,lim=7/view.s;let bx=null,by=null;
+ if(!off&&!D.box||(!off&&D.box)){const mx=[S.x+dx,S.x+dx+S.w/2,S.x+dx+S.w],my=[S.y+dy,S.y+dy+S.h/2,S.y+dy+S.h];
+  S.T.forEach(t=>{t.xs.forEach(v=>mx.forEach(m=>{const d=v-m;if(Math.abs(d)<lim&&(!bx||Math.abs(d)<Math.abs(bx.d)))bx={d,v}}));t.ys.forEach(v=>my.forEach(m=>{const d=v-m;if(Math.abs(d)<lim&&(!by||Math.abs(d)<Math.abs(by.d)))by={d,v}}))})}
+ const gx=$("#gx"),gy=$("#gy");
+ if(bx){gx.hidden=false;gx.style.left=(bx.v*view.s+view.x)+"px"}else gx.hidden=true;
+ if(by){gy.hidden=false;gy.style.top=(by.v*view.s+view.y)+"px"}else gy.hidden=true;
+ return{x:dx+(bx?bx.d:0),y:dy+(by?by.d:0)}}
+/* arrows: straight lines from a corner or the middle of a side of one card to the same kind of point on another */
+const NS="http://www.w3.org/2000/svg",AL=document.createElementNS(NS,"svg");AL.id="arl";
+AL.innerHTML='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#094E99"/></marker><marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e91f25"/></marker></defs><g class="ag"></g><g class="ap"></g>';
+world.prepend(AL);
+const PTS=["nw","n","ne","e","se","s","sw","w"];let ARM=false,ARD=null,arHov=null,arDirty=1,arLast="";
+function geo(id){const it=items.find(i=>i.id===id),e=els.get(id);if(!it||!e)return null;
+ const m=!e.classList.contains("open")&&e.querySelector(":scope>img,:scope>video,:scope>iframe,:scope>.yt,:scope>.cw,:scope>.miss,:scope>.sqw");
+ return{x:it.x,y:it.y,w:e.offsetWidth,h:m?m.offsetHeight:e.offsetHeight}}
+function anc(g,p){return{x:p.includes("w")?g.x:p.includes("e")?g.x+g.w:g.x+g.w/2,y:p.includes("n")?g.y:p.includes("s")?g.y+g.h:g.y+g.h/2}}
+function nearA(g,x,y){let b="n",bd=1e18;PTS.forEach(k=>{const a=anc(g,k),d=(a.x-x)**2+(a.y-y)**2;if(d<bd){bd=d;b=k}});return b}
+function cardAt(e){for(const x of document.elementsFromPoint(e.clientX,e.clientY)){const c=x.closest&&x.closest(".card");if(c&&world.contains(c))return c}return null}
+function arrMode(on){ARM=on;document.body.classList.toggle("armode",on);$("#ba").classList.toggle("act",on);ARD=null;arHov=null;arDirty=1;if(on)ctxHide()}
+function drawArrows(){
+ let h="";const sw=2/view.s;
+ items.forEach(a=>{if(a.type!=="arr")return;const ga=geo(a.a),gb=geo(a.b);if(!ga||!gb)return;const p=anc(ga,a.pa),q=anc(gb,a.pb),on=sels.has(a.id);
+  h+=`<g data-id="${a.id}" class="arw${on?" on":""}"><line class="ahit" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="${16/view.s}"/><line class="aln" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="${sw}" marker-end="url(#${on?"ahs":"ah"})"/></g>`});
+ let v="";if(ARM){const dots=id=>{const g=geo(id);return g?PTS.map(k=>{const a=anc(g,k);return`<circle class="adot" cx="${a.x}" cy="${a.y}" r="${5/view.s}" stroke-width="${2/view.s}"/>`}).join(""):""};
+  if(arHov&&(!ARD||arHov!==ARD.a))v+=dots(arHov);
+  if(ARD){v+=dots(ARD.a);const p=anc(geo(ARD.a),ARD.pa),q=ARD.b?anc(geo(ARD.b),ARD.pb):ARD.m;v+=`<line class="aln apv" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="${sw}" marker-end="url(#ah)"/>`}}
+ const all=h+"|"+v;if(all!==arLast){arLast=all;AL.querySelector(".ag").innerHTML=h;AL.querySelector(".ap").innerHTML=v}
+}
+(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}requestAnimationFrame(arLoop)})();
+/* Freeze: the whole board becomes read only (pan and zoom still work) */
+function freeze(on){
+ if(on){if(ED)closeEd();if(cropEdit)cancelCrop();if(BXD)boxMode(false);if(ARM)arrMode(false);const a=document.activeElement;a&&a.blur&&a.blur();select(null);ctxHide();const h=$("#help");h&&(h.hidden=true)}
+ VIEW=on;document.body.classList.toggle("frozen",on);document.body.classList.toggle("ro",on);
+ const keep={...view};items.forEach(mount);view=keep;apply();
+ $("#unf").innerHTML=IC.lock+"<span>Unlock</span>";
+}
+/* Purge: forget the undo history and delete from the board folder the files no longer used */
+async function purge(){
+ const saved=!!PD;
+ if(!confirm("Purge\n\n• Clears the undo history: the changes made so far can no longer be undone with Ctrl/⌘+Z.\n"+(saved?"• Deletes for good, from the board folder, every media file that is no longer on the board (files of deleted cards that undo was keeping).\n":"• Frees the memory used by cards you deleted (the board isn't saved in a folder yet, so no file is touched).\n")+"\nThe board itself doesn't change. Continue?"))return;
+ hist=[];hi=-1;hp=false;clearTimeout(ht);commit();
+ let n=0;if(saved){n=await pkClean();await savePkg(true)}
+ toast(saved?(n?`Purged: undo history cleared, ${n} unused file${n>1?"s":""} deleted from the board folder.`:"Purged: undo history cleared, the board folder had no unused files."):"Purged: undo history cleared.");
+}
+/* help panel */
+function help(){
+ let h=$("#help");if(h){h.hidden=!h.hidden;return}
+ h=document.createElement("div");h.id="help";h.innerHTML=HELP;document.body.append(h);
+ h.querySelector(".hx").onclick=()=>h.hidden=true;h.addEventListener("pointerdown",e=>e.stopPropagation());
+}
+const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
+<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Hover a card to see its menu: crop, open the source, comment, duplicate, delete.</p>
+<h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Dragging a box by its title moves the cards inside it too.</p>
+<h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip at the bottom right, or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
+<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the moodboard.html inside it works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
+<h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
+<h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
+<h4>Moving cards</h4><p>While you move a card, its edges and centre snap to those of nearby cards (red guide lines). Hold Alt to move freely.</p>
+<h4>Shortcuts · board</h4><table>
+<tr><td>Double-click background</td><td>new note</td></tr><tr><td>Drag background · Space+drag</td><td>move around</td></tr>
+<tr><td>Ctrl/⌘+scroll · pinch</td><td>zoom</td></tr><tr><td>Shift+click · Shift+drag</td><td>select several cards</td></tr>
+<tr><td>Alt while dragging</td><td>move without snapping</td></tr><tr><td>Ctrl/⌘+V</td><td>paste images, files or links</td></tr>
+<tr><td>Delete · Backspace</td><td>delete selected cards</td></tr><tr><td>Ctrl/⌘+D</td><td>duplicate</td></tr>
+<tr><td>Ctrl/⌘+Z · Ctrl/⌘+Shift+Z</td><td>undo · redo</td></tr><tr><td>Esc</td><td>deselect · stop drawing boxes or arrows</td></tr>
+<tr><td>Enter · Esc while cropping</td><td>apply · cancel the crop</td></tr></table>
+<h4>Shortcuts · sequence</h4><table>
+<tr><td>Space</td><td>play · pause</td></tr><tr><td>← →  (Shift ×10)</td><td>one frame back · forward</td></tr>
+<tr><td>Alt+← →  (Shift ×5)</td><td>shorten · lengthen the selected block</td></tr><tr><td>Alt+drag a video or GIF block</td><td>choose which part plays</td></tr>
+<tr><td>F</td><td>fill · fit the selected block</td></tr><tr><td>Scroll on the timeline · Shift+scroll</td><td>zoom · scroll the timeline</td></tr>
+<tr><td>Ctrl/⌘+D · Delete</td><td>duplicate · remove the block</td></tr><tr><td>Esc · Enter · OK</td><td>close the sequence</td></tr></table>
+<p class="hn">Saving, opening and Purge need Chrome or Edge. YouTube and Vimeo play inside the card when the program is opened from its web address.</p></div>`;
 /* context menu: appears above the card under the mouse */
 const ctx=$("#ctx");let CX=null,cxT=0;
 function ctxHide(){clearTimeout(cxT);CX=null;ctx.hidden=true}
 function ctxSoon(){clearTimeout(cxT);cxT=setTimeout(ctxHide,260)}
 function ctxShow(id){
- clearTimeout(cxT);
+ clearTimeout(cxT);if(VIEW){ctxHide();return}
  if(drag||(ED&&ED.id===id)||(cropEdit&&cropEdit.id===id)||document.body.classList.contains("bxmode")){if(CX)ctxHide();return}
  if(CX!==id){CX=id;ctxBuild()}ctx.hidden=false;ctxPlace();
 }
 function ctxBuild(){
  const it=items.find(i=>i.id===CX);if(!it){ctxHide();return}
+ if(it.type==="arr"){const mk=(ic,t,f,c)=>{const b=document.createElement("button");b.innerHTML=IC[ic];b.title=t;b.className="cxb"+(c?" "+c:"");b.onclick=e=>{e.stopPropagation();f()};return b};
+  ctx.replaceChildren(mk("swap","Reverse the direction",()=>{[it.a,it.b]=[it.b,it.a];[it.pa,it.pb]=[it.pb,it.pa];arDirty=1;save()}),document.createElement("i"),mk("del","Delete the arrow (Delete key)",()=>{ctxHide();del(it.id);commit()},"cxd"));return}
  const B=[],web=it.url&&/^https?:/i.test(it.url);
  if(it.type==="seq"){const t=document.createElement("span");t.className="cxl";t.textContent=info(it);B.push(t)}
  const btn=(ic,t,f,cls)=>{const b=document.createElement("button");b.innerHTML=IC[ic];b.title=t;b.className="cxb"+(cls?" "+cls:"");b.onclick=e=>{e.stopPropagation();f(b)};B.push(b)};
@@ -500,12 +634,13 @@ function ctxBuild(){
  if(it.type!=="txt"&&it.type!=="box")btn("cmt",it.cap?"Edit the comment":"Add a comment",()=>{ctxHide();editCap(it.id)});
  if(B.length){const i=document.createElement("i");B.push(i)}
  btn("dup","Duplicate (Ctrl/⌘+D)",()=>{const o=it;add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));ctxHide()});
- btn("del","Delete (Delete key)",()=>{ctxHide();del(it.id);commit()},"cxd");
+ if(!it.lk)btn("del","Delete (Delete key)",()=>{ctxHide();del(it.id);commit()},"cxd");
  ctx.replaceChildren(...B);
 }
 function ctxPlace(){
- if(!CX||ctx.hidden)return;const c=els.get(CX);if(!c){ctxHide();return}
- const r=c.getBoundingClientRect(),w=ctx.offsetWidth,h=ctx.offsetHeight;
+ if(!CX||ctx.hidden)return;const c=els.get(CX),ai=!c&&items.find(i=>i.id===CX&&i.type==="arr");if(!c&&!ai){ctxHide();return}
+ let r;if(ai){const ga=geo(ai.a),gb=geo(ai.b);if(!ga||!gb){ctxHide();return}const p=anc(ga,ai.pa),q=anc(gb,ai.pb),x=((p.x+q.x)/2)*view.s+view.x,y=((p.y+q.y)/2)*view.s+view.y;r={left:x-30,top:y-6,bottom:y+6}}else r=c.getBoundingClientRect();
+ const w=ctx.offsetWidth,h=ctx.offsetHeight;
  let y=r.top-h-10;if(y<68)y=Math.max(68,Math.min(r.bottom+10,innerHeight-h-70));
  ctx.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";ctx.style.top=y+"px";
 }
@@ -554,7 +689,7 @@ function boxCard(c,it){
  t.onblur=done;t.onkeydown=e=>{if(e.key==="Enter"||e.key==="Escape"){e.preventDefault();t.blur()}};
 }
 function editBox(id){const c=els.get(id),t=c&&c.querySelector(".bxt");if(!t)return;t.contentEditable="true";t.focus();const g=document.createRange();g.selectNodeContents(t);const sl=getSelection();sl.removeAllRanges();sl.addRange(g)}
-function inBox(bx){return items.filter(i=>{if(i===bx)return false;const e=els.get(i.id);if(!e)return false;
+function inBox(bx){return items.filter(i=>{if(i===bx||i.lk)return false;const e=els.get(i.id);if(!e)return false;
  if(i.type==="box")return i.x>=bx.x&&i.y>=bx.y&&i.x+i.w<=bx.x+bx.w&&i.y+i.bh<=bx.y+bx.bh;
  const cx=i.x+i.w/2,cy=i.y+e.offsetHeight/2;return cx>=bx.x&&cx<=bx.x+bx.w&&cy>=bx.y&&cy<=bx.y+bx.bh})}
 let BXD=false;
@@ -601,7 +736,7 @@ addEventListener("message",e=>{
 });
 /* non-destructive crop: only the window proportions are saved, never a copy of the image */
 const svgI=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,
-IC={edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
+IC={arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),unlock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
 function startCrop(it){
  if(VIEW||it.type!=="img")return;
  if(cropEdit)cancelCrop();
@@ -796,14 +931,14 @@ function openEd(id){
  const it=items.find(i=>i.id===id);if(!it||it.type!=="seq")return;if(cropEdit)cancelCrop();
  const a=document.activeElement;a&&a.blur&&a.blur();
  ED={id,it,c:null,f:0,f0:0,t0:0,play:false,ppf:null,sel:it.blocks[0]?it.blocks[0].id:null,dr:null,dt:1,lf:-1,pv:{...view},di:null,dpb:null};
- document.body.classList.add("sqmode");$("#bt").textContent="Sequence";HM=$("#hint").textContent;
+ document.body.classList.add("sqmode");document.body.classList.add("focus");$("#bt").textContent="Sequence";HM=$("#hint").textContent;
  $("#hint").textContent=VIEW?"Space play · ← → one frame at a time · Esc or OK to close":"Drag board cards into the timeline to add them, or onto a striped block to relink it · scroll over the timeline to zoom · Alt+← → shorten or lengthen the block · F fill/fit · Space play · ← → frame · Esc or OK to close";
  edFps();$("#qfmt").value=it.fmt||"16/9";$("#qpl").textContent="▶";
  select(id);mount(it);
  const h=ED.c.offsetHeight;view.s=1;view.x=Math.round(innerWidth/2-(it.x+EWc()/2));view.y=Math.round(h+150>innerHeight?80-it.y:(innerHeight-h)/2+20-it.y);apply();
 }
 function closeEd(){
- if(!ED)return;$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
+ if(!ED)return;document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
  document.body.classList.remove("sqmode");showName();$("#hint").textContent=HM;
  const it=items.find(i=>i.id===id);if(it)mount(it);view=pv;apply();dirty();
 }
@@ -996,7 +1131,8 @@ function edKey(e){
  else if(k==="Delete"||k==="Backspace"){e.preventDefault();delB()}
 }
 /* toolbar controls in sequence mode */
-document.querySelectorAll(".tb>*").forEach(x=>{if(x.tagName!=="B"&&x.tagName!=="INPUT"&&!x.classList.contains("bq"))x.classList.add("bm")});
+document.querySelectorAll(".tb>*").forEach(x=>{if(x.tagName!=="B"&&x.tagName!=="INPUT"&&!x.classList.contains("bq")&&!x.classList.contains("both"))x.classList.add("bm")});
+$("#hp").innerHTML=IC.book;$("#fz").innerHTML=IC.lock;$("#ba").innerHTML=IC.arrow;
 $("#qfps").onchange=e=>{if(!ED)return;let v=e.target.value;if(v==="x"){v=prompt("Frames per second (1–120)",ED.it.fps);v=parseFloat(String(v||"").replace(",","."))}else v=+v;
  if(v>=1&&v<=120){ED.it.fps=Math.round(v*1000)/1000;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}save();dirty()}edFps();edAll();e.target.blur()};
 $("#qfmt").onchange=e=>{if(!ED)return;ED.it.fmt=e.target.value;mount(ED.it);save();e.target.blur()};
@@ -1008,14 +1144,15 @@ document.querySelectorAll(".tb").forEach(t=>t.addEventListener("click",e=>{const
 /* package */
 async function wr(d,n,t){const w=await(await d.getFileHandle(n,{create:true})).createWritable();await w.write(t);await w.close()}
 function ser(i){
- const o={t:i.type,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh};
+ const o={t:i.type,lk:i.lk,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh};
+ if(i.type==="arr"){o.a=i.a;o.b=i.b;o.pa=i.pa;o.pb=i.pb}
  if(i.type==="seq"){o.fps=i.fps;o.fmt=i.fmt;o.ew=i.ew;o.blocks=i.blocks.map(b=>({ref:b.ref,d:b.d,note:b.note||"",vin:b.vin,fit:b.fit}))}
  return o}
-const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box";
+const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box"&&i.type!=="arr";
 /* boards are folders: board.js + media/ + a copy of the program (moodboard.html) */
 const HINT=$("#hint").textContent;
 function showName(){$("#bt").textContent=BNAME||"Moodboard";document.title=(BNAME?BNAME+" · ":"")+"Moodboard"}
-function fromO(o){const it={id:o.id||uid(),type:o.t,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
+function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
  if(o.src){if(/^(https?|blob):/i.test(o.src))it.url=o.src;else it.pf=o.src.replace(/^media\//,"")}
  Object.keys(it).forEach(k=>it[k]===undefined&&delete it[k]);return it}
 function fixOld(i){if(i.url&&!/^(https?|blob):/i.test(i.url)){i.pf=i.url.replace(/^media\//,"");delete i.url}
@@ -1038,7 +1175,7 @@ async function writeProgram(){
  const c=document.documentElement.cloneNode(true),q=x=>c.querySelector(x);
  q("body").className="";q("#world").innerHTML="";q("#vp").removeAttribute("style");q("#empty").removeAttribute("style");q("#z").textContent="";q("#bar4").innerHTML="";q("#mq").hidden=true;
  const st=q("#st");st.hidden=true;st.textContent="";q("#hint").textContent=HINT;q("#bt").textContent="Moodboard";q("title").textContent="Moodboard";const sv=q("#sv");sv.textContent="Save";sv.className="";sv.removeAttribute("disabled");
- const cx=q("#ctx");cx&&(cx.hidden=true,cx.innerHTML="");
+ const cx=q("#ctx");cx&&(cx.hidden=true,cx.innerHTML="");const hl=q("#help");hl&&hl.remove();q("#gx").hidden=true;q("#gy").hidden=true;
  if(!q('script[src="board.js"]')){const sc=q("script:not([src])"),bs=document.createElement("script");bs.src="board.js";sc.before(bs)}
  await wr(PD,"moodboard.html","<!DOCTYPE html>\n"+c.outerHTML);PRG=true;
 }
@@ -1128,12 +1265,13 @@ async function pkClean(md){
  if(!PD)return;try{md=md||await PD.getDirectoryHandle("media",{create:true});
   const used=new Set(),add=l=>l.forEach(i=>{if(i.pf)used.add(i.pf)});add(items);hist.forEach(h=>add(h.s));
   const del=[];for await(const[n,h]of md.entries())if(h.kind==="file"&&!used.has(n))del.push(n);
-  for(const n of del)await md.removeEntry(n);
- }catch(e){}
+  for(const n of del)await md.removeEntry(n);return del.length
+ }catch(e){return 0}
 }
 addEventListener("focus",()=>{if(PD)pkClean()});
 setInterval(()=>{if(PD&&!pkBusy)pkClean()},30000);
 addEventListener("beforeunload",e=>{if((PD&&(pkBusy||$("#sv").textContent==="Saving…"))||(!PD&&items.length)){e.preventDefault();e.returnValue=""}});
+$("#pg").onclick=purge;$("#fz").onclick=()=>freeze(true);$("#unf").onclick=()=>freeze(false);$("#hp").onclick=help;
 $("#sv").onclick=()=>{if(PD)savePkg(true);else if(PID)pkgConnect();else saveNew()};
 /* toolbar */
 $("#bf").onclick=pickFiles;
@@ -1141,7 +1279,7 @@ $("#rl").onclick=async()=>{for(const i of items)if(i.h&&i.type!=="txt"&&!files.h
 $("#fi").onchange=e=>{const b=p(innerWidth/2,innerHeight/2);[...e.target.files].forEach((f,i)=>addLocal(null,f,{x:b.x+24*i,y:b.y+24*i}));e.target.value=""};
 $("#zi").onclick=()=>zoomAt(innerWidth/2,innerHeight/2,1.25);
 $("#zo").onclick=()=>zoomAt(innerWidth/2,innerHeight/2,.8);
-$("#fb").onclick=fit;$("#bl").onclick=()=>{const t=prompt("Paste one or more links (images, videos, YouTube, Vimeo), separated by a space");if(!t)return;const b=p(innerWidth/2,innerHeight/2);t.split(/\s+/).filter(u=>/^https?:/i.test(u)).forEach((u,i)=>addURL(u,{x:b.x+24*i,y:b.y+24*i}))};$("#bx").onclick=newBox;$("#bs").onclick=newSeq;$("#im").onclick=openBoard;
+$("#fb").onclick=fit;$("#bl").onclick=()=>{const t=prompt("Paste one or more links (images, videos, YouTube, Vimeo), separated by a space");if(!t)return;const b=p(innerWidth/2,innerHeight/2);t.split(/\s+/).filter(u=>/^https?:/i.test(u)).forEach((u,i)=>addURL(u,{x:b.x+24*i,y:b.y+24*i}))};$("#bx").onclick=()=>{if(ARM)arrMode(false);newBox()};$("#ba").onclick=()=>{if(BXD)boxMode(false);arrMode(!ARM)};$("#bs").onclick=newSeq;$("#im").onclick=openBoard;
 
 (async()=>{
  showName();
