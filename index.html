@@ -194,7 +194,7 @@ body.sqmode #sv{display:none}
 #st button{margin-left:10px;border:0;border-radius:var(--pill);padding:4px 12px;font:inherit;cursor:pointer;background:#fff;color:var(--blue)}
 /* clean cards: media keeps its own rounded shape, the comment sits in its own box below */
 .card:not(.note):not(.box):not(.open){background:transparent;box-shadow:none}
-.card>img,.card>video,.card>iframe,.card>.yt,.card>.cw,.card>.miss,.card>.sqw{border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.card>img,.card>video,.card>iframe,.card>.yt,.card>.cw,.card>.miss,.card>.sqw,.card>.aud{border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
 .card .cap{margin-top:8px;padding:8px 12px;min-height:0;background:#fff;border-radius:var(--rs);box-shadow:var(--sh);font-size:13px}
 .card .cap:empty{display:none}
 .card.cedit .cap{display:block;outline:2px solid var(--acc);outline-offset:0}
@@ -274,11 +274,34 @@ body.frozen #unf{display:flex}
 .box.bc3{--lb:#e91f25;--lt:#fff;--lo:#e91f25;--bxb:rgba(233,31,37,.07);--bxl:rgba(233,31,37,.25)}
 .card.flash{animation:fl 1.5s ease-out}
 @keyframes fl{0%,40%{outline:4px solid var(--yellow);outline-offset:4px}100%{outline:4px solid rgba(251,204,10,0);outline-offset:4px}}
+.box .bxh{position:absolute;left:0;bottom:100%;padding:0 0 12px;border-radius:0;white-space:nowrap}
+.box .bxt{border-radius:18px;padding:6px 22px 9px}
+#grp{position:absolute;display:none;border:calc(1.5px*var(--k,1)) dashed var(--acc);border-radius:calc(8px*var(--k,1));pointer-events:none;z-index:2147483000}
+#grp .gh{position:absolute;width:calc(14px*var(--k,1));height:calc(14px*var(--k,1));margin:calc(-7px*var(--k,1)) 0 0 calc(-7px*var(--k,1));background:#fff;border:calc(2px*var(--k,1)) solid var(--acc);border-radius:50%;pointer-events:auto;box-sizing:border-box}
+#grp .nw{left:0;top:0;cursor:nwse-resize}#grp .n{left:50%;top:0;cursor:ns-resize}#grp .ne{left:100%;top:0;cursor:nesw-resize}#grp .e{left:100%;top:50%;cursor:ew-resize}
+#grp .se{left:100%;top:100%;cursor:nwse-resize}#grp .s{left:50%;top:100%;cursor:ns-resize}#grp .sw{left:0;top:100%;cursor:nesw-resize}#grp .w{left:0;top:50%;cursor:ew-resize}
+.aud{display:flex;align-items:center;gap:12px;padding:12px 16px 12px 12px;background:#fff}
+.apb{flex:none;width:46px;height:46px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer}
+.apb svg{width:18px;height:18px}
+.acol{flex:1;min-width:0}
+.ain{display:flex;gap:8px;justify-content:space-between;font-size:12px;color:var(--ink);margin-bottom:4px}
+.anm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.atm{color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.awv{height:40px;cursor:pointer}.awv canvas{display:block;width:100%;height:100%}
+.eau{position:relative;height:42px;margin-top:4px;border-radius:var(--rs);background:var(--tint);overflow:hidden;cursor:grab}
+.eau.on{box-shadow:inset 0 0 0 2.5px var(--acc)}
+.eau canvas{display:block;height:38px;margin-top:2px}
+.eau.none{background:transparent;border:1.5px dashed var(--line);cursor:default}
+.eau.gone{background:repeating-linear-gradient(45deg,#fff 0 7px,rgba(251,204,10,.38) 7px 14px)}
+.eah{position:absolute;left:10px;top:12px;font-size:12px;color:var(--mut);white-space:nowrap}
+.eal{position:absolute;left:8px;top:4px;font-size:10.5px;color:var(--blue);background:rgba(255,255,255,.85);padding:1px 8px;border-radius:var(--pill);white-space:nowrap;pointer-events:none}
+#bar4 .avl{width:90px;padding:0}
+#bar4 .aof{width:70px}
 </style>
 </head>
 <body>
-<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="bf" class="ed" title="Add images or videos from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
-<div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
+<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
+<div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qau" class="bq ed" title="Add a soundtrack from your computer (it is also added to the board as an audio card)">+ Audio</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
 <div id="bar4" class="tb"></div>
 <div id="bar3" class="tb"><button id="hp" class="both ib" title="How the program works, and keyboard shortcuts"></button><i class="both"></i><button id="zo" title="Zoom out">−</button><span id="z"></span><button id="zi" title="Zoom in">+</button><button id="fb" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
 <div id="empty">Paste or drop images and videos here</div>
@@ -347,7 +370,7 @@ function mount(it){
  const old=els.get(it.id);old&&old.remove();
  const c=document.createElement("div");c.className="card"+(it.type==="txt"?" note":it.type==="box"?" box bc"+((it.col||0)%4):"")+(it.lk?" lk":"");c.dataset.id=it.id;
  c.style.cssText=`left:${it.x}px;top:${it.y}px;width:${it.w}px;z-index:${zOf(it)}`+(it.type==="box"?`;height:${it.bh}px`:"");
- if(it.type==="box"){boxCard(c,it)}else if(it.type==="seq"){seqCard(c,it)}else if(it.type==="yt"){ytCard(c,it)}else if(it.type==="txt"){
+ if(it.type==="box"){boxCard(c,it)}else if(it.type==="aud"){audCard(c,it)}else if(it.type==="seq"){seqCard(c,it)}else if(it.type==="yt"){ytCard(c,it)}else if(it.type==="txt"){
   c.innerHTML='<div class="grip"></div><div class="nt" contenteditable="true" data-ph="Write a note…"></div>';
   const t=c.querySelector(".nt");t.textContent=it.text||"";if(VIEW)t.contentEditable="false";t.oninput=()=>{it.text=t.textContent;persist()};
  }else{
@@ -383,14 +406,15 @@ function del(id){if(CX===id)ctxHide();if(cropEdit&&cropEdit.id===id)cropEdit=nul
 function newNote(cx,cy){const w=p(cx,cy);let nw=260,bd=1e18;
  items.forEach(i=>{if(i.type==="box")return;const e=els.get(i.id);if(!e)return;const h=e.offsetHeight,dx=Math.max(i.x-w.x,0,w.x-i.x-i.w),dy=Math.max(i.y-w.y,0,w.y-i.y-h),d=dx*dx+dy*dy;if(d<bd){bd=d;nw=i.type==="seq"&&ED&&ED.id===i.id?nw:i.w}});
  add({type:"txt",text:"",w:Math.max(120,Math.round(nw)),x:w.x,y:w.y});setTimeout(()=>{const e=els.get(sel);e&&e.querySelector(".nt").focus()})}
-async function addBlob(b,pt){const fp=await fpOf(b),d=await dupFile(fp,b.name||"This image");if(d)return d;if(isHeic(b))return fromHeic(b,pt,fp);const v=b.type[0]==="v";return add({type:v?"vid":"img",blob:b,fp,w:v?380:320,cap:"",x:pt.x,y:pt.y})}
+async function addBlob(b,pt){const fp=await fpOf(b),d=await dupFile(fp,b.name||"This image");if(d)return d;if(isHeic(b))return fromHeic(b,pt,fp);const v=b.type[0]==="v",au=isAud(b);return add({type:au?"aud":v?"vid":"img",blob:b,fp,w:au?360:v?380:320,cap:"",x:pt.x,y:pt.y})}
 function embedOf(u){let m;
  if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i))return{yt:m[1],ar:/shorts\//i.test(u)?"9/16":"16/9"}
  if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/i))return{url:`https://player.vimeo.com/video/${m[1]}?background=1&autoplay=1&loop=1&muted=1`,ar:"16/9"}}
 async function addURL(u,pt){u=u.trim();const dl=dupLink(u);if(dl)return dl;const e=embedOf(u);if(e){return add(e.yt?{type:"yt",yt:e.yt,url:"https://youtu.be/"+e.yt,ar:e.ar,w:e.ar==="9/16"?240:380,cap:"",x:pt.x,y:pt.y}:{type:"emb",url:e.url,ar:e.ar,w:380,cap:"",x:pt.x,y:pt.y});return}
+ if(isAU(u))return add({type:"aud",url:u,name:decodeURIComponent(u.split(/[?#]/)[0].split("/").pop()||"audio"),w:360,cap:"",x:pt.x,y:pt.y});
  u=u.replace(/\.gifv(\?|#|$)/i,".mp4$1");const v=isV(u);return add({type:v?"vid":"img",url:u,w:v?380:320,cap:"",x:pt.x,y:pt.y})}
-async function addLocal(h,f,pt){const fp=await fpOf(f),d=await dupFile(fp,f.name);if(d)return d;if(isHeic(f))return fromHeic(f,pt,fp);const v=f.type[0]==="v";return add({type:v?"vid":"img",h:h||undefined,name:f.name,fp,w:v?380:320,cap:"",x:pt.x,y:pt.y},f)}
-const PT=[{description:"Images and videos",accept:{"image/*":[".heic",".heif"],"video/*":[]}}];
+async function addLocal(h,f,pt){const fp=await fpOf(f),d=await dupFile(fp,f.name);if(d)return d;if(isHeic(f))return fromHeic(f,pt,fp);const v=f.type[0]==="v",au=isAud(f);return add({type:au?"aud":v?"vid":"img",h:h||undefined,name:f.name,fp,w:au?360:v?380:320,cap:"",x:pt.x,y:pt.y},f)}
+const PT=[{description:"Images, videos and audio",accept:{"image/*":[".heic",".heif"],"video/*":[],"audio/*":[".mp3",".wav",".m4a",".aac",".ogg",".flac",".aif",".aiff"]}}];
 /* duplicates: every file gets a fingerprint (size + the start and end of its content), links are compared as text */
 const FPC=new WeakMap();
 async function fpOf(f){if(!f)return null;if(FPC.has(f))return FPC.get(f);let h="s"+f.size+":"+(f.name||"");
@@ -430,7 +454,7 @@ function fixSvg(t){t=t.trim().replace(/<svg(?![^>]*\sxmlns=)/i,'<svg xmlns="http
 function ingest(dt,pt,paste){
  const base=p(pt.x,pt.y);let n=0;const at=()=>({x:base.x+24*n,y:base.y+24*n++});
  const html=dt.getData("text/html"),uri=dt.getData("text/uri-list"),txt=(dt.getData("text/plain")||"").trim();
- const jobs=[...(dt.items||[])].filter(i=>i.kind==="file").map(i=>({hp:!paste&&i.getAsFileSystemHandle?i.getAsFileSystemHandle().catch(()=>null):null,f:i.getAsFile()})).filter(j=>j.f&&(/^(image|video)\//.test(j.f.type)||isHeic(j.f)));
+ const jobs=[...(dt.items||[])].filter(i=>i.kind==="file").map(i=>({hp:!paste&&i.getAsFileSystemHandle?i.getAsFileSystemHandle().catch(()=>null):null,f:i.getAsFile()})).filter(j=>j.f&&(/^(image|video)\//.test(j.f.type)||isHeic(j.f)||isAud(j.f)));
  let urls=[];const svg=/^\s*<(\?xml|!--|!DOCTYPE|svg)/i.test(txt)&&/<svg[\s>]/i.test(txt)?fixSvg(txt):null;
  if(html){const d=new DOMParser().parseFromString(html,"text/html");
   urls=[...d.querySelectorAll("video[src],video source[src],img[src]")].map(e=>e.getAttribute("src")).filter(u=>/^(https?:|\/\/)/i.test(u)).map(u=>u.startsWith("//")?"https:"+u:u)}
@@ -451,12 +475,14 @@ const mq=$("#mq");
 world.addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches(".cap,.nt"))commit()});
 vp.addEventListener("pointerdown",e=>{
  if(ARM&&e.button===0&&!space){e.preventDefault();const c=cardAt(e);if(c){const w=p(e.clientX,e.clientY);ARD={a:c.dataset.id,pa:nearA(geo(c.dataset.id),w.x,w.y),m:w};drag={m:"arw"};vp.setPointerCapture(e.pointerId)}return}
+ if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("gh")){e.preventDefault();ctxHide();const l=grpItems();
+  drag={m:"grz",e:e.target.dataset.e,sx:e.clientX,sy:e.clientY,bb:grpBox(l),its:l.map(it=>({it,ox:it.x,oy:it.y,ow:it.w,obh:it.bh,oH:els.get(it.id).offsetHeight}))};vp.setPointerCapture(e.pointerId);return}
  if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("ahit")){const id=e.target.parentNode.dataset.id;ctxHide();if(e.shiftKey){sels.has(id)?sels.delete(id):sels.add(id)}else{sels.clear();sels.add(id);sel=id}paintSel();arDirty=1;if(!e.shiftKey)setTimeout(()=>ctxShow(id));return}
  if(BXD&&e.button===0&&!space){e.preventDefault();const a=document.activeElement;a&&a.blur&&a.blur();drag={m:"bxd",sx:e.clientX,sy:e.clientY};vp.setPointerCapture(e.pointerId);return}
  const sh=e.shiftKey&&!VIEW&&e.button===0&&!space,ae=document.activeElement;
  if(sh&&ae&&ae.isContentEditable&&ae.contains(e.target))return;
  ctxHide();
- dn={x:e.clientX,y:e.clientY,m:sh||VIEW?null:e.target.closest(".vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
+ dn={x:e.clientX,y:e.clientY,m:sh||VIEW?null:e.target.closest(".apb,.awv,.vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
  const c=e.target.closest(".card"),pan=e.button===1||space||VIEW;
  if(sh){
   ae&&ae.blur();
@@ -493,12 +519,13 @@ vp.addEventListener("pointermove",e=>{
   sels.clear();drag.base.forEach(i=>sels.add(i));
   els.forEach((el,id)=>{const r=el.getBoundingClientRect();if(el.classList.contains("lk"))return;if(el.classList.contains("box")?r.left>=x1&&r.right<=x2&&r.top>=y1&&r.bottom<=y2:r.left<x2&&r.right>x1&&r.top<y2&&r.bottom>y1)sels.add(id)});
   sel=[...sels].pop()||null;paintSel();return}
+ if(drag.m==="grz"){grpResize(drag,dx/view.s,dy/view.s);return}
  if(drag.m==="mvg"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);drag.its.forEach(({it,ox,oy})=>{it.x=ox+sn.x;it.y=oy+sn.y;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
  const it=drag.it,c=els.get(it.id);
  if(drag.m==="mv"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);it.x=drag.ox+sn.x;it.y=drag.oy+sn.y;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
  else resizeBy(drag,it,c,dx/view.s,dy/view.s);
 });
-const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,it=items.find(i=>i.id===m.closest(".card").dataset.id);dn={};if(it){if(m.classList.contains("sd"))m.closest(".card").classList.toggle("showsrc");else if(m.classList.contains("so"))openSrc(it);else if(m.classList.contains("cn"))copyName(it,m);else if(m.classList.contains("miss"))relink(it);else if(m.classList.contains("crbtn"))startCrop(it);else if(m.classList.contains("sqpl"))seqPlay(it.id);else if(m.classList.contains("sqed"))openEd(it.id);else if(m.classList.contains("vstop"))stopInline(it);else if(!m.closest(".playing"))playInline(it)}}
+const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,it=items.find(i=>i.id===m.closest(".card").dataset.id);dn={};if(it){if(m.classList.contains("sd"))m.closest(".card").classList.toggle("showsrc");else if(m.classList.contains("so"))openSrc(it);else if(m.classList.contains("cn"))copyName(it,m);else if(m.classList.contains("miss"))relink(it);else if(m.classList.contains("crbtn"))startCrop(it);else if(m.classList.contains("sqpl"))seqPlay(it.id);else if(m.classList.contains("sqed"))openEd(it.id);else if(m.classList.contains("apb"))audToggle(it);else if(m.classList.contains("awv"))audSeekAt(it,m,e.clientX);else if(m.classList.contains("vstop"))stopInline(it);else if(!m.closest(".playing"))playInline(it)}}
  $("#gx").hidden=$("#gy").hidden=true;
  if(drag&&drag.m==="arw"){if(ARD&&ARD.b){items.push({id:uid(),type:"arr",a:ARD.a,pa:ARD.pa,b:ARD.b,pb:ARD.pb});save()}ARD=null;drag=null;arDirty=1;return}
  if(drag&&drag.m==="bxd"){endBoxDraw(e);drag=null;return}
@@ -541,7 +568,7 @@ function openSrc(it){
  if(!u){relink(it);return}
  const w=window.open("","_blank");if(!w)return;const v=it.type==="vid",d=w.document;
  d.title=it.name||"Pasted";d.body.style.cssText="margin:0;height:100vh;display:grid;place-items:center;background:#111";
- const e=d.createElement(v?"video":"img");e.src=u;e.style.cssText="max-width:100vw;max-height:100vh";if(v){e.controls=true;e.autoplay=true}d.body.append(e);
+ const au=it.type==="aud",e=d.createElement(au?"audio":v?"video":"img");if(au){d.body.style.background="#f7f4ed"}e.src=u;if(au){e.controls=true;e.autoplay=true}e.style.cssText="max-width:100vw;max-height:100vh";if(v){e.controls=true;e.autoplay=true}d.body.append(e);
 }
 async function copyName(it,el){
  const t=it.name||"";try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.append(a);a.select();document.execCommand("copy");a.remove()}
@@ -571,13 +598,106 @@ function snapMove(D,dx,dy,off){
  if(bx){gx.hidden=false;gx.style.left=(bx.v*view.s+view.x)+"px"}else gx.hidden=true;
  if(by){gy.hidden=false;gy.style.top=(by.v*view.s+view.y)+"px"}else gy.hidden=true;
  return{x:dx+(bx?bx.d:0),y:dy+(by?by.d:0)}}
+/* sound: audio cards on the board, and one soundtrack per sequence */
+const isAud=f=>!!f&&(/^audio\//.test(f.type||"")||/\.(mp3|wav|m4a|aac|ogg|oga|flac|aiff?|opus)$/i.test(f.name||""));
+const isAU=u=>/\.(mp3|wav|m4a|aac|ogg|oga|flac|aiff?|opus)(\?|#|$)/i.test(u||"");
+const PK=new Map(),AP=new Map();let ACX=null;
+const tfmt=t=>{t=Math.max(0,t||0);const m=Math.floor(t/60),x=t-m*60;return m+":"+(x<10?"0":"")+x.toFixed(1)};
+/* the waveform is read once per file: the loudest point of every small slice of the sound */
+function peaksOf(r){const k=srcOf(r)||r.id;let o=PK.get(k);if(o)return o;o={ok:false,done:false};PK.set(k,o);
+ (async()=>{try{let buf=null;const f=r.blob||files.get(r.id);
+  if(f)buf=await f.arrayBuffer();
+  else if(r.pf&&PD){const md=await PD.getDirectoryHandle("media");buf=await(await(await md.getFileHandle(r.pf)).getFile()).arrayBuffer()}
+  else if(r.url&&/^https?:/i.test(r.url))buf=await(await fetch(r.url)).arrayBuffer();
+  if(!buf)return;ACX=ACX||new(window.AudioContext||window.webkitAudioContext)();const ab=await ACX.decodeAudioData(buf);
+  const ch=ab.getChannelData(0),N=6000,st=Math.max(1,Math.floor(ch.length/N)),pk=new Float32Array(Math.ceil(ch.length/st));let mx=1e-4;
+  for(let i=0,j=0;i<ch.length;i+=st,j++){let m=0;const e=Math.min(i+st,ch.length);for(let q=i;q<e;q+=4){const v=Math.abs(ch[q]);if(v>m)m=v}pk[j]=m;if(m>mx)mx=m}
+  for(let j=0;j<pk.length;j++)pk[j]/=mx;Object.assign(o,{ok:true,pk,dur:ab.duration})}catch(e){}finally{o.done=true;audCards();if(ED&&ED.c)edAudio()}})();
+ return o}
+function wave(cv,o,t0,t1,col,dim,split){const x=cv.getContext("2d"),W=cv.width,H=cv.height;x.clearRect(0,0,W,H);
+ if(!o.ok){x.fillStyle=col;x.globalAlpha=.35;x.fillRect(0,H/2-1,W,2);x.globalAlpha=1;return}
+ const n=o.pk.length,bw=Math.max(1,Math.round(DPR()*1.5)),gap=Math.max(1,Math.round(DPR()));
+ for(let px=0;px<W;px+=bw+gap){const a=t0+(t1-t0)*px/W,b=t0+(t1-t0)*(px+bw)/W;if(a>=o.dur||b<=0)continue;
+  const i0=Math.max(0,Math.floor(a/o.dur*n)),i1=Math.min(n,Math.max(i0+1,Math.ceil(b/o.dur*n)));let m=0;for(let i=i0;i<i1;i++)if(o.pk[i]>m)m=o.pk[i];
+  const h=Math.max(bw,m*H*.9);x.fillStyle=split!=null&&a>split?dim:col;x.fillRect(px,(H-h)/2,bw,h)}}
+function audCard(c,it){
+ const b=document.createElement("div");b.className="aud";
+ b.innerHTML='<div class="apb" title="Play / pause"></div><div class="acol"><div class="ain"><span class="anm"></span><span class="atm"></span></div><div class="awv" title="Click to jump to that point"><canvas></canvas></div></div>';
+ b.querySelector(".anm").textContent=it.name||"Audio";c.append(b);capEl(c,it);setTimeout(()=>audDraw(it));
+}
+function audDraw(it){const c=els.get(it.id);if(!c)return;const w=c.querySelector(".awv"),cv=w&&w.querySelector("canvas");if(!cv)return;
+ const o=peaksOf(it),a=AP.get(it.id),W=Math.max(10,Math.round(w.clientWidth*DPR())),H=Math.max(10,Math.round(w.clientHeight*DPR()));if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
+ const d=o.ok?o.dur:a&&a.duration||0,t=a?a.currentTime:0;wave(cv,o,0,d||1,"#094E99","rgba(9,78,153,.35)",a&&t>0?t:null);
+ if(!o.ok&&o.done&&!srcOf(it))cv.getContext("2d").clearRect(0,0,W,H);
+ c.querySelector(".atm").textContent=(a&&!a.paused||t>0?tfmt(t)+" / ":"")+(d?tfmt(d):o.done?"":"…");
+ c.querySelector(".apb").innerHTML=a&&!a.paused?IC.pause:IC.play}
+function audCards(){items.forEach(i=>{if(i.type==="aud")audDraw(i)})}
+function audEl(it){let a=AP.get(it.id);if(a)return a;const s=srcOf(it);if(!s)return null;a=new Audio(s);a.preload="auto";a.ontimeupdate=a.onplay=a.onpause=a.onended=a.onloadedmetadata=()=>audDraw(it);AP.set(it.id,a);return a}
+function audToggle(it){const a=audEl(it);if(!a){relink(it);return}AP.forEach((x,k)=>{if(x!==a&&!x.paused)x.pause()});if(ED)audStop();a.paused?a.play().catch(()=>{}):a.pause()}
+function audSeekAt(it,m,cx){const a=audEl(it);if(!a)return;const r=m.getBoundingClientRect(),d=a.duration||(peaksOf(it).dur||0);if(!d)return;a.currentTime=Math.max(0,Math.min(d,(cx-r.left)/r.width*d));audDraw(it)}
+/* soundtrack of the sequence being edited: follows play, pause, seek and the loop */
+const sndOf=it=>it&&it.au?items.find(i=>i.id===it.au.ref)||null:null;
+function audSync(now){const it=ED.it,r=sndOf(it);
+ if(!ED.play||!r){audStop();return}
+ const s=srcOf(r);if(!s)return;if(!ED.ae||ED.ae._s!==s){audStop();ED.ae=new Audio(s);ED.ae._s=s}
+ const a=ED.ae,T=ftot(it),t=it.au.off+(((ED.f0+(now-ED.t0)/1000*it.fps)%T+T)%T)/it.fps;a.volume=Math.max(0,Math.min(1,it.au.vol==null?1:it.au.vol));
+ AP.forEach(x=>{if(!x.paused)x.pause()});
+ if(isFinite(a.duration)&&t>=a.duration){if(!a.paused)a.pause();return}
+ if(a.paused){try{a.currentTime=t}catch(e){}a.play().catch(()=>{})}else if(Math.abs(a.currentTime-t)>.15){try{a.currentTime=t}catch(e){}}}
+function audStop(){if(ED&&ED.ae&&!ED.ae.paused)ED.ae.pause()}
+function edAudio(){
+ const el=eq(".eau");if(!el)return;const it=ED.it,P=ED.ppf,W=Math.max(1,(ftot(it)+tailN())*P);el.style.width=W+"px";el.classList.toggle("on",!!ED.selA&&!!it.au);
+ if(!it.au){el.className="eau none";el.innerHTML=VIEW?"":'<span class="eah">♪ Drag an audio card here, or use + Audio, to add a soundtrack</span>';return}
+ const r=sndOf(it);
+ if(!r){el.className="eau gone"+(ED.selA?" on":"");el.innerHTML='<span class="eah">Soundtrack removed from the board · drop an audio card here to replace it</span>';return}
+ el.className="eau"+(ED.selA?" on":"");let cv=el.querySelector("canvas");if(!cv){el.innerHTML='<canvas></canvas><span class="eal"></span>';cv=el.querySelector("canvas")}
+ const o=peaksOf(r),k=DPR(),cw=Math.min(W,16000/k),sec0=it.au.off,sec1=sec0+cw/(P*it.fps);
+ cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(38*k);wave(cv,o,sec0,sec1,"#094E99","#094E99");
+ const f=o.ok&&sec0+ftot(it)/it.fps>o.dur?" · ends before the sequence":"";
+ el.querySelector(".eal").textContent="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f;
+ el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
+  if(!o.ok)return;el.setPointerCapture(e.pointerId);const x0=e.clientX,f0=it.au.off;
+  el.onpointermove=ev=>{if(!ev.buttons)return;it.au.off=Math.round(Math.max(0,Math.min(o.dur-.05,f0-(ev.clientX-x0)/view.s/(P*it.fps)))*100)/100;edAudio();const q=$("#bar4 .aof");q&&(q.value=it.au.off)};
+  el.onpointerup=el.onpointercancel=()=>{el.onpointermove=null;if(it.au.off!==f0){save();ED.lf=-1}}};
+}
+function audPanel(P,it){
+ const r=sndOf(it),o=r&&peaksOf(r);
+ P.innerHTML=`<b>Soundtrack</b><span class="pm anm"></span><label title="Where the audio starts at the first frame (you can also drag the waveform)">Starts at <input class="aof" type="number" min="0" step="0.1"> s</label><label title="Volume">Vol <input class="avl" type="range" min="0" max="1" step="0.05"></label><button class="pde ib" title="Remove the soundtrack from this sequence (the audio card stays on the board)">${IC.del}</button>`;
+ P.querySelector(".anm").textContent=r?(r.name||"Audio")+(o&&o.ok?" · "+tfmt(o.dur):""):"removed";
+ const of=P.querySelector(".aof"),vl=P.querySelector(".avl");of.value=it.au.off;vl.value=it.au.vol==null?1:it.au.vol;
+ of.oninput=()=>{const v=parseFloat(of.value);if(v>=0){it.au.off=v;edAudio();save()}};
+ vl.oninput=()=>{it.au.vol=parseFloat(vl.value);if(ED.ae)ED.ae.volume=it.au.vol;save()};
+ P.querySelector(".pde").onclick=()=>{audStop();delete it.au;ED.selA=false;edAll();save()};
+}
+async function edAudFile(){
+ if(!ED)return;const it=ED.it,pt={x:it.x+EWc()+40,y:it.y};let r=null;
+ try{if(window.showOpenFilePicker){const[h]=await showOpenFilePicker({types:[{description:"Audio",accept:{"audio/*":[".mp3",".wav",".m4a",".aac",".ogg",".flac",".aif",".aiff"]}}]});r=await addLocal(h,await h.getFile(),pt)}
+  else{const f=await new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept="audio/*";i.onchange=()=>res(i.files[0]);i.click()});if(!f)return;r=await addLocal(null,f,pt)}}catch(e){return}
+ if(r&&ED&&r.type==="aud"){ED.it.au={ref:r.id,off:0,vol:1};ED.sel=null;ED.selA=true;edAll();edTop();save()}
+}
+/* group resize: with several cards selected, one frame with handles scales them all together */
+const GRP=document.createElement("div");GRP.id="grp";GRP.innerHTML=PTS0().map(k=>`<i class="gh ${k}" data-e="${k}"></i>`).join("");world.append(GRP);
+function PTS0(){return["nw","n","ne","e","se","s","sw","w"]}
+function grpItems(){return[...sels].map(id=>items.find(i=>i.id===id)).filter(i=>i&&i.type!=="arr"&&!i.hid&&!i.lk&&els.get(i.id))}
+function grpBox(list){let a=1e9,b=1e9,c=-1e9,d=-1e9;list.forEach(i=>{const e=els.get(i.id);a=Math.min(a,i.x);b=Math.min(b,i.y);c=Math.max(c,i.x+e.offsetWidth);d=Math.max(d,i.y+e.offsetHeight)});return{x:a,y:b,w:c-a,h:d-b}}
+function grpDraw(){const l=VIEW||ED?[]:grpItems();if(l.length<2){GRP.style.display="none";return}
+ const g=grpBox(l),k=1/view.s;GRP.style.cssText=`display:block;left:${g.x-6*k}px;top:${g.y-6*k}px;width:${g.w+12*k}px;height:${g.h+12*k}px;--k:${k}`}
+function grpResize(D,dx,dy){
+ const E=D.e,L=E.includes("w"),Rt=E.includes("e"),T=E.includes("n"),B=E.includes("s"),g=D.bb;
+ const sx=L?(g.w-dx)/g.w:Rt?(g.w+dx)/g.w:1,sy=T?(g.h-dy)/g.h:B?(g.h+dy)/g.h:1;
+ let k=(L||Rt)&&(T||B)?Math.max(sx,sy):(L||Rt)?sx:sy;k=Math.max(.08,k);
+ const ax=L?g.x+g.w:g.x,ay=T?g.y+g.h:g.y;
+ D.its.forEach(o=>{const it=o.it,c=els.get(it.id);it.x=ax+(o.ox-ax)*k;it.y=ay+(o.oy-ay)*k;it.w=Math.max(40,o.ow*k);
+  c.style.left=it.x+"px";c.style.top=it.y+"px";c.style.width=it.w+"px";
+  if(it.type==="box"){it.bh=o.obh*k;c.style.height=it.bh+"px"}
+  if(it.type==="txt"){it.nh=Math.max(40,o.oH*k);c.style.minHeight=it.nh+"px"}})}
 /* arrows: straight lines from a corner or the middle of a side of one card to the same kind of point on another */
 const NS="http://www.w3.org/2000/svg",AL=document.createElementNS(NS,"svg");AL.id="arl";
 AL.innerHTML='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#094E99"/></marker><marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e91f25"/></marker></defs><g class="ag"></g><g class="ap"></g>';
 world.prepend(AL);
 const PTS=["nw","n","ne","e","se","s","sw","w"];let ARM=false,ARD=null,arHov=null,arDirty=1,arLast="";
 function geo(id){const it=items.find(i=>i.id===id),e=els.get(id);if(!it||!e)return null;
- const m=!e.classList.contains("open")&&e.querySelector(":scope>img,:scope>video,:scope>iframe,:scope>.yt,:scope>.cw,:scope>.miss,:scope>.sqw");
+ const m=!e.classList.contains("open")&&e.querySelector(":scope>img,:scope>video,:scope>iframe,:scope>.yt,:scope>.cw,:scope>.miss,:scope>.sqw,:scope>.aud");
  return{x:it.x,y:it.y,w:e.offsetWidth,h:m?m.offsetHeight:e.offsetHeight}}
 function anc(g,p){return{x:p.includes("w")?g.x:p.includes("e")?g.x+g.w:g.x+g.w/2,y:p.includes("n")?g.y:p.includes("s")?g.y+g.h:g.y+g.h/2}}
 function nearA(g,x,y){let b="n",bd=1e18;PTS.forEach(k=>{const a=anc(g,k),d=(a.x-x)**2+(a.y-y)**2;if(d<bd){bd=d;b=k}});return b}
@@ -592,7 +712,7 @@ function drawArrows(){
   if(ARD){v+=dots(ARD.a);const p=anc(geo(ARD.a),ARD.pa),q=ARD.b?anc(geo(ARD.b),ARD.pb):ARD.m;v+=`<line class="aln apv" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="${sw}" marker-end="url(#ah)"/>`}}
  const all=h+"|"+v;if(all!==arLast){arLast=all;AL.querySelector(".ag").innerHTML=h;AL.querySelector(".ap").innerHTML=v}
 }
-(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}requestAnimationFrame(arLoop)})();
+requestAnimationFrame(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}grpDraw();requestAnimationFrame(arLoop)});
 /* Freeze: the whole board becomes read only (pan and zoom still work) */
 function freeze(on){
  if(on){if(ED)closeEd();if(cropEdit)cancelCrop();if(BXD)boxMode(false);if(ARM)arrMode(false);const a=document.activeElement;a&&a.blur&&a.blur();select(null);ctxHide();const h=$("#help");h&&(h.hidden=true)}
@@ -603,11 +723,11 @@ function freeze(on){
 /* deleting cards: if a card is used in a sequence, ask whether to remove it from the sequence too */
 function delCards(ids){
  ids=ids.filter(id=>{const i=items.find(o=>o.id===id);return i&&!i.lk});if(!ids.length)return;
- const seqs=items.filter(s=>s.type==="seq"&&s.blocks.some(b=>ids.includes(b.ref))),used=ids.filter(id=>seqs.some(s=>s.blocks.some(b=>b.ref===id)));
+ const inS=(s,id)=>s.blocks.some(b=>b.ref===id)||(s.au&&s.au.ref===id),seqs=items.filter(s=>s.type==="seq"&&ids.some(id=>inS(s,id))),used=ids.filter(id=>seqs.some(s=>inS(s,id)));
  if(!used.length){ids.forEach(del);commit();return}
  const n=used.length,k=seqs.length;
  toast(`${n===1?(ids.length===1?"This card is":"One of these cards is"):n+" of these cards are"} used in ${k===1?"a sequence":k+" sequences"}.`,[
-  ["Delete everywhere",()=>{seqs.forEach(s=>{s.blocks=s.blocks.filter(b=>!ids.includes(b.ref));mount(s)});ids.forEach(del);if(ED)edSync();commit()}],
+  ["Delete everywhere",()=>{seqs.forEach(s=>{s.blocks=s.blocks.filter(b=>!ids.includes(b.ref));if(s.au&&ids.includes(s.au.ref))delete s.au;mount(s)});ids.forEach(del);if(ED)edSync();commit()}],
   ["Keep in the sequence",()=>{ids.forEach(id=>used.includes(id)?hideCard(id):del(id));if(ED)edSync();commit()}],
   ["Cancel",()=>{}]]);
 }
@@ -618,7 +738,7 @@ function hideCard(id){const it=items.find(i=>i.id===id);if(!it)return;it.hid=tru
 async function purge(){
  const saved=!!PD;
  if(!confirm("Purge\n\n• Clears the undo history: the changes made so far can no longer be undone with Ctrl/⌘+Z.\n"+(saved?"• Deletes for good, from the board folder, every media file that is no longer on the board (files of deleted cards that undo was keeping).\n":"• Frees the memory used by cards you deleted (the board isn't saved in a folder yet, so no file is touched).\n")+"\nThe board itself doesn't change. Continue?"))return;
- items=items.filter(i=>!i.hid||items.some(q=>q.type==="seq"&&q.blocks.some(b=>b.ref===i.id)));
+ items=items.filter(i=>!i.hid||items.some(q=>q.type==="seq"&&(q.blocks.some(b=>b.ref===i.id)||(q.au&&q.au.ref===i.id))));
  hist=[];hi=-1;hp=false;clearTimeout(ht);commit();
  let n=0;if(saved){n=await pkClean();await savePkg(true)}
  toast(saved?(n?`Purged: undo history cleared, ${n} unused file${n>1?"s":""} deleted from the board folder.`:"Purged: undo history cleared, the board folder had no unused files."):"Purged: undo history cleared.");
@@ -633,6 +753,8 @@ const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="
 <h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Hover a card to see its menu: crop, open the source, comment, duplicate, delete. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
 <h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip at the bottom right, or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
+<h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar at the bottom right. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
+<h4>Resizing</h4><p>Drag any side or corner of a card. With several cards selected, a dashed frame appears around them: its handles resize the whole group as if it were one card.</p>
 <h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the moodboard.html inside it works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
 <h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
 <h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
@@ -834,7 +956,7 @@ const FMT=[["16/9","16:9"],["9/16","9:16"],["1/1","1:1"],["4/5","4:5"]],EWc=()=>
 const fr=(it,b)=>Math.max(1,Math.round(b.d*it.fps));
 const ftot=it=>it.blocks.reduce((a,b)=>a+fr(it,b),0);
 const sec=x=>(Math.round(x*100)/100).toLocaleString("en-US",{maximumFractionDigits:2});
-const cl=i=>i.blocks?{...i,blocks:i.blocks.map(b=>({...b}))}:{...i};
+const cl=i=>i.blocks?{...i,blocks:i.blocks.map(b=>({...b})),au:i.au&&{...i.au}}:{...i};
 let ED=null,dropEl=null,HM="";
 function dirty(){SV.forEach(v=>v.last=-1);if(ED)ED.dt=1}
 function srcOf(it){if(it.url)return it.url;const b=it.blob||files.get(it.id);if(!b)return it.pf&&!BADPF.has(it.pf)?"media/"+it.pf:null;if(!ou.has(b))ou.set(b,URL.createObjectURL(b));return ou.get(b)}
@@ -945,7 +1067,7 @@ function newSeq(){
 }
 /* dragging board cards into a sequence */
 function dropAt(e,ids){
- if(VIEW||!ids.some(id=>{const i=items.find(o=>o.id===id);return i&&MED(i.type)}))return null;
+ if(VIEW||!ids.some(id=>{const i=items.find(o=>o.id===id);return i&&(MED(i.type)||i.type==="aud")}))return null;
  for(const x of document.elementsFromPoint(e.clientX,e.clientY)){const c=x.closest&&x.closest(".seqc");if(c&&!ids.includes(c.dataset.id))return c}return null}
 function hl(c,e){
  if(dropEl!==c){document.body.classList.toggle("dropping",!!c);dropEl&&dropEl.classList.remove("drop");if(ED&&dropEl&&dropEl===ED.c)edMarkOff();dropEl=c;c&&c.classList.add("drop")}
@@ -953,7 +1075,8 @@ function hl(c,e){
 function dropIn(D){
  const s=items.find(i=>i.id===dropEl.dataset.id),list=D.m==="mv"?[{it:D.it,ox:D.ox,oy:D.oy}]:D.m==="mvg"?D.its:[],open=!!(ED&&s&&s.id===ED.id),di=open?ED.di:null,dpb=open?ED.dpb:null;
  hl(null);if(!s||s.type!=="seq"||!list.length)return;
- const imgs=order(list.map(o=>o.it).filter(i=>MED(i.type)));
+ const imgs=order(list.map(o=>o.it).filter(i=>MED(i.type))),snd=list.map(o=>o.it).find(i=>i.type==="aud");
+ if(snd){s.au={ref:snd.id,off:0,vol:s.au&&s.au.vol!=null?s.au.vol:1};if(open){ED.selA=true;ED.sel=null}}
  list.forEach(({it,ox,oy})=>{it.x=ox;it.y=oy;const c=els.get(it.id);c.style.left=ox+"px";c.style.top=oy+"px"});
  const dd=dflt(s);let ins=imgs.map(i=>nb(i,dd));const bl=s.blocks;
  if(open){
@@ -961,7 +1084,7 @@ function dropIn(D){
   if(b&&ins.length){setRef(b,imgs[0]);ED.sel=b.id;ins=ins.slice(1);bl.splice(bl.indexOf(b)+1,0,...ins)}
   else bl.splice(di==null?bl.length:di,0,...ins);
   if(ins.length)ED.sel=ins[ins.length-1].id;
-  edAfterAdd();edTop();
+  if(ins.length)edAfterAdd();else edAll();edTop();
  }else bl.push(...ins);
  dirty();
 }
@@ -981,7 +1104,7 @@ function openEd(id){
  const h=ED.c.offsetHeight;view.s=1;view.x=Math.round(innerWidth/2-(it.x+EWc()/2));view.y=Math.round(h+150>innerHeight?80-it.y:(innerHeight-h)/2+20-it.y);apply();
 }
 function closeEd(){
- if(!ED)return;document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
+ if(!ED)return;audStop();document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
  document.body.classList.remove("sqmode");showName();$("#hint").textContent=HM;
  const it=items.find(i=>i.id===id);if(it)mount(it);view=pv;apply();dirty();
 }
@@ -989,7 +1112,7 @@ function edBuild(c,it){
  ED.c=c;ED.it=it;c.classList.add("open");c.style.width=EWc()+"px";
  c.insertAdjacentHTML("beforeend",`<div class="sqg"><b>Sequence</b><span class="sqgi"></span><span style="flex:1"></span>${VIEW?"":"<span>drag here to move</span>"}</div>
 <div class="sqx"><div class="ev"><canvas class="ecv" title="Click to play / pause"></canvas></div><div class="en"></div>
-<div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div></div>`);
+<div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eau"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div></div>`);
  capEl(c,it);
  const x=c.querySelector(".sqx");x.addEventListener("pointerdown",e=>e.stopPropagation());
  eq(".ecv").onclick=edPlay;
@@ -1002,7 +1125,7 @@ function edBuild(c,it){
  tr.onpointerdown=e=>{
   const d=e.target.closest(".blk");if(!d||!ED)return;e.preventDefault();
   const bl=ED.it.blocks,b=bl.find(q=>q.id===d.dataset.b);if(!b)return;
-  ED.sel=b.id;tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
+  ED.sel=b.id;ED.selA=false;eq(".eau").classList.remove("on");tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
   if(VIEW){edSeekB(b);return}
   tr.setPointerCapture(e.pointerId);
   let a=0;for(const q of bl){if(q===b)break;a+=fr(ED.it,q)}
@@ -1041,7 +1164,7 @@ function edLayout(){
  if(ED.f>T-1)ED.f=Math.max(0,T-1);
  const fl=(FMT.find(q=>q[0]===it.fmt)||[0,it.fmt])[1];
  eq(".sqgi").textContent=`${sec(it.fps)} fps · ${fl} · ${sec(T/it.fps)} s · ${T} frames`;
- edRuler();edTrack();ED.lf=-1}
+ edRuler();edTrack();edAudio();ED.lf=-1}
 function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-24;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
 function edRuler(){
  const it=ED.it,T=ftot(it)+tailN(),P=ED.ppf,W=Math.max(T*P,1),c=eq(".erc"),d=DPR();
@@ -1078,6 +1201,7 @@ function edTick(now){
  if(!ED.c.isConnected)return;
  const it=ED.it,T=ftot(it);if(ED.dt&&!ED.vd){ED.dt=0;edLayout();if(!$("#bar4").contains(document.activeElement))edPanel()}
  if(ED.play&&T)ED.f=(ED.f0+Math.floor((now-ED.t0)/1000*it.fps))%T;
+ audSync(now);
  if(ED.f===ED.lf)return;ED.lf=ED.f;
  frame(eq(".ecv"),it,ED.f,ED.play,"e"+ED.id);const o=at(it,ED.f);
  eq(".eph").style.left=ED.f*ED.ppf+"px";const pc=eq(".ephc");pc.style.left=ED.f*ED.ppf+"px";pc.style.width=Math.max(2,ED.ppf)+"px";pc.style.display=ftot(it)?"block":"none";
@@ -1086,12 +1210,13 @@ function edTick(now){
  ED.c.querySelectorAll(".blk.cur").forEach(q=>q.classList.remove("cur"));if(o){const d=ED.c.querySelector(`.blk[data-b="${o.b.id}"]`);d&&d.classList.add("cur")}
  if(ED.play){const tl=eq(".etl"),x=ED.f*ED.ppf;if(x<tl.scrollLeft||x>tl.scrollLeft+tl.clientWidth-60)tl.scrollLeft=x-40}
 }
-function edPlay(){if(!ED)return;const T=ftot(ED.it);if(!T)return;ED.play=!ED.play;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}$("#qpl").textContent=ED.play?"❚❚":"▶"}
+function edPlay(){if(!ED)return;const T=ftot(ED.it);if(!T)return;ED.play=!ED.play;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}else audStop();$("#qpl").textContent=ED.play?"❚❚":"▶"}
 function edSeek(f){const T=ftot(ED.it);ED.f=T?Math.max(0,Math.min(T-1,f|0)):0;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}ED.lf=-1}
 function edSeekB(b){let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED.it,q)}if(ED.play)edPlay();edSeek(a)}
 function edStep(k){if(!ED)return;if(ED.play)edPlay();const T=ftot(ED.it);if(T)edSeek(((ED.f+k)%T+T)%T)}
 function edPanel(){
  const P=$("#bar4"),it=ED.it,b=selB();
+ if(!b&&ED.selA&&it.au){audPanel(P,it);return}
  if(!b){P.innerHTML="";return}
  const i=it.blocks.indexOf(b),n=fr(it,b),ph=isPh(b),st=bState(b),r=refOf(b);
  if(VIEW){P.innerHTML=`<b>Block ${i+1}</b><span class="pm"></span>`;P.querySelector(".pm").textContent=`${n} frames = ${sec(n/it.fps)} s`+(r&&r.type==="vid"?" · video from "+sec(b.vin||0)+" s":"")+(b.note?" · "+b.note:"")+(st?" · "+st:"");edLinkRow(P,r);return}
@@ -1180,7 +1305,7 @@ $("#qfps").onchange=e=>{if(!ED)return;let v=e.target.value;if(v==="x"){v=prompt(
 $("#qfmt").onchange=e=>{if(!ED)return;ED.it.fmt=e.target.value;mount(ED.it);save();e.target.blur()};
 $("#qpl").onclick=edPlay;$("#qpr").onclick=()=>edStep(-1);$("#qnx").onclick=()=>edStep(1);
 $("#qzi").onclick=()=>edZoom(1.4);$("#qzo").onclick=()=>edZoom(1/1.4);$("#qok").onclick=closeEd;
-$("#qlk").onclick=edLink;$("#qfit").onclick=edFit;$("#qfi").onclick=edFile;
+$("#qlk").onclick=edLink;$("#qau").onclick=edAudFile;$("#qfit").onclick=edFit;$("#qfi").onclick=edFile;
 document.querySelectorAll(".tb").forEach(t=>t.addEventListener("click",e=>{const b=e.target.closest("button");b&&b.blur()}));
 
 /* package */
@@ -1188,13 +1313,14 @@ async function wr(d,n,t){const w=await(await d.getFileHandle(n,{create:true})).c
 function ser(i){
  const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh};
  if(i.type==="arr"){o.a=i.a;o.b=i.b;o.pa=i.pa;o.pb=i.pb}
+ if(i.type==="seq"&&i.au)o.au={...i.au};
  if(i.type==="seq"){o.fps=i.fps;o.fmt=i.fmt;o.ew=i.ew;o.blocks=i.blocks.map(b=>({ref:b.ref,d:b.d,note:b.note||"",vin:b.vin,fit:b.fit}))}
  return o}
 const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box"&&i.type!=="arr";
 /* boards are folders: board.js + media/ + a copy of the program (moodboard.html) */
 const HINT=$("#hint").textContent;
 function showName(){$("#bt").textContent=BNAME||"Moodboard";document.title=(BNAME?BNAME+" · ":"")+"Moodboard"}
-function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
+function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
  if(o.src){if(/^(https?|blob):/i.test(o.src))it.url=o.src;else it.pf=o.src.replace(/^media\//,"")}
  Object.keys(it).forEach(k=>it[k]===undefined&&delete it[k]);return it}
 function fixOld(i){if(i.url&&!/^(https?|blob):/i.test(i.url)){i.pf=i.url.replace(/^media\//,"");delete i.url}
