@@ -30,6 +30,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 .miss b{display:block;color:var(--ink);font-size:13px;font-weight:600;margin-bottom:3px}
 .del,.rz{position:absolute;opacity:0;transition:opacity .12s}
 .card:hover .del,.card:hover .rz,.card.sel .del,.card.sel .rz{opacity:1}
+.card.sel:not(.open) .rz{display:none}
 .del{top:-12px;right:-12px;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--card);background:var(--red);color:#fff;cursor:pointer;font-size:15px;line-height:20px;padding:0;box-shadow:var(--sh)}
 .rz{right:-8px;bottom:-8px;width:18px;height:18px;border-radius:50%;background:var(--acc);cursor:nwse-resize;border:2px solid var(--card)}
 .rz::before{content:"";position:absolute;inset:-8px;border-radius:50%}
@@ -193,7 +194,7 @@ body.bxmode #vp,body.bxmode #vp *{cursor:crosshair!important}
 .gl[hidden]{display:none}
 #gx{top:0;bottom:0;width:1px}#gy{left:0;right:0;height:1px}
 /* focus mode (editing a sequence) and freeze (read only) each tint the board */
-#vp{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(circle,var(--dot) 1.3px,transparent 1.6px);background-size:24px 24px;transition:background-color .25s}
+#vp{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:default;background-image:radial-gradient(circle,var(--dot) 1.3px,transparent 1.6px);background-size:24px 24px;transition:background-color .25s}
 body.focus #vp{background-color:#fbefc8}
 #fzw{position:absolute;inset:0;pointer-events:none;background-color:#d7edf0;background-image:radial-gradient(circle,var(--dot) 1.3px,transparent 1.6px);background-size:24px 24px;clip-path:circle(0px at 100% 0px);visibility:hidden}
 #help{position:fixed;right:16px;bottom:72px;top:76px;width:min(440px,calc(100vw - 32px));z-index:20;background:#fff;border:1.5px solid var(--blue);border-radius:20px;box-shadow:var(--sh);display:flex;flex-direction:column;color:var(--ink)}
@@ -233,7 +234,8 @@ body.frozen .rz,body.frozen .eg,body.frozen .sqb,body.frozen .yt .play,body.froz
 .box .bxh{position:absolute;left:0;bottom:100%;padding:0 0 12px;border-radius:0;white-space:nowrap}
 .box .bxt{background:var(--lb);color:var(--lt);border:3px solid var(--lo);box-shadow:none;border-radius:18px;padding:6px 22px 9px}
 #grp{position:absolute;display:none;border:calc(1.5px*var(--k,1)) dashed var(--acc);border-radius:calc(8px*var(--k,1));pointer-events:none;z-index:2147483000}
-#grp .gh{position:absolute;width:calc(14px*var(--k,1));height:calc(14px*var(--k,1));margin:calc(-7px*var(--k,1)) 0 0 calc(-7px*var(--k,1));background:#fff;border:calc(2px*var(--k,1)) solid var(--acc);border-radius:50%;pointer-events:auto;box-sizing:border-box}
+#grp .gh{position:absolute;width:calc(7px*var(--k,1));height:calc(7px*var(--k,1));margin:calc(-3.5px*var(--k,1)) 0 0 calc(-3.5px*var(--k,1));background:#fff;border:calc(1.5px*var(--k,1)) solid var(--acc);border-radius:50%;pointer-events:auto;box-sizing:border-box}
+#grp .gh::before{content:"";position:absolute;inset:calc(-7px*var(--k,1));border-radius:50%}
 #grp .nw{left:0;top:0;cursor:nwse-resize}#grp .n{left:50%;top:0;cursor:ns-resize}#grp .ne{left:100%;top:0;cursor:nesw-resize}#grp .e{left:100%;top:50%;cursor:ew-resize}
 #grp .se{left:100%;top:100%;cursor:nwse-resize}#grp .s{left:50%;top:100%;cursor:ns-resize}#grp .sw{left:0;top:100%;cursor:nesw-resize}#grp .w{left:0;top:50%;cursor:ew-resize}
 .aud{display:flex;align-items:center;gap:12px;padding:12px 16px 12px 12px;background:#fff}
@@ -320,13 +322,6 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .sqok{position:absolute;top:-22px;right:-22px;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(9,78,153,.3);z-index:6;padding:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .15s;animation:pop .45s .25s cubic-bezier(.34,1.56,.64,1) backwards;line-height:0;font-size:0}
 .seqc.open .sqg{padding-right:44px}
 .sqg .bxg{--lb:#fff;--lo:rgba(9,78,153,.18);--lt:var(--blue);padding:7px 7px;border-width:2px}
-.hsw{display:flex;align-items:center;gap:10px;margin:10px 0 4px;padding:10px 14px;border-radius:16px;background:var(--soft);color:var(--blue);font-weight:600;cursor:pointer}
-.hsw input{position:absolute;opacity:0;pointer-events:none}
-.hsw span{position:relative;flex:none;width:42px;height:24px;border-radius:999px;background:rgba(9,78,153,.25);transition:background .2s}
-.hsw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
-.hsw input:checked+span{background:var(--blue)}
-.hsw input:checked+span::after{transform:translateX(18px)}
-.hsw input:focus-visible+span{outline:2px solid var(--acc);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -345,7 +340,7 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 <button id="unf" title="Back to editing">Unlock</button>
 <div id="gx" class="gl" hidden></div><div id="gy" class="gl" hidden></div>
 <div id="ctx" class="tb" hidden></div>
-<div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Ctrl/⌘+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
+<div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Alt/⌥+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
 <div id="vp"><div id="fzw"></div><div id="world"></div></div>
 <script>
 const SRC0=document.documentElement.outerHTML;
@@ -512,7 +507,8 @@ const mq=$("#mq");
 world.addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches(".cap,.nt"))commit()});
 vp.addEventListener("pointerdown",e=>{
  if(ARM&&e.button===0&&!space){e.preventDefault();const c=cardAt(e);if(c){const w=p(e.clientX,e.clientY);ARD={a:c.dataset.id,pa:nearA(geo(c.dataset.id),w.x,w.y),m:w};drag={m:"arw"};vp.setPointerCapture(e.pointerId)}return}
- if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("gh")){e.preventDefault();ctxHide();const l=grpItems();
+ if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("gh")){e.preventDefault();ctxHide();const l=grpItems().filter(i=>!(ED&&ED.id===i.id));
+  if(l.length===1){const it=l[0],c=els.get(it.id);drag={m:"rz",eg:e.target.dataset.e,oH:c.offsetHeight,it,sx:e.clientX,sy:e.clientY,ox:it.x,oy:it.y,ow:it.w,oh:it.bh,oew:it.ew||900,oppf:ED&&ED.ppf};vp.setPointerCapture(e.pointerId);return}
   drag={m:"grz",e:e.target.dataset.e,sx:e.clientX,sy:e.clientY,bb:grpBox(l),its:l.map(it=>({it,ox:it.x,oy:it.y,ow:it.w,obh:it.bh,oH:els.get(it.id).offsetHeight}))};vp.setPointerCapture(e.pointerId);return}
  if(!VIEW&&e.button===0&&e.target.classList&&e.target.classList.contains("ahit")){const id=e.target.parentNode.dataset.id;ctxHide();if(e.shiftKey){sels.has(id)?sels.delete(id):sels.add(id)}else{sels.clear();sels.add(id);sel=id}paintSel();arDirty=1;if(!e.shiftKey)setTimeout(()=>ctxShow(id));return}
  if(BXD&&e.button===0&&!space){e.preventDefault();const a=document.activeElement;a&&a.blur&&a.blur();drag={m:"bxd",sx:e.clientX,sy:e.clientY};vp.setPointerCapture(e.pointerId);return}
@@ -575,9 +571,11 @@ const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,
   drag=null;vp.classList.remove("pan");if(ED)edTop();save();
   const one=D.m==="mv"||D.m==="rz"?D.it.id:D.m==="mvg"&&(D.box||still)?D.id:null;
   if(one&&e.type==="pointerup"&&sels.size===1&&sels.has(one))ctxShow(one)}};
+function shiftDrag(e){if(e.key!=="Shift"||!drag||!/^(mv|mvg|rz)$/.test(drag.m))return;vp.dispatchEvent(new PointerEvent("pointermove",{clientX:mouse.x,clientY:mouse.y,shiftKey:e.type==="keydown",buttons:1,bubbles:true}))}
+addEventListener("keydown",shiftDrag,true);addEventListener("keyup",shiftDrag,true);
 vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
 vp.addEventListener("wheel",e=>{if(e.ctrlKey&&pinched())return;e.preventDefault();
- if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.01));else{view.x-=e.deltaX;view.y-=e.deltaY;apply()}},{passive:false});
+ if(e.altKey||e.ctrlKey){const d=e.deltaY||e.deltaX;zoomAt(e.clientX,e.clientY,Math.exp(-d*.01))}else{view.x-=e.deltaX;view.y-=e.deltaY;apply()}},{passive:false});
 vp.addEventListener("dblclick",e=>{const pt=document.elementFromPoint(e.clientX,e.clientY)||e.target,bh=!VIEW&&pt.closest&&pt.closest(".bxh");if(bh){editBox(bh.closest(".card").dataset.id);return}const sc=pt.closest&&pt.closest(".seqc");if(sc&&!VIEW&&!pt.closest(".cap,.sqx")){openEd(sc.dataset.id);return}if(!VIEW&&pt===vp)newNote(e.clientX,e.clientY)});
 addEventListener("paste",e=>{if(VIEW||ED&&/^(INPUT|SELECT)$/.test(e.target.tagName))return;
  e.preventDefault();
@@ -595,7 +593,7 @@ addEventListener("keydown",e=>{
  if(e.code==="Space"&&!ed){space=true;if(e.target===document.body)e.preventDefault()}
  if(cropEdit&&!ed&&(e.key==="Enter"||e.key==="Escape")){e.preventDefault();e.key==="Enter"?applyCrop():cancelCrop();return}
  if(!ed&&!VIEW&&(e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key.toLowerCase()==="z"||e.key.toLowerCase()==="y")){e.preventDefault();(e.key.toLowerCase()==="y"||e.shiftKey)?redo():undo();return}
- if(e.key==="Shift"&&!VIEW)document.body.classList.add("selmode");
+ if(e.key==="Shift"&&!VIEW&&!drag)document.body.classList.add("selmode");
  if(!ed&&sels.size&&(e.key==="Delete"||e.key==="Backspace")){e.preventDefault();delCards([...sels])}
  if(!ed&&sels.size&&(e.metaKey||e.ctrlKey)&&e.key==="d"){e.preventDefault();const nw=[];[...sels].forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr"){add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));nw.push(sel)}});sels.clear();nw.forEach(i=>sels.add(i));sel=nw[nw.length-1]||null;paintSel()}
  if(e.key==="Escape"){document.activeElement&&document.activeElement.blur();select(null);ctxHide()}
@@ -626,9 +624,8 @@ function pinchCheck(){const p=pinched(),st=$("#st");
  if(p&&!pinchMsg){pinchMsg=true;toast("The browser view is magnified, so the toolbars are cut off. Pinch out on the trackpad (or press Ctrl/⌘ and scroll down) to bring it back to normal.",[["OK",()=>{}]])}
  if(!p&&pinchMsg){pinchMsg=false;if(st.textContent.startsWith("The browser view is magnified"))st.hidden=true}}
 window.visualViewport&&visualViewport.addEventListener("resize",pinchCheck);
-/* snapping can be switched off from the guide (remembered in this browser); Alt does the opposite of the switch for a moment */
-let SNAP=true;try{SNAP=localStorage.getItem("mb-snap")!=="0"}catch(e){}
-const noSnap=e=>e.altKey===SNAP;
+/* snapping is on only while Shift is held during a move or resize */
+const noSnap=e=>!e.shiftKey;
 /* light snapping: while moving, the edges and centres of the moving card (or group) stick to those of the
    other cards when they are a few pixels apart; hold Alt to move freely */
 function snapMove(D,dx,dy,off){
@@ -725,7 +722,7 @@ const GRP=document.createElement("div");GRP.id="grp";GRP.innerHTML=PTS0().map(k=
 function PTS0(){return["nw","n","ne","e","se","s","sw","w"]}
 function grpItems(){return[...sels].map(id=>items.find(i=>i.id===id)).filter(i=>i&&i.type!=="arr"&&!i.hid&&!i.lk&&els.get(i.id))}
 function grpBox(list){let a=1e9,b=1e9,c=-1e9,d=-1e9;list.forEach(i=>{const e=els.get(i.id);a=Math.min(a,i.x);b=Math.min(b,i.y);c=Math.max(c,i.x+e.offsetWidth);d=Math.max(d,i.y+e.offsetHeight)});return{x:a,y:b,w:c-a,h:d-b}}
-function grpDraw(){const l=VIEW||ED?[]:grpItems();if(l.length<2){GRP.style.display="none";return}
+function grpDraw(){const l=VIEW?[]:grpItems().filter(i=>!(ED&&ED.id===i.id)&&!(cropEdit&&cropEdit.id===i.id));if(!l.length){GRP.style.display="none";return}
  const g=grpBox(l),k=1/view.s;GRP.style.cssText=`display:block;left:${g.x-6*k}px;top:${g.y-6*k}px;width:${g.w+12*k}px;height:${g.h+12*k}px;--k:${k}`}
 function grpResize(D,dx,dy){
  const E=D.e,L=E.includes("w"),Rt=E.includes("e"),T=E.includes("n"),B=E.includes("s"),g=D.bb;
@@ -814,16 +811,16 @@ function help(){
  let h=$("#help");if(h){h.hidden=!h.hidden;return}
  h=document.createElement("div");h.id="help";h.innerHTML=HELP;document.body.append(h);
  h.querySelector(".hx").onclick=()=>h.hidden=true;
- const st=h.querySelector("#snapT");st.checked=SNAP;st.onchange=()=>{SNAP=st.checked;try{localStorage.setItem("mb-snap",SNAP?"1":"0")}catch(e){}};h.addEventListener("pointerdown",e=>e.stopPropagation());
+h.addEventListener("pointerdown",e=>e.stopPropagation());
 }
 const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
 <h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Click a card to see its menu (crop, open the source, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
-<h4>Snapping</h4><p>While you move or resize a card, its edges and centre stick to those of the other cards, and a blue guide shows where. Hold Alt to do the opposite for a moment.</p><label class="hsw"><input type="checkbox" id="snapT"><span></span>Snap to other cards</label>
+<h4>Snapping</h4><p>Start moving or resizing a card, then hold Shift: its edges and centre stick to those of the other cards, and a blue guide shows where. Let go of Shift to move freely again.</p>
 <h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip in the block bar (between the play button and the timeline), or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
 <h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar above the timeline when the soundtrack is selected. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
 <h4>Resizing</h4><p>Drag any side or corner of a card. With several cards selected, a dashed frame appears around them: its handles resize the whole group as if it were one card.</p>
-<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the moodboard.html inside it works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
+<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the .html file inside it (it has the same name as the folder) works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
 <h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
 <h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
 <h4>Moving cards</h4><p>While you move a card, its edges and centre snap to those of nearby cards (red guide lines). Hold Alt to move freely.</p>
@@ -1425,11 +1422,29 @@ async function loadItems(list,dir){
 }
 const readB=async d=>{const t=await(await(await d.getFileHandle("board.js")).getFile()).text();return JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1))};
 /* writes the current program into the board folder, so every board opens with the newest version */
+/* the program copy takes the folder's name, so it is clear which board it opens */
+const prgName=()=>((PD&&PD.name||"Moodboard").replace(/[\\/:*?"<>|]+/g,"_").trim()||"Moodboard")+".html";
+function readme(nm){return `MOODBOARD
+
+To open this board, double-click "${nm}".
+
+Use Chrome or Edge: they keep saving every change into this folder.
+Other browsers can show the board but cannot save it.
+${WEBURL?"Online version: "+WEBURL+" (press Open and choose this folder).\n":""}
+What is in this folder:
+  ${nm}   the program
+  board.js   the board (positions, notes, boxes, arrows, sequences)
+  media/     the files placed on the board
+Keep them together and do not rename board.js or the media folder.
+`}
 async function writeProgram(){
  if(!PD||PRG)return;
  const c=new DOMParser().parseFromString(SRC0,"text/html");
  if(!c.querySelector('script[src="board.js"]')){const sc=c.querySelector("script:not([src])"),bs=c.createElement("script");bs.src="board.js";sc.before(bs)}
- await wr(PD,"moodboard.html","<!DOCTYPE html>\n"+c.documentElement.outerHTML);PRG=true;
+ const nm=prgName();await wr(PD,nm,"<!DOCTYPE html>\n"+c.documentElement.outerHTML);PRG=true;
+ await wr(PD,"README.txt",readme(nm)).catch(()=>{});
+ /* remove older copies of the program left in the folder (the old moodboard.html, or a copy named after the folder's previous name) */
+ try{for await(const[n,h]of PD.entries()){if(h.kind!=="file"||n===nm||!/\.html?$/i.test(n))continue;const f=await h.getFile();if(f.size>50000&&(await f.text()).includes("How Moodboard works"))await PD.removeEntry(n)}}catch(e){}
 }
 let pkT=0,pkBusy=false,pkAgain=false,pkLast="";
 function pkStat(t,c){const b=$("#sv");b.textContent=t;b.className=c||""}
@@ -1474,7 +1489,7 @@ async function openBoard(){
  if(!B){const subs=await findBoards(d);
   if(subs.length===1){d=subs[0]}
   else if(subs.length>1){const n=prompt("This folder contains several boards. Which one do you want to open?\n\n"+subs.map((h,i)=>(i+1)+". "+h.name).join("\n")+"\n\nType its number:","1");const k=parseInt(n);if(!(k>=1&&k<=subs.length))return;d=subs[k-1]}
-  else{toast(d.name==="media"?"That is the media folder: choose the board folder that contains it (the one with board.js and moodboard.html).":"No board in “"+d.name+"”: choose the folder that contains board.js and moodboard.html.");return}
+  else{toast(d.name==="media"?"That is the media folder: choose the board folder that contains it (the one with board.js and the .html file named like the folder).":"No board in “"+d.name+"”: choose the folder that contains board.js and the .html file named like it.");return}
   try{B=await readB(d)}catch(e){toast("The board in “"+d.name+"” can't be read: "+e.message);return}}
  if(!PD&&!PID&&items.length&&!confirm("The current board isn't saved. Open the other board anyway? (The current one stays recoverable the next time you open the program.)"))return;
  await loadItems(B.items.map(fromO),d);
