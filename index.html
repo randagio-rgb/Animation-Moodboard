@@ -237,7 +237,7 @@ body.sqmode #sv{display:none}
 /* focus mode (editing a sequence) and freeze (read only) each tint the board */
 #vp{transition:background-color .25s}
 body.focus #vp{background-color:#fbefc8}
-body.frozen #vp{background-color:#d7edf0}
+#fzw{position:absolute;inset:0;pointer-events:none;background-color:#d7edf0;background-image:radial-gradient(circle,var(--dot) 1.3px,transparent 1.6px);background-size:24px 24px;clip-path:circle(0px at 100% 0px);visibility:hidden}
 #help{position:fixed;right:16px;bottom:72px;top:76px;width:min(440px,calc(100vw - 32px));z-index:20;background:#fff;border:1.5px solid var(--blue);border-radius:20px;box-shadow:var(--sh);display:flex;flex-direction:column;color:var(--ink)}
 #help[hidden]{display:none}
 #help .hh{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1.5px solid var(--line)}
@@ -359,7 +359,7 @@ body.frozen #unf svg{animation:shut .6s .15s ease-out}
 <div id="gx" class="gl" hidden></div><div id="gy" class="gl" hidden></div>
 <div id="ctx" class="tb" hidden></div>
 <div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Ctrl/⌘+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
-<div id="vp"><div id="world"></div></div>
+<div id="vp"><div id="fzw"></div><div id="world"></div></div>
 <script>
 const $=s=>document.querySelector(s),vp=$("#vp"),world=$("#world"),els=new Map(),files=new Map();
 let items=[],view={x:0,y:0,s:1},Z=0,sel=null,sels=new Set(),hist=[],hi=-1,ht=0,hp=false,cropEdit=null,mouse={x:innerWidth/2,y:innerHeight/2},drag=null,tm,space=false,dn={};
@@ -404,7 +404,7 @@ function restore(st){
 function undo(){if(cropEdit)cancelCrop();commit();if(hi<=0)return;hi--;restore(hist[hi])}
 function redo(){if(cropEdit)cancelCrop();commit();if(hi>=hist.length-1)return;hi++;restore(hist[hi])}
 
-function apply(){ctxPlace();world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`;vp.style.backgroundSize=`${24*view.s}px ${24*view.s}px`;vp.style.backgroundPosition=`${view.x}px ${view.y}px`;$("#z").textContent=Math.round(view.s*100)+"%";save()}
+function apply(){ctxPlace();world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`;vp.style.backgroundSize=`${24*view.s}px ${24*view.s}px`;vp.style.backgroundPosition=`${view.x}px ${view.y}px`;{const f=$("#fzw");f.style.backgroundPosition=vp.style.backgroundPosition;f.style.backgroundSize=vp.style.backgroundSize}$("#z").textContent=Math.round(view.s*100)+"%";save()}
 function zoomAt(cx,cy,f){const s=Math.min(4,Math.max(.03,view.s*f)),k=s/view.s;view.x=cx-(cx-view.x)*k;view.y=cy-(cy-view.y)*k;view.s=s;apply()}
 function empty(){$("#empty").style.display=items.some(i=>!i.hid&&i.type!=="arr")?"none":"grid"}
 function fit(){if(!items.length){view={x:0,y:0,s:1};return apply()}
@@ -762,9 +762,16 @@ function drawArrows(){
 }
 requestAnimationFrame(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}grpDraw();requestAnimationFrame(arLoop)});
 /* Freeze: the whole board becomes read only (pan and zoom still work) */
+/* the new background colour grows out of the lock in a circle, and shrinks back into it on unlock */
+function fzWipe(on,from){const w=$("#fzw"),b=from||$(on?"#fz":"#unf"),q=b&&b.offsetParent!==null?b.getBoundingClientRect():{left:innerWidth-40,top:20,width:24,height:24},
+ x=q.left+q.width/2,y=q.top+q.height/2,R=Math.ceil(Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)))+2,
+ A=`circle(0px at ${x}px ${y}px)`,Z=`circle(${R}px at ${x}px ${y}px)`;
+ w.style.transition="none";w.style.visibility="visible";w.style.clipPath=on?A:Z;void w.offsetWidth;
+ w.style.transition=`clip-path ${on?.7:.55}s cubic-bezier(.65,0,.35,1)`;w.style.clipPath=on?Z:A;
+ clearTimeout(w._t);if(!on)w._t=setTimeout(()=>{if(!VIEW)w.style.visibility="hidden"},600)}
 function freeze(on){
  if(on){if(ED)closeEd();if(cropEdit)cancelCrop();if(BXD)boxMode(false);if(ARM)arrMode(false);const a=document.activeElement;a&&a.blur&&a.blur();select(null);ctxHide();const h=$("#help");h&&(h.hidden=true)}
- VIEW=on;document.body.classList.toggle("frozen",on);document.body.classList.toggle("ro",on);
+ const fb=on?$("#fz"):$("#unf");fzWipe(on,fb);VIEW=on;document.body.classList.toggle("frozen",on);document.body.classList.toggle("ro",on);
  const keep={...view};items.forEach(mount);view=keep;apply();
  $("#unf").innerHTML=IC.lock+"<span>Unlock</span>";
 }
@@ -1168,6 +1175,9 @@ function camAnim(){world.classList.add("anim");vp.classList.add("anim");clearTim
 /* editing the sequence directly inside its card */
 const eq=s=>ED.c.querySelector(s),selB=()=>ED&&ED.it.blocks.find(x=>x.id===ED.sel);
 function edTop(){if(!ED)return;const c=els.get(ED.id);ED.it.z=++Z;if(c)c.style.zIndex=ED.it.z}
+/* frame the whole open card (preview, timeline and soundtrack), never larger than 100% */
+function edCenter(){if(!ED||!ED.c)return;const it=ED.it,w=ED.c.offsetWidth,h=ED.c.offsetHeight,T=84,B=84,
+ s=Math.min(1,(innerWidth-48)/w,(innerHeight-T-B)/h);view.s=s;view.x=Math.round(innerWidth/2-(it.x+w/2)*s);view.y=Math.round(T+(innerHeight-T-B-h*s)/2-it.y*s);apply()}
 function openEd(id){
  if(ED){if(ED.id===id)return;closeEd()}
  const it=items.find(i=>i.id===id);if(!it||it.type!=="seq")return;if(cropEdit)cancelCrop();
@@ -1178,7 +1188,7 @@ function openEd(id){
  edFps();$("#qfmt").value=it.fmt||"16/9";$("#qpl").textContent="▶";
  const c0=els.get(id),w0=c0?c0.offsetWidth:0,h0=c0?c0.offsetHeight:0;
  select(id);mount(it);if(w0)morph(ED.c,w0,h0);camAnim();
- const h=ED.c.offsetHeight;view.s=1;view.x=Math.round(innerWidth/2-(it.x+EWc()/2));view.y=Math.round(h+150>innerHeight?80-it.y:(innerHeight-h)/2+20-it.y);apply();
+ edCenter();
 }
 function closeEd(){
  if(!ED)return;audStop();document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
