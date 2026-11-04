@@ -258,7 +258,7 @@ body.frozen #vp{background-color:#d7edf0}
 #arl .adot{fill:#fff;stroke:var(--blue)}
 body.armode #vp,body.armode #vp *{cursor:crosshair!important}
 body.frozen #arl .ahit{pointer-events:none}
-body.frozen .tb,body.frozen #ctx,body.frozen #help,body.frozen .gl{display:none!important}
+body.frozen #ctx,body.frozen #help,body.frozen .gl{display:none!important}
 body.frozen .rz,body.frozen .eg,body.frozen .sqb,body.frozen .yt .play,body.frozen .vgrip,body.frozen .vstop{display:none!important}
 #unf{position:fixed;top:16px;right:16px;z-index:12;display:none;align-items:center;gap:8px;padding:8px 18px 8px 14px;border:1.5px solid var(--blue);border-radius:var(--pill);background:var(--blue);color:#fff;font:inherit;font-weight:600;cursor:pointer;box-shadow:var(--sh)}
 #unf svg{width:16px;height:16px}
@@ -308,6 +308,43 @@ body.offline #off{display:inline-block}
 .eau{margin-top:8px!important}
 .eal{left:10px!important;top:5px!important;padding:2px 10px!important}
 .sqi{padding:10px 16px 0}
+#world.anim{transition:transform .44s cubic-bezier(.65,0,.35,1)}
+#vp.anim{transition:background-position .44s cubic-bezier(.65,0,.35,1),background-size .44s cubic-bezier(.65,0,.35,1),background-color .25s}
+.tb{transition:opacity .3s ease,transform .42s cubic-bezier(.34,1.56,.64,1),visibility 0s}
+body.frozen .tb{opacity:0;transform:scale(.9);visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .2s ease,visibility 0s .2s}
+body.frozen #unf{animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+body.frozen #unf svg{animation:shut .6s .15s ease-out}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:none}}
+@keyframes shut{0%{transform:translateY(-3px) rotate(-14deg)}55%{transform:translateY(1px) rotate(4deg)}100%{transform:none}}
+#fz:active svg,#unf:active svg{transform:scale(.85)}
+/* timeline: big, rounded and easy to read */
+.erc{height:30px}
+.etr{height:156px;margin-top:4px;overflow:visible;border-radius:0}
+.bfr{height:30px;border-radius:8px}
+.blk{background:transparent!important;box-shadow:none!important;overflow:visible}
+.blk .btl{position:absolute;left:3px;right:3px;top:38px;bottom:2px;border-radius:18px;background:#eef7f8;box-shadow:inset 0 0 0 2px rgba(9,78,153,.1);overflow:hidden;padding:8px 8px 6px}
+.blk.alt .btl{background:#fff6d6}
+.blk.on .btl{box-shadow:inset 0 0 0 3px var(--acc)}
+.blk.ph .btl{background:repeating-linear-gradient(45deg,#fff 0 9px,rgba(251,204,10,.4) 9px 18px)}
+.blk.dph .btl{box-shadow:inset 0 0 0 4px var(--yellow);background:rgba(251,204,10,.35)}
+.blk canvas{height:70px;margin:0;border-radius:12px}
+.blk span{padding:5px 2px 0;font-size:12px;line-height:1.35}
+.blk .bf{margin-top:2px;color:var(--mut)}
+.blk .bf b{font-size:17px;font-weight:800;color:var(--ink);margin-right:1px}
+.blk.cur .bf b{color:var(--red)}
+.blk .bn{font-size:12px}
+.bh{right:-3px;top:64px;bottom:34px;width:10px;border-radius:999px;background:rgba(9,78,153,.22);z-index:2}
+.bh:hover,.blk.on .bh{background:var(--acc)}
+.etail{background:transparent}
+.etm{top:84px;left:16px;font-size:14px}
+.ephc{top:34px;height:30px;border-radius:7px}
+.eph{width:3px;margin-left:-1.5px;z-index:3}
+.eph::before{content:"";position:absolute;top:-14px;left:-6px;width:15px;height:15px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px #fff}
+.eins{top:34px;width:8px;margin-left:-4px}
+.eau{height:60px;margin-top:12px!important;border-radius:18px}
+.eau canvas{height:50px;margin-top:5px}
+.eah{top:21px;left:16px;font-size:13px}
+.eal{font-size:12px!important;top:6px!important;left:12px!important}
 </style>
 </head>
 <body>
@@ -534,7 +571,7 @@ vp.addEventListener("pointermove",e=>{
  if(drag.m==="mvg"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);drag.its.forEach(({it,ox,oy})=>{it.x=ox+sn.x;it.y=oy+sn.y;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
  const it=drag.it,c=els.get(it.id);
  if(drag.m==="mv"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);it.x=drag.ox+sn.x;it.y=drag.oy+sn.y;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
- else resizeBy(drag,it,c,dx/view.s,dy/view.s);
+ else{const q=snapRz(drag,it,dx/view.s,dy/view.s,e.altKey);resizeBy(drag,it,c,q[0],q[1])}
 });
 const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,it=items.find(i=>i.id===m.closest(".card").dataset.id);dn={};if(it){if(m.classList.contains("sd"))m.closest(".card").classList.toggle("showsrc");else if(m.classList.contains("so"))openSrc(it);else if(m.classList.contains("cn"))copyName(it,m);else if(m.classList.contains("miss"))relink(it);else if(m.classList.contains("crbtn"))startCrop(it);else if(m.classList.contains("sqpl"))seqPlay(it.id);else if(m.classList.contains("sqed"))openEd(it.id);else if(m.classList.contains("apb"))audToggle(it);else if(m.classList.contains("awv"))audSeekAt(it,m,e.clientX);else if(m.classList.contains("vstop"))stopInline(it);else if(!m.closest(".playing"))playInline(it)}}
  $("#gx").hidden=$("#gy").hidden=true;
@@ -663,7 +700,7 @@ function edAudio(){
  if(!r){el.className="eau gone"+(ED.selA?" on":"");el.innerHTML='<span class="eah">Soundtrack removed from the board · drop an audio card here to replace it</span>';return}
  el.className="eau"+(ED.selA?" on":"");let cv=el.querySelector("canvas");if(!cv){el.innerHTML='<canvas></canvas><span class="eal"></span>';cv=el.querySelector("canvas")}
  const o=peaksOf(r),k=DPR(),cw=Math.min(W,16000/k),sec0=it.au.off,sec1=sec0+cw/(P*it.fps);
- cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(38*k);wave(cv,o,sec0,sec1,"#094E99","#094E99");
+ cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(50*k);wave(cv,o,sec0,sec1,"#094E99","#094E99");
  const f=o.ok&&sec0+ftot(it)/it.fps>o.dur?" · ends before the sequence":"";
  el.querySelector(".eal").textContent="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f;
  el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;if(sels.size){sels.clear();sel=null;paintSel()}eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
@@ -745,6 +782,16 @@ function delCards(ids){
 /* a card kept only for a sequence: off the board, still in the sequence (and in the board folder) */
 function hideCard(id){const it=items.find(i=>i.id===id);if(!it)return;it.hid=true;items=items.filter(a=>!(a.type==="arr"&&(a.a===id||a.b===id)));
  const e=els.get(id);e&&e.remove();els.delete(id);sels.delete(id);if(sel===id)sel=null;if(CX===id)ctxHide();arDirty=1;empty();dirty();save()}
+/* snapping while resizing: the edge being dragged sticks to the edges and centres of the other cards (Alt: free) */
+function snapRz(D,it,dx,dy,off){
+ const gx=$("#gx"),gy=$("#gy");gx.hidden=gy.hidden=true;if(off)return[dx,dy];
+ const E=D.eg||"se",L=E.includes("w"),Rt=E.includes("e"),T=E.includes("n"),B=E.includes("s");
+ if(!D.st){D.st=[];items.forEach(i=>{if(i.id===it.id)return;const e=els.get(i.id);if(!e)return;const w=e.offsetWidth,h=e.offsetHeight;D.st.push({xs:[i.x,i.x+w/2,i.x+w],ys:[i.y,i.y+h/2,i.y+h]})})}
+ const lim=7/view.s,W0=ED&&ED.id===it.id?D.oew:D.ow,H0=it.type==="box"?D.oh:D.oH,
+  best=(v,k)=>{let b=null;D.st.forEach(t=>t[k].forEach(q=>{const d=q-v;if(Math.abs(d)<lim&&(!b||Math.abs(d)<Math.abs(b.d)))b={d,q}}));return b};
+ if(L||Rt){const b=best(L?D.ox+dx:D.ox+W0+dx,"xs");if(b){dx+=b.d;gx.hidden=false;gx.style.left=(b.q*view.s+view.x)+"px"}}
+ if((T||B)&&(it.type==="box"||it.type==="txt"||!(L||Rt))){const b=best(T?D.oy+dy:D.oy+H0+dy,"ys");if(b){dy+=b.d;gy.hidden=false;gy.style.top=(b.q*view.s+view.y)+"px"}}
+ return[dx,dy]}
 /* Purge: forget the undo history and delete from the board folder the files no longer used */
 async function purge(){
  const saved=!!PD;
@@ -1112,6 +1159,12 @@ function dropIn(D){
 /* while a sequence is open, picking a card on the board deselects the block (or soundtrack) inside the sequence,
    and picking a block deselects the board cards: Delete and Ctrl/⌘+D always act on what is highlighted */
 function edUnsel(id){if(!ED||id===ED.id||(!ED.sel&&!ED.selA))return;ED.sel=null;ED.selA=false;ED.c&&ED.c.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));const a=ED.c&&eq(".eau");a&&a.classList.remove("on");edPanel()}
+/* smooth transitions: the card morphs from its old size to the new one while the board camera glides */
+const EASE="cubic-bezier(.65,0,.35,1)";let caT=0;
+function morph(el,w0,h0){const w1=el.offsetWidth,h1=el.offsetHeight;if(!w1||!h1)return;
+ el.style.transition="none";el.style.transformOrigin="0 0";el.style.transform=`scale(${w0/w1},${h0/h1})`;void el.offsetWidth;
+ el.style.transition=`transform .44s ${EASE}`;el.style.transform="";setTimeout(()=>{el.style.transition="";el.style.transformOrigin=""},480)}
+function camAnim(){world.classList.add("anim");vp.classList.add("anim");clearTimeout(caT);caT=setTimeout(()=>{world.classList.remove("anim");vp.classList.remove("anim")},480)}
 /* editing the sequence directly inside its card */
 const eq=s=>ED.c.querySelector(s),selB=()=>ED&&ED.it.blocks.find(x=>x.id===ED.sel);
 function edTop(){if(!ED)return;const c=els.get(ED.id);ED.it.z=++Z;if(c)c.style.zIndex=ED.it.z}
@@ -1123,20 +1176,21 @@ function openEd(id){
  document.body.classList.add("sqmode");document.body.classList.add("focus");$("#bt").textContent="Sequence";HM=$("#hint").textContent;
  $("#hint").textContent=VIEW?"Space play · ← → one frame at a time · Esc or OK to close":"Drag board cards into the timeline to add them, or onto a striped block to relink it · scroll over the timeline to zoom · Alt+← → shorten or lengthen the block · F fill/fit · Space play · ← → frame · Esc or OK to close";
  edFps();$("#qfmt").value=it.fmt||"16/9";$("#qpl").textContent="▶";
- select(id);mount(it);
+ const c0=els.get(id),w0=c0?c0.offsetWidth:0,h0=c0?c0.offsetHeight:0;
+ select(id);mount(it);if(w0)morph(ED.c,w0,h0);camAnim();
  const h=ED.c.offsetHeight;view.s=1;view.x=Math.round(innerWidth/2-(it.x+EWc()/2));view.y=Math.round(h+150>innerHeight?80-it.y:(innerHeight-h)/2+20-it.y);apply();
 }
 function closeEd(){
  if(!ED)return;audStop();document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
  document.body.classList.remove("sqmode");showName();$("#hint").textContent=HM;
- const it=items.find(i=>i.id===id);if(it)mount(it);view=pv;apply();dirty();
+ const c0=els.get(id),w0=c0?c0.offsetWidth:0,h0=c0?c0.offsetHeight:0;
+ const it=items.find(i=>i.id===id);if(it){mount(it);const c1=els.get(id);if(c1&&w0)morph(c1,w0,h0)}camAnim();view=pv;apply();dirty();
 }
 function edBuild(c,it){
  ED.c=c;ED.it=it;c.classList.add("open");c.style.width=EWc()+"px";
  c.insertAdjacentHTML("beforeend",`<div class="sqg"><b>Sequence</b><span class="sqgi"></span><span style="flex:1"></span>${VIEW?"":"<span>drag here to move</span>"}</div>
 <div class="sqx"><div class="ev"><canvas class="ecv" title="Click to play / pause"></canvas></div><div class="en"></div>
 <div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eau"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div></div>`);
- capEl(c,it);
  const x=c.querySelector(".sqx");x.addEventListener("pointerdown",e=>e.stopPropagation());
  eq(".ecv").onclick=edPlay;
  const tl=eq(".etl");tl.addEventListener("wheel",e=>{
@@ -1191,18 +1245,18 @@ function edLayout(){
 function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-36;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
 function edRuler(){
  const it=ED.it,T=ftot(it)+tailN(),P=ED.ppf,W=Math.max(T*P,1),c=eq(".erc"),d=DPR();
- eq(".ein").style.width=W+"px";c.style.width=W+"px";c.width=Math.round(W*d);c.height=Math.round(22*d);
+ eq(".ein").style.width=W+"px";c.style.width=W+"px";c.width=Math.round(W*d);c.height=Math.round(30*d);
  const x=c.getContext("2d"),cs=getComputedStyle(document.documentElement),mut=cs.getPropertyValue("--mut").trim()||"#888";
- x.scale(d,d);x.strokeStyle=x.fillStyle=mut;x.font="10px system-ui,sans-serif";x.textBaseline="top";x.lineWidth=1;
+ x.scale(d,d);x.strokeStyle=x.fillStyle=mut;x.font="600 12px system-ui,sans-serif";x.textBaseline="top";x.lineWidth=1.5;
  let st=1;while(st*P<6)st*=st===1?5:2;
- x.globalAlpha=.45;for(let f=0;f<=T;f+=st){const X=Math.round(f*P)+.5;x.beginPath();x.moveTo(X,16);x.lineTo(X,22);x.stroke()}
- x.globalAlpha=1;let ls=1;while(ls*it.fps*P<34)ls*=2;
- for(let s=0;s*it.fps<=T+1e-6;s++){const X=Math.round(s*it.fps*P)+.5;x.beginPath();x.moveTo(X,s%ls?13:6);x.lineTo(X,22);x.stroke();if(s%ls===0)x.fillText(s+"s",X+3,1)}
+ x.globalAlpha=.4;for(let f=0;f<=T;f+=st){const X=Math.round(f*P)+.5;x.beginPath();x.moveTo(X,22);x.lineTo(X,30);x.stroke()}
+ x.globalAlpha=1;let ls=1;while(ls*it.fps*P<44)ls*=2;
+ for(let s=0;s*it.fps<=T+1e-6;s++){const X=Math.round(s*it.fps*P)+.5;x.beginPath();x.moveTo(X,s%ls?18:4);x.lineTo(X,30);x.stroke();if(s%ls===0)x.fillText(s+" s",X+5,2)}
 }
 function cellK(){let k=1;for(const q of [1,2,5,10,25,50,100,250]){k=q;if(q*ED.ppf>=4)break}return k}
 function strip(el,a,P,K){const fw=K*P,g=fw>=10?2:1;el.style.backgroundSize=fw+"px 100%";el.style.backgroundPosition=(-((a%K)*P))+"px 0";el.style.setProperty("--g",g+"px")}
 function edTrack(){
- const t=eq(".etr"),it=ED.it,h=44,tw=Math.round(h*R(it.fmt)),k=DPR(),P=ED.ppf,K=cellK();t.innerHTML="";
+ const t=eq(".etr"),it=ED.it,h=70,tw=Math.round(h*R(it.fmt)),k=DPR(),P=ED.ppf,K=cellK();t.innerHTML="";
  t.title=K>1?`Zoomed out: each cell is ${K} frames · scroll over the timeline to zoom in`:"";
  let a=0;
  it.blocks.forEach((b,bi)=>{
@@ -1212,8 +1266,8 @@ function edTrack(){
   d.title=(st?st+"\n":"")+n+" frames"+(b.note?"\n"+b.note:"")+(VIEW?"":ph?"\nDrop a board card here to relink it":"\nDrag to move · drag the right edge to change the duration"+(mdur(refOf(b))>0?" · Alt+drag to choose which part of the video plays":""));
   const cv=document.createElement("canvas");cv.width=tw*k;cv.height=h*k;cv.style.width=tw+"px";paint(cv.getContext("2d"),cv.width,cv.height,b);
   const f1=document.createElement("span"),f2=document.createElement("span");f1.className="bf";f2.className="bn";
-  f1.textContent=n+"f · "+sec(n/it.fps)+" s";f2.textContent=b.note||(ph?st:lbl(b));
-  d.append(cv,f1,f2);if(!VIEW)d.insertAdjacentHTML("beforeend",'<i class="bh"></i>');t.append(d)});
+  f1.innerHTML=`<b>${n}</b> frames · ${sec(n/it.fps)} s`;f2.textContent=b.note||(ph?st:lbl(b));
+  const tile=document.createElement("div");tile.className="btl";tile.append(cv,f1,f2);d.append(tile);if(!VIEW)d.insertAdjacentHTML("beforeend",'<i class="bh"></i>');t.append(d)});
  const tl=document.createElement("div"),n=tailN(),sp=document.createElement("div");tl.className="etail";tl.style.width=n*P+"px";sp.className="bfr";strip(sp,a,P,K);tl.append(sp);
  if(!it.blocks.length){const m=document.createElement("span");m.className="etm";m.textContent=VIEW?"Empty sequence":"Drag board cards here";tl.append(m)}
  t.append(tl);
