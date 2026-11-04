@@ -98,14 +98,14 @@ body.selmode .cap,body.selmode .nt,body.selmode .src{user-select:none}
 .seqc.open .del{display:none}
 .seqc.open .rz{opacity:1;width:22px;height:22px;right:-10px;bottom:-10px}
 body.dropping .card.sel{opacity:.4;transition:opacity .1s}
-.sqg{height:38px;display:flex;align-items:center;gap:10px;padding:0 18px;font-size:12px;color:var(--mut);cursor:grab;border-radius:var(--r) var(--r) 0 0;background:var(--soft)}
-.sqg b{color:var(--ink);font-weight:650;font-size:13px}
+.sqg{height:48px;display:flex;align-items:center;gap:14px;padding:0 24px;font-size:12.5px;color:var(--mut);cursor:grab;border-radius:var(--r) var(--r) 0 0;background:var(--soft)}
+.sqg b{color:var(--ink);font-weight:650;font-size:14px}
 .sqgi{font-variant-numeric:tabular-nums}
 .sqx{cursor:default;user-select:none}
 .sqx .ev{background:#000;margin:0 12px;border-radius:var(--rs);overflow:hidden;display:grid;place-items:center}
 .ecv{display:block;cursor:pointer}
-.sqx .en{min-height:26px;padding:6px 16px 0;font-size:13px;text-align:center}
-.etl{overflow-x:auto;overflow-y:hidden;padding:2px 12px 10px}
+.sqx .en{min-height:34px;padding:10px 24px 2px;font-size:13.5px;text-align:center}
+.etl{overflow-x:auto;overflow-y:hidden;padding:6px 18px 14px}
 .ein{position:relative;min-width:1px}
 .erc{display:block;height:22px;cursor:ew-resize}
 .etr{display:flex;height:104px;margin-top:3px;border-radius:var(--rs);overflow:hidden}
@@ -119,7 +119,7 @@ body.dropping .card.sel{opacity:.4;transition:opacity .1s}
 .etm{position:absolute;left:12px;top:46px;font-size:12px;color:var(--mut);white-space:nowrap}
 .ephc{position:absolute;top:25px;height:24px;background:var(--red);pointer-events:none;display:none;border-radius:2px}
 .blk canvas{display:block;height:44px;margin:5px 5px 0;border-radius:7px;background:#000}
-.blk span{display:block;padding:0 7px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk span{display:block;padding:0 9px;font-size:11px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blk .bf{margin-top:3px;font-variant-numeric:tabular-nums}
 .blk .bn{color:var(--mut)}
 .blk.ph{background:repeating-linear-gradient(45deg,#fff 0 7px,rgba(251,204,10,.38) 7px 14px)}
@@ -297,10 +297,21 @@ body.frozen #unf{display:flex}
 .eal{position:absolute;left:8px;top:4px;font-size:10.5px;color:var(--blue);background:rgba(255,255,255,.85);padding:1px 8px;border-radius:var(--pill);white-space:nowrap;pointer-events:none}
 #bar4 .avl{width:90px;padding:0}
 #bar4 .aof{width:70px}
+#off{display:none;background:var(--yellow)!important;color:var(--blue)!important;font-size:11px!important;font-weight:600;padding:3px 10px!important;margin:0 6px 0 -4px}
+body.offline #off{display:inline-block}
+.bxh{display:flex;align-items:center;gap:10px}
+.bxg{flex:none;display:grid;grid-template-columns:repeat(2,5px);gap:4px 5px;padding:10px 9px;border-radius:14px;background:var(--lb);border:3px solid var(--lo);cursor:grab;opacity:.9}
+.bxg i{width:5px;height:5px;border-radius:50%;background:var(--lt)}
+.bxg:hover{opacity:1}
+.sqx .ev{margin:4px 18px 0!important}
+.seqc.open .cap{padding:10px 24px 16px!important}
+.eau{margin-top:8px!important}
+.eal{left:10px!important;top:5px!important;padding:2px 10px!important}
+.sqi{padding:10px 16px 0}
 </style>
 </head>
 <body>
-<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
+<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="off" class="both" title="This is the offline copy of the program">Offline</button><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
 <div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qau" class="bq ed" title="Add a soundtrack from your computer (it is also added to the board as an audio card)">+ Audio</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
 <div id="bar4" class="tb"></div>
 <div id="bar3" class="tb"><button id="hp" class="both ib" title="How the program works, and keyboard shortcuts"></button><i class="both"></i><button id="zo" title="Zoom out">−</button><span id="z"></span><button id="zi" title="Zoom in">+</button><button id="fb" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
@@ -496,10 +507,10 @@ vp.addEventListener("pointerdown",e=>{
  if(c&&!pan&&!lkd){
   const id=c.dataset.id,eg=e.target.closest(".rz,.eg"),rz=!!eg;
   const bx=items.find(i=>i.id===id);
-  if(!rz&&bx&&bx.type==="box"&&!(sels.has(id)&&sels.size>1)){select(id);drag={m:"mvg",box:1,id,sx:e.clientX,sy:e.clientY,its:[bx,...inBox(bx)].map(it=>({it,ox:it.x,oy:it.y}))}}
+  if(!rz&&bx&&bx.type==="box"&&!(sels.has(id)&&sels.size>1)){select(id);edUnsel(id);drag={m:"mvg",box:1,id,sx:e.clientX,sy:e.clientY,its:[bx,...inBox(bx)].map(it=>({it,ox:it.x,oy:it.y}))}}
   else if(!rz&&sels.has(id)&&sels.size>1){
    drag={m:"mvg",id,sx:e.clientX,sy:e.clientY,its:[...sels].map(i=>items.find(o=>o.id===i)).filter(Boolean).map(it=>({it,ox:it.x,oy:it.y}))}}
-  else{select(id);const it=items.find(i=>i.id===id);
+  else{select(id);edUnsel(id);const it=items.find(i=>i.id===id);
    drag={m:rz?"rz":"mv",eg:eg?eg.dataset.e:"",oH:c.offsetHeight,it,sx:e.clientX,sy:e.clientY,ox:it.x,oy:it.y,ow:it.w,oh:it.bh,oew:it.ew||900,oppf:ED&&ED.ppf}}}
  else{if(!lkd)select(null);drag={m:"pan",sx:e.clientX,sy:e.clientY,ox:view.x,oy:view.y};vp.classList.add("pan")}
  ae&&ae.blur();
@@ -655,7 +666,7 @@ function edAudio(){
  cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(38*k);wave(cv,o,sec0,sec1,"#094E99","#094E99");
  const f=o.ok&&sec0+ftot(it)/it.fps>o.dur?" · ends before the sequence":"";
  el.querySelector(".eal").textContent="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f;
- el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
+ el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;if(sels.size){sels.clear();sel=null;paintSel()}eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
   if(!o.ok)return;el.setPointerCapture(e.pointerId);const x0=e.clientX,f0=it.au.off;
   el.onpointermove=ev=>{if(!ev.buttons)return;it.au.off=Math.round(Math.max(0,Math.min(o.dur-.05,f0-(ev.clientX-x0)/view.s/(P*it.fps)))*100)/100;edAudio();const q=$("#bar4 .aof");q&&(q.value=it.au.off)};
   el.onpointerup=el.onpointercancel=()=>{el.onpointermove=null;if(it.au.off!==f0){save();ED.lf=-1}}};
@@ -803,6 +814,10 @@ function ctxBuild(){
 }
 function ctxPlace(){
  if(!CX||ctx.hidden)return;const c=els.get(CX),ai=!c&&items.find(i=>i.id===CX&&i.type==="arr");if(!c&&!ai){ctxHide();return}
+ const bxl=c&&c.classList.contains("box")&&c.querySelector(".bxh");
+ if(bxl){const L=bxl.getBoundingClientRect(),w=ctx.offsetWidth,h=ctx.offsetHeight,lb=bxl.querySelector(".bxt").getBoundingClientRect();
+  let x=L.right+10,y=lb.top+(lb.height-h)/2;if(x+w>innerWidth-8){x=Math.max(8,L.left);y=lb.top-h-10}if(y<68)y=Math.max(68,lb.bottom+10);
+  ctx.style.left=x+"px";ctx.style.top=y+"px";return}
  let r;if(ai){const ga=geo(ai.a),gb=geo(ai.b);if(!ga||!gb){ctxHide();return}const p=anc(ga,ai.pa),q=anc(gb,ai.pb),x=((p.x+q.x)/2)*view.s+view.x,y=((p.y+q.y)/2)*view.s+view.y;r={left:x-30,top:y-6,bottom:y+6}}else r=c.getBoundingClientRect();
  const w=ctx.offsetWidth,h=ctx.offsetHeight;
  let y=r.top-h-10;if(y<68)y=Math.max(68,Math.min(r.bottom+10,innerHeight-h-70));
@@ -845,7 +860,7 @@ function resizeBy(D,it,c,dx,dy){
 }
 /* boxes: titled areas drawn behind cards */
 function boxCard(c,it){
- const h=document.createElement("div");h.className="bxh";const t=document.createElement("div");t.className="bxt";t.dataset.ph=VIEW?"":"Title";t.textContent=it.title||"";
+ const h=document.createElement("div");h.className="bxh";if(!VIEW)h.insertAdjacentHTML("beforeend",'<span class="bxg" title="Drag to move the box and the cards inside it"><i></i><i></i><i></i><i></i><i></i><i></i></span>');const t=document.createElement("div");t.className="bxt";t.dataset.ph=VIEW?"":"Title";t.textContent=it.title||"";
  h.append(t);c.append(h);if(VIEW)return;
  h.title="Drag to move the box and the cards inside it · double-click to edit the title";
  const done=()=>{if(!t.isContentEditable)return;t.contentEditable="false";it.title=t.textContent.trim();t.textContent=it.title;save()};
@@ -876,9 +891,14 @@ function ytCard(c,it){
  b.innerHTML='<div class="play" title="'+(WEB?"Play the video here":"Watch the video in a small window")+'">'+IC.play+'</div>';
  b.prepend(im);c.append(b);capEl(c,it);
 }
+/* the program opened as a file (the copy inside a board folder, or a downloaded moodboard.html) is the offline version */
+let WEBURL="";
+function offInfo(){const u=WEBURL||(BD&&BD.web)||"";
+ toast("You are using the offline copy of the program saved in this folder. Everything works and saves as usual, but it may be an older version, and YouTube and Vimeo open in a small window instead of playing in the card."+(u?" Open the online version, then use Open to continue on this board.":""),u?[["Open the online version",()=>window.open(u,"_blank","noopener")],["OK",()=>{}]]:[["OK",()=>{}]])}
 /* inline player for YouTube and Vimeo: works when the program is opened from a web address (https),
    because both services refuse to play inside a page opened as a file */
 const WEB=/^https?:$/.test(location.protocol),PLAYING=new Set();
+WEBURL=WEB?location.origin+location.pathname:(window.BOARD&&window.BOARD.web)||"";if(!WEB)document.body.classList.add("offline");
 function playInline(it){
  const vid=it.type==="emb"&&/video\/(\d+)/.exec(it.url||"");
  if(!WEB){window.open(it.type==="yt"?"https://www.youtube.com/watch?v="+it.yt:vid?"https://vimeo.com/"+vid[1]:it.url,"yt"+it.id,"popup,width=720,height=440");return}
@@ -1089,6 +1109,9 @@ function dropIn(D){
  dirty();
 }
 
+/* while a sequence is open, picking a card on the board deselects the block (or soundtrack) inside the sequence,
+   and picking a block deselects the board cards: Delete and Ctrl/⌘+D always act on what is highlighted */
+function edUnsel(id){if(!ED||id===ED.id||(!ED.sel&&!ED.selA))return;ED.sel=null;ED.selA=false;ED.c&&ED.c.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));const a=ED.c&&eq(".eau");a&&a.classList.remove("on");edPanel()}
 /* editing the sequence directly inside its card */
 const eq=s=>ED.c.querySelector(s),selB=()=>ED&&ED.it.blocks.find(x=>x.id===ED.sel);
 function edTop(){if(!ED)return;const c=els.get(ED.id);ED.it.z=++Z;if(c)c.style.zIndex=ED.it.z}
@@ -1125,7 +1148,7 @@ function edBuild(c,it){
  tr.onpointerdown=e=>{
   const d=e.target.closest(".blk");if(!d||!ED)return;e.preventDefault();
   const bl=ED.it.blocks,b=bl.find(q=>q.id===d.dataset.b);if(!b)return;
-  ED.sel=b.id;ED.selA=false;eq(".eau").classList.remove("on");tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
+  ED.sel=b.id;ED.selA=false;if(sels.size){sels.clear();sel=null;paintSel()}eq(".eau").classList.remove("on");tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
   if(VIEW){edSeekB(b);return}
   tr.setPointerCapture(e.pointerId);
   let a=0;for(const q of bl){if(q===b)break;a+=fr(ED.it,q)}
@@ -1148,16 +1171,16 @@ function edBuild(c,it){
 function edFps(){const s=$("#qfps"),L=[12,24,25,30,60],f=ED.it.fps,all=L.includes(f)?L:[...L,f].sort((a,b)=>a-b);
  s.innerHTML=all.map(v=>`<option value="${v}">${sec(v)}</option>`).join("")+'<option value="x">Other…</option>';s.value=String(f)}
 function edResize(p){if(!ED||!ED.c)return;eq(".ev").style.height=EHc()+"px";edSize();if(p)ED.ppf=p;edLayout()}
-function edSize(){eq(".ev").style.height=EHc()+"px";const cv=eq(".ecv"),r=R(ED.it.fmt),aw=EWc()-24,ah=EHc()-24;let w=aw,h=w/r;if(h>ah){h=ah;w=h*r}
+function edSize(){eq(".ev").style.height=EHc()+"px";const cv=eq(".ecv"),r=R(ED.it.fmt),aw=EWc()-60,ah=EHc()-24;let w=aw,h=w/r;if(h>ah){h=ah;w=h*r}
  cv.style.width=w+"px";cv.style.height=h+"px";cv.width=Math.round(w*DPR());cv.height=Math.round(h*DPR());ED.lf=-1}
-function fitPPF(){const T=Math.max(ftot(ED.it),1);return Math.min(40,Math.max(.5,(EWc()-24)/T))}
+function fitPPF(){const T=Math.max(ftot(ED.it),1);return Math.min(40,Math.max(.5,(EWc()-36)/T))}
 function edZoomAt(cx,k){if(!ED)return;const tl=eq(".etl"),rc=tl.getBoundingClientRect(),off=(cx-rc.left)/view.s,fp=(off+tl.scrollLeft-12)/ED.ppf;
  ED.ppf=Math.min(80,Math.max(.5,ED.ppf*k));edLayout();tl.scrollLeft=Math.max(0,fp*ED.ppf+12-off)}
 function edZoom(k){if(!ED)return;const rc=eq(".etl").getBoundingClientRect();edZoomAt(rc.left+rc.width/2,k)}
 function edFit(){if(!ED)return;ED.ppf=fitPPF();edLayout();eq(".etl").scrollLeft=0}
 function edReveal(b){if(!b)return;const tl=eq(".etl");let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED.it,q)}const x=a*ED.ppf,w=fr(ED.it,b)*ED.ppf;
  if(x<tl.scrollLeft||x+w>tl.scrollLeft+tl.clientWidth-24)tl.scrollLeft=Math.max(0,x+w/2-tl.clientWidth/2)}
-function edAfterAdd(){const T=ftot(ED.it);if(T*ED.ppf>EWc()-24){const f=fitPPF();if(f>=3)ED.ppf=f}else if(ED.it.blocks.length===1)ED.ppf=fitPPF();edAll();edReveal(selB())}
+function edAfterAdd(){const T=ftot(ED.it);if(T*ED.ppf>EWc()-36){const f=fitPPF();if(f>=3)ED.ppf=f}else if(ED.it.blocks.length===1)ED.ppf=fitPPF();edAll();edReveal(selB())}
 function edAll(){edLayout();edPanel()}
 function edLayout(){
  const it=ED.it,T=ftot(it);ED.ppf=Math.min(ED.ppf,30000/(Math.max(T,1)*DPR()));
@@ -1165,7 +1188,7 @@ function edLayout(){
  const fl=(FMT.find(q=>q[0]===it.fmt)||[0,it.fmt])[1];
  eq(".sqgi").textContent=`${sec(it.fps)} fps · ${fl} · ${sec(T/it.fps)} s · ${T} frames`;
  edRuler();edTrack();edAudio();ED.lf=-1}
-function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-24;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
+function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-36;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
 function edRuler(){
  const it=ED.it,T=ftot(it)+tailN(),P=ED.ppf,W=Math.max(T*P,1),c=eq(".erc"),d=DPR();
  eq(".ein").style.width=W+"px";c.style.width=W+"px";c.width=Math.round(W*d);c.height=Math.round(22*d);
@@ -1293,9 +1316,9 @@ function edKey(e){
  else if(k==="Escape"||(k==="Enter"&&!mod)){e.preventDefault();closeEd()}
  else if(VIEW)return;
  else if(mod&&(kl==="z"||kl==="y")){e.preventDefault();(kl==="y"||e.shiftKey)?redo():undo();edSync()}
- else if(mod&&kl==="d"){e.preventDefault();dupB()}
+ else if(mod&&kl==="d"){e.preventDefault();if(selB())dupB();else{const l=[...sels].filter(id=>id!==ED.id);if(l.length){const nw=[];l.forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr")nw.push(add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id)).id)});sels.clear();nw.forEach(i=>sels.add(i));paintSel()}}}
  else if(kl==="f"&&!mod&&!e.altKey){e.preventDefault();const b=selB();if(b&&!isPh(b))setFit(b,!b.fit)}
- else if(k==="Delete"||k==="Backspace"){e.preventDefault();delB()}
+ else if(k==="Delete"||k==="Backspace"){e.preventDefault();if(selB())delB();else if(ED.selA&&ED.it.au){audStop();delete ED.it.au;ED.selA=false;edAll();save()}else{const l=[...sels].filter(id=>id!==ED.id);if(l.length)delCards(l)}}
 }
 /* toolbar controls in sequence mode */
 document.querySelectorAll(".tb>*").forEach(x=>{if(x.tagName!=="B"&&x.tagName!=="INPUT"&&!x.classList.contains("bq")&&!x.classList.contains("both"))x.classList.add("bm")});
@@ -1423,7 +1446,7 @@ async function savePkg(force){
     if(i.name)o.name=i.name}
    out.push(o)}
   const txt=JSON.stringify({items:out,view,BNAME});
-  if(force||txt!==pkLast){const t=Date.now();await wr(PD,"board.js","window.BOARD="+JSON.stringify({v:2,pid:PID,name:BNAME,t,view,items:out})+";");pkLast=txt;BT=t;put("pkg:"+PID,{base:BT,items,view})}
+  if(force||txt!==pkLast){const t=Date.now();await wr(PD,"board.js","window.BOARD="+JSON.stringify({v:2,pid:PID,name:BNAME,t,web:WEBURL,view,items:out})+";");pkLast=txt;BT=t;put("pkg:"+PID,{base:BT,items,view})}
   await pkClean(md);pkStat("Saved","ok");
  }catch(e){pkStat("Not saved · retry","err")}
  pkBusy=false;if(pkAgain){pkAgain=false;savePkg()}
@@ -1439,7 +1462,7 @@ async function pkClean(md){
 addEventListener("focus",()=>{if(PD)pkClean()});
 setInterval(()=>{if(PD&&!pkBusy)pkClean()},30000);
 addEventListener("beforeunload",e=>{if((PD&&(pkBusy||$("#sv").textContent==="Saving…"))||(!PD&&items.length)){e.preventDefault();e.returnValue=""}});
-$("#pg").onclick=purge;$("#fz").onclick=()=>freeze(true);$("#unf").onclick=()=>freeze(false);$("#hp").onclick=help;
+$("#pg").onclick=purge;$("#off").onclick=offInfo;$("#fz").onclick=()=>freeze(true);$("#unf").onclick=()=>freeze(false);$("#hp").onclick=help;
 $("#sv").onclick=()=>{if(PD)savePkg(true);else if(PID)pkgConnect();else saveNew()};
 /* toolbar */
 $("#bf").onclick=pickFiles;
