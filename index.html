@@ -130,7 +130,7 @@ body.dropping .card.sel{opacity:.4;transition:opacity .1s}
 .bh:hover,.blk.on .bh{background:var(--acc)}
 .eph{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--red);pointer-events:none}
 .eins{position:absolute;top:25px;bottom:0;width:5px;margin-left:-2.5px;border-radius:var(--pill);background:var(--acc);pointer-events:none;display:none}
-#bar4{bottom:16px;right:16px;max-width:calc(100vw - 530px);flex-wrap:wrap;justify-content:flex-end;border-radius:26px;gap:4px 6px;padding:6px 8px;font-size:13px}
+#bar4{max-width:min(860px,calc(100vw - 16px));flex-wrap:wrap;justify-content:flex-end;border-radius:26px;gap:4px 6px;padding:6px 8px;font-size:13px}
 body:not(.sqmode) #bar4,#bar4:empty{display:none}
 body.sqmode:has(#bar4:not(:empty)) #hint{display:none}
 #bar4 b{padding:0 4px 0 8px}
@@ -345,13 +345,37 @@ body.frozen #unf svg{animation:shut .6s .15s ease-out}
 .eau canvas{height:50px;margin-top:5px}
 .eah{top:21px;left:16px;font-size:13px}
 .eal{font-size:12px!important;top:6px!important;left:12px!important}
+/* sequence edit: everything lives on or around the card */
+body.sqmode #bar,body.sqmode #bar2{display:none}
+#sqt{display:none;gap:4px;padding:6px 8px}
+body.sqmode #sqt{display:flex}
+body.ro #sqt{display:none!important}
+#sqt i{width:1.5px;height:20px;background:var(--line);margin:0 6px}
+#sqt .bq{display:flex;align-items:center;gap:6px}
+#sqt label select{margin:0}
+.etp{display:flex;align-items:center;gap:10px;padding:12px 18px 2px}
+.etl1,.etl2{display:flex;align-items:center;gap:8px}
+.etp button{display:grid;place-items:center;min-width:40px;height:40px;padding:0 12px;border-radius:999px;border:1.5px solid rgba(9,78,153,.25);background:#fff;color:var(--blue);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,transform .15s}
+.etp button:hover{background:var(--soft)}
+.etp button:active{transform:scale(.92)}
+.etp button svg{width:18px;height:18px}
+#qpl{width:52px;height:52px;border-radius:50%;background:var(--blue);border-color:var(--blue);color:#fff;font-size:18px;padding:0}
+#qpl:hover{background:var(--blue);filter:brightness(1.12)}
+#qpr,#qnx{width:40px;padding:0}
+#qfr{font-size:14px!important;min-width:180px!important;padding:0 8px!important;color:var(--ink)!important}
+.etp .tl{font-size:13px;color:var(--mut);margin-right:2px}
+.sqok{position:absolute;top:-22px;right:-22px;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(9,78,153,.3);z-index:6;padding:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .15s;animation:pop .45s .25s cubic-bezier(.34,1.56,.64,1) backwards}
+.sqok:hover{transform:scale(1.08);filter:brightness(1.12)}
+.sqok:active{transform:scale(.92)}
+.sqok svg{width:24px;height:24px}
+.seqc.open .sqg{padding-right:44px}
 </style>
 </head>
 <body>
 <div id="bar" class="tb"><b id="bt">Moodboard</b><button id="off" class="both" title="This is the offline copy of the program">Offline</button><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden><label class="bq ed">fps<select id="qfps"></select></label><label class="bq ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
 <div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button><button id="qlk" class="bq ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="bq ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qau" class="bq ed" title="Add a soundtrack from your computer (it is also added to the board as an audio card)">+ Audio</button><button id="qok" class="bq" title="Finish editing (Esc)">OK</button></div>
-<div id="bar4" class="tb"></div>
-<div id="bar3" class="tb"><button id="hp" class="both ib" title="How the program works, and keyboard shortcuts"></button><i class="both"></i><button id="zo" title="Zoom out">−</button><span id="z"></span><button id="zi" title="Zoom in">+</button><button id="fb" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
+<div id="bar4" class="tb"></div><div id="sqt" class="tb"></div><div id="park" hidden></div>
+<div id="bar3" class="tb"><button id="hp" class="both ib" title="How the program works, and keyboard shortcuts"></button><i class="both"></i><button id="zo" class="both" title="Zoom out">−</button><span id="z" class="both"></span><button id="zi" class="both" title="Zoom in">+</button><button id="fb" class="both" title="Fit the whole board on screen">Fit</button><button id="qpl" class="bq" title="Play / pause (Space)">▶</button><button id="qpr" class="bq" title="Previous frame (←, Shift+← = 10)">‹</button><button id="qnx" class="bq" title="Next frame (→, Shift+→ = 10)">›</button><span id="qfr" class="bq"></span><i class="bq"></i><span class="bq tl">timeline</span><button id="qzo" class="bq" title="Zoom out the timeline">−</button><button id="qzi" class="bq" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" class="bq" title="Fit the timeline to the card">Fit</button></div>
 <div id="empty">Paste or drop images and videos here</div>
 <div id="st" hidden></div>
 <div id="mq" hidden></div>
@@ -361,6 +385,7 @@ body.frozen #unf svg{animation:shut .6s .15s ease-out}
 <div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Ctrl/⌘+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
 <div id="vp"><div id="fzw"></div><div id="world"></div></div>
 <script>
+const Q={};"qpl qpr qnx qfr qzo qzi qfit qok qlk qfi qau qfps qfmt".split(" ").forEach(k=>Q[k]=document.getElementById(k));
 const $=s=>document.querySelector(s),vp=$("#vp"),world=$("#world"),els=new Map(),files=new Map();
 let items=[],view={x:0,y:0,s:1},Z=0,sel=null,sels=new Set(),hist=[],hi=-1,ht=0,hp=false,cropEdit=null,mouse={x:innerWidth/2,y:innerHeight/2},drag=null,tm,space=false,dn={};
 const zOf=it=>it.type==="box"?(it.z||0)-1000000:it.z;
@@ -760,7 +785,7 @@ function drawArrows(){
   if(ARD){v+=dots(ARD.a);const p=anc(geo(ARD.a),ARD.pa),q=ARD.b?anc(geo(ARD.b),ARD.pb):ARD.m;v+=`<line class="aln apv" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke-width="${sw}" marker-end="url(#ah)"/>`}}
  const all=h+"|"+v;if(all!==arLast){arLast=all;AL.querySelector(".ag").innerHTML=h;AL.querySelector(".ap").innerHTML=v}
 }
-requestAnimationFrame(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}grpDraw();requestAnimationFrame(arLoop)});
+requestAnimationFrame(function arLoop(){if(arDirty||ARM||drag||items.some(i=>i.type==="arr")){arDirty=0;drawArrows()}grpDraw();if(ED)sqPlace();requestAnimationFrame(arLoop)});
 /* Freeze: the whole board becomes read only (pan and zoom still work) */
 /* the new background colour grows out of the lock in a circle, and shrinks back into it on unlock */
 function fzWipe(on,from){const w=$("#fzw"),b=from||$(on?"#fz":"#unf"),q=b&&b.offsetParent!==null?b.getBoundingClientRect():{left:innerWidth-40,top:20,width:24,height:24},
@@ -1176,7 +1201,7 @@ function camAnim(){world.classList.add("anim");vp.classList.add("anim");clearTim
 const eq=s=>ED.c.querySelector(s),selB=()=>ED&&ED.it.blocks.find(x=>x.id===ED.sel);
 function edTop(){if(!ED)return;const c=els.get(ED.id);ED.it.z=++Z;if(c)c.style.zIndex=ED.it.z}
 /* frame the whole open card (preview, timeline and soundtrack), never larger than 100% */
-function edCenter(){if(!ED||!ED.c)return;const it=ED.it,w=ED.c.offsetWidth,h=ED.c.offsetHeight,T=84,B=84,
+function edCenter(){if(!ED||!ED.c)return;const it=ED.it,w=ED.c.offsetWidth,h=ED.c.offsetHeight,T=82,B=104,
  s=Math.min(1,(innerWidth-48)/w,(innerHeight-T-B)/h);view.s=s;view.x=Math.round(innerWidth/2-(it.x+w/2)*s);view.y=Math.round(T+(innerHeight-T-B-h*s)/2-it.y*s);apply()}
 function openEd(id){
  if(ED){if(ED.id===id)return;closeEd()}
@@ -1185,22 +1210,23 @@ function openEd(id){
  ED={id,it,c:null,f:0,f0:0,t0:0,play:false,ppf:null,sel:it.blocks[0]?it.blocks[0].id:null,dr:null,dt:1,lf:-1,pv:{...view},di:null,dpb:null};
  document.body.classList.add("sqmode");document.body.classList.add("focus");$("#bt").textContent="Sequence";HM=$("#hint").textContent;
  $("#hint").textContent=VIEW?"Space play · ← → one frame at a time · Esc or OK to close":"Drag board cards into the timeline to add them, or onto a striped block to relink it · scroll over the timeline to zoom · Alt+← → shorten or lengthen the block · F fill/fit · Space play · ← → frame · Esc or OK to close";
- edFps();$("#qfmt").value=it.fmt||"16/9";$("#qpl").textContent="▶";
+ edFps();Q.qfmt.value=it.fmt||"16/9";Q.qpl.textContent="▶";
  const c0=els.get(id),w0=c0?c0.offsetWidth:0,h0=c0?c0.offsetHeight:0;
  select(id);mount(it);if(w0)morph(ED.c,w0,h0);camAnim();
  edCenter();
 }
 function closeEd(){
  if(!ED)return;audStop();document.body.classList.remove("focus");$("#bar4").innerHTML="";const id=ED.id,pv=ED.pv;ED=null;hl(null);LV.forEach(v=>{if(v._k==="e"+id)v.pause()});
- document.body.classList.remove("sqmode");showName();$("#hint").textContent=HM;
+ $("#park").append(ETP,Q.qok);document.body.classList.remove("sqmode");showName();$("#hint").textContent=HM;
  const c0=els.get(id),w0=c0?c0.offsetWidth:0,h0=c0?c0.offsetHeight:0;
  const it=items.find(i=>i.id===id);if(it){mount(it);const c1=els.get(id);if(c1&&w0)morph(c1,w0,h0)}camAnim();view=pv;apply();dirty();
 }
 function edBuild(c,it){
  ED.c=c;ED.it=it;c.classList.add("open");c.style.width=EWc()+"px";
  c.insertAdjacentHTML("beforeend",`<div class="sqg"><b>Sequence</b><span class="sqgi"></span><span style="flex:1"></span>${VIEW?"":"<span>drag here to move</span>"}</div>
-<div class="sqx"><div class="ev"><canvas class="ecv" title="Click to play / pause"></canvas></div><div class="en"></div>
+<div class="sqx"><div class="ev"><canvas class="ecv" title="Click to play / pause"></canvas></div><div class="en"></div><div class="etph"></div>
 <div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eau"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div></div>`);
+ c.querySelector(".etph").replaceWith(ETP);c.append(Q.qok);Q.qok.onpointerdown=e=>e.stopPropagation();
  const x=c.querySelector(".sqx");x.addEventListener("pointerdown",e=>e.stopPropagation());
  eq(".ecv").onclick=edPlay;
  const tl=eq(".etl");tl.addEventListener("wheel",e=>{
@@ -1232,7 +1258,7 @@ function edBuild(c,it){
  if(ED.ppf==null)ED.ppf=fitPPF();
  edSize();edAll();
 }
-function edFps(){const s=$("#qfps"),L=[12,24,25,30,60],f=ED.it.fps,all=L.includes(f)?L:[...L,f].sort((a,b)=>a-b);
+function edFps(){const s=Q.qfps,L=[12,24,25,30,60],f=ED.it.fps,all=L.includes(f)?L:[...L,f].sort((a,b)=>a-b);
  s.innerHTML=all.map(v=>`<option value="${v}">${sec(v)}</option>`).join("")+'<option value="x">Other…</option>';s.value=String(f)}
 function edResize(p){if(!ED||!ED.c)return;eq(".ev").style.height=EHc()+"px";edSize();if(p)ED.ppf=p;edLayout()}
 function edSize(){eq(".ev").style.height=EHc()+"px";const cv=eq(".ecv"),r=R(ED.it.fmt),aw=EWc()-60,ah=EHc()-24;let w=aw,h=w/r;if(h>ah){h=ah;w=h*r}
@@ -1292,12 +1318,12 @@ function edTick(now){
  if(ED.f===ED.lf)return;ED.lf=ED.f;
  frame(eq(".ecv"),it,ED.f,ED.play,"e"+ED.id);const o=at(it,ED.f);
  eq(".eph").style.left=ED.f*ED.ppf+"px";const pc=eq(".ephc");pc.style.left=ED.f*ED.ppf+"px";pc.style.width=Math.max(2,ED.ppf)+"px";pc.style.display=ftot(it)?"block":"none";
- $("#qfr").textContent=T?`frame ${ED.f} / ${T} · ${sec(ED.f/it.fps)} s`:"0 frames";
+ Q.qfr.textContent=T?`frame ${ED.f} / ${T} · ${sec(ED.f/it.fps)} s`:"0 frames";
  eq(".en").textContent=o&&o.b.note||"";
  ED.c.querySelectorAll(".blk.cur").forEach(q=>q.classList.remove("cur"));if(o){const d=ED.c.querySelector(`.blk[data-b="${o.b.id}"]`);d&&d.classList.add("cur")}
  if(ED.play){const tl=eq(".etl"),x=ED.f*ED.ppf;if(x<tl.scrollLeft||x>tl.scrollLeft+tl.clientWidth-60)tl.scrollLeft=x-40}
 }
-function edPlay(){if(!ED)return;const T=ftot(ED.it);if(!T)return;ED.play=!ED.play;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}else audStop();$("#qpl").textContent=ED.play?"❚❚":"▶"}
+function edPlay(){if(!ED)return;const T=ftot(ED.it);if(!T)return;ED.play=!ED.play;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}else audStop();Q.qpl.textContent=ED.play?"❚❚":"▶"}
 function edSeek(f){const T=ftot(ED.it);ED.f=T?Math.max(0,Math.min(T-1,f|0)):0;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}ED.lf=-1}
 function edSeekB(b){let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED.it,q)}if(ED.play)edPlay();edSeek(a)}
 function edStep(k){if(!ED)return;if(ED.play)edPlay();const T=ftot(ED.it);if(T)edSeek(((ED.f+k)%T+T)%T)}
@@ -1367,7 +1393,7 @@ async function edFile(){
 }
 function edSync(){
  if(!ED)return;const it=items.find(i=>i.id===ED.id);if(!it||it.type!=="seq"){closeEd();return}
- if(!it.blocks.some(b=>b.id===ED.sel))ED.sel=null;edFps();$("#qfmt").value=it.fmt||"16/9";
+ if(!it.blocks.some(b=>b.id===ED.sel))ED.sel=null;edFps();Q.qfmt.value=it.fmt||"16/9";
  if(ED.it!==it||!ED.c||!ED.c.isConnected)mount(it);else{edSize();edAll()}
 }
 function edKey(e){
@@ -1387,12 +1413,27 @@ function edKey(e){
 /* toolbar controls in sequence mode */
 document.querySelectorAll(".tb>*").forEach(x=>{if(x.tagName!=="B"&&x.tagName!=="INPUT"&&!x.classList.contains("bq")&&!x.classList.contains("both"))x.classList.add("bm")});
 $("#hp").innerHTML=IC.book;$("#fz").innerHTML=IC.lock;$("#ba").innerHTML=IC.arrow;
-$("#qfps").onchange=e=>{if(!ED)return;let v=e.target.value;if(v==="x"){v=prompt("Frames per second (1–120)",ED.it.fps);v=parseFloat(String(v||"").replace(",","."))}else v=+v;
+Q.qfps.onchange=e=>{if(!ED)return;let v=e.target.value;if(v==="x"){v=prompt("Frames per second (1–120)",ED.it.fps);v=parseFloat(String(v||"").replace(",","."))}else v=+v;
  if(v>=1&&v<=120){ED.it.fps=Math.round(v*1000)/1000;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}save();dirty()}edFps();edAll();e.target.blur()};
-$("#qfmt").onchange=e=>{if(!ED)return;ED.it.fmt=e.target.value;mount(ED.it);save();e.target.blur()};
-$("#qpl").onclick=edPlay;$("#qpr").onclick=()=>edStep(-1);$("#qnx").onclick=()=>edStep(1);
-$("#qzi").onclick=()=>edZoom(1.4);$("#qzo").onclick=()=>edZoom(1/1.4);$("#qok").onclick=closeEd;
-$("#qlk").onclick=edLink;$("#qau").onclick=edAudFile;$("#qfit").onclick=edFit;$("#qfi").onclick=edFile;
+Q.qfmt.onchange=e=>{if(!ED)return;ED.it.fmt=e.target.value;mount(ED.it);save();e.target.blur()};
+/* sequence controls: the add buttons, fps and format sit in a bar above the card (top left, like the board),
+   playback and timeline zoom live inside the card, the round check closes it */
+const ETP=document.createElement("div");ETP.className="etp";
+{const tl=$("#bar3 .tl"),sp=document.createElement("span");sp.style.flex="1";const L=document.createElement("div");L.className="etl1";L.append(Q.qpr,Q.qpl,Q.qnx,Q.qfr);
+ const R=document.createElement("div");R.className="etl2";R.append(tl,Q.qzo,Q.qzi,Q.qfit);ETP.append(L,sp,R);
+ document.querySelectorAll("#bar3 i.bq,#bar2 i.bq,#bar i.bq").forEach(e=>e.remove());
+ const sep=document.createElement("i");$("#sqt").append(Q.qlk,Q.qfi,Q.qau,sep,Q.qfps.parentElement,Q.qfmt.parentElement);
+ Q.qok.className="sqok";Q.qok.title="Done (Esc)";Q.qok.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+ Q.qpr.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 6v12l-8-6z"/><rect x="5" y="6" width="2.4" height="12" rx="1"/></svg>';
+ Q.qnx.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6v12l8-6z"/><rect x="16.6" y="6" width="2.4" height="12" rx="1"/></svg>';
+ $("#park").append(ETP,Q.qok)}
+function sqPlace(){if(!ED||!ED.c)return;const T=$("#sqt"),B4=$("#bar4"),r=ED.c.getBoundingClientRect();
+ T.style.left=Math.max(8,Math.min(r.left,innerWidth-T.offsetWidth-8))+"px";T.style.top=Math.max(8,r.top-T.offsetHeight-14)+"px";
+ if(B4.childElementCount){const b=ED.c.querySelector(".blk.on,.eau.on"),q=b?b.getBoundingClientRect():r,w=B4.offsetWidth,cx=q.left+q.width/2;
+  B4.style.left=Math.max(8,Math.min(cx-w/2,innerWidth-w-8))+"px";B4.style.top=Math.max(8,Math.min(r.bottom+14,innerHeight-B4.offsetHeight-8))+"px"}}
+Q.qpl.onclick=edPlay;Q.qpr.onclick=()=>edStep(-1);Q.qnx.onclick=()=>edStep(1);
+Q.qzi.onclick=()=>edZoom(1.4);Q.qzo.onclick=()=>edZoom(1/1.4);Q.qok.onclick=closeEd;
+Q.qlk.onclick=edLink;Q.qau.onclick=edAudFile;Q.qfit.onclick=edFit;Q.qfi.onclick=edFile;
 document.querySelectorAll(".tb").forEach(t=>t.addEventListener("click",e=>{const b=e.target.closest("button");b&&b.blur()}));
 
 /* package */
