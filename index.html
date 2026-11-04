@@ -16,7 +16,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 #vp.pan{cursor:grabbing}
 #world{position:absolute;left:0;top:0;transform-origin:0 0}
 .card{position:absolute;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);user-select:none}
-.card.sel{outline:2.5px solid var(--acc);outline-offset:3px}
+/* blue outline only while hovering a card that is not selected; a selected card shows the dashed frame with handles */
+body:not(.ro) .card:not(.sel):hover{outline:2.5px solid var(--acc);outline-offset:3px}
 .card iframe{display:block;width:100%;height:auto;border:0;border-radius:var(--r) var(--r) 0 0;pointer-events:none;background:#000}
 .card img,.card video{display:block;width:100%;height:auto;border-radius:var(--r) var(--r) 0 0;pointer-events:none;-webkit-user-drag:none;background:var(--soft)}
 .cap,.nt{outline:none;white-space:pre-wrap;word-break:break-word;user-select:text;cursor:text}
