@@ -32,6 +32,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 .card:hover .del,.card:hover .rz,.card.sel .del,.card.sel .rz{opacity:1}
 .del{top:-12px;right:-12px;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--card);background:var(--red);color:#fff;cursor:pointer;font-size:15px;line-height:20px;padding:0;box-shadow:var(--sh)}
 .rz{right:-8px;bottom:-8px;width:18px;height:18px;border-radius:50%;background:var(--acc);cursor:nwse-resize;border:2px solid var(--card)}
+.rz::before{content:"";position:absolute;inset:-8px;border-radius:50%}
 #bar{top:16px;left:16px}
 #bar2{top:16px;right:16px}
 #bar3{bottom:16px;left:16px}
@@ -138,11 +139,11 @@ body.bxmode #vp,body.bxmode #vp *{cursor:crosshair!important}
 .tb i::before{content:"/"}
 #bar4 .pm,#bar4 .ps,#bar4 input{text-transform:none;letter-spacing:0;font-size:13px}
 .eg{position:absolute;z-index:5}
-.eg.n,.eg.s{left:14px;right:14px;height:10px;cursor:ns-resize}.eg.n{top:-5px}.eg.s{bottom:-5px}
-.eg.w,.eg.e{top:14px;bottom:14px;width:10px;cursor:ew-resize}.eg.w{left:-5px}.eg.e{right:-5px}
-.eg.nw,.eg.ne,.eg.sw{width:16px;height:16px}.eg.nw{left:-7px;top:-7px;cursor:nwse-resize}.eg.ne{right:-7px;top:-7px;cursor:nesw-resize}.eg.sw{left:-7px;bottom:-7px;cursor:nesw-resize}
+.eg.n,.eg.s{left:18px;right:18px;height:18px;cursor:ns-resize}.eg.n{top:-9px}.eg.s{bottom:-9px}
+.eg.w,.eg.e{top:18px;bottom:18px;width:18px;cursor:ew-resize}.eg.w{left:-9px}.eg.e{right:-9px}
+.eg.nw,.eg.ne,.eg.sw{width:24px;height:24px}.eg.nw{left:-11px;top:-11px;cursor:nwse-resize}.eg.ne{right:-11px;top:-11px;cursor:nesw-resize}.eg.sw{left:-11px;bottom:-11px;cursor:nesw-resize}
 .eg.n::after,.eg.s::after,.eg.w::after,.eg.e::after{content:"";position:absolute;background:var(--acc);border-radius:2px;opacity:0;transition:opacity .12s}
-.eg.n::after,.eg.s::after{left:0;right:0;top:4px;height:2px}.eg.w::after,.eg.e::after{top:0;bottom:0;left:4px;width:2px}
+.eg.n::after,.eg.s::after{left:0;right:0;top:8px;height:2px}.eg.w::after,.eg.e::after{top:0;bottom:0;left:8px;width:2px}
 .eg:hover::after{opacity:1}
 .box .eg{pointer-events:auto}
 .ro .eg,.cropping>.eg{display:none}
@@ -319,6 +320,13 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .sqok{position:absolute;top:-22px;right:-22px;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(9,78,153,.3);z-index:6;padding:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .15s;animation:pop .45s .25s cubic-bezier(.34,1.56,.64,1) backwards;line-height:0;font-size:0}
 .seqc.open .sqg{padding-right:44px}
 .sqg .bxg{--lb:#fff;--lo:rgba(9,78,153,.18);--lt:var(--blue);padding:7px 7px;border-width:2px}
+.hsw{display:flex;align-items:center;gap:10px;margin:10px 0 4px;padding:10px 14px;border-radius:16px;background:var(--soft);color:var(--blue);font-weight:600;cursor:pointer}
+.hsw input{position:absolute;opacity:0;pointer-events:none}
+.hsw span{position:relative;flex:none;width:42px;height:24px;border-radius:999px;background:rgba(9,78,153,.25);transition:background .2s}
+.hsw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.hsw input:checked+span{background:var(--blue)}
+.hsw input:checked+span::after{transform:translateX(18px)}
+.hsw input:focus-visible+span{outline:2px solid var(--acc);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -510,7 +518,7 @@ vp.addEventListener("pointerdown",e=>{
  if(BXD&&e.button===0&&!space){e.preventDefault();const a=document.activeElement;a&&a.blur&&a.blur();drag={m:"bxd",sx:e.clientX,sy:e.clientY};vp.setPointerCapture(e.pointerId);return}
  const sh=e.shiftKey&&!VIEW&&e.button===0&&!space,ae=document.activeElement;
  if(sh&&ae&&ae.isContentEditable&&ae.contains(e.target))return;
- ctxHide();
+ const bgp=!e.target.closest(".card")||e.button===1||space||VIEW;if(!bgp)ctxHide();
  dn={x:e.clientX,y:e.clientY,m:sh||VIEW?null:e.target.closest(".apb,.awv,.vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
  const c=e.target.closest(".card"),pan=e.button===1||space||VIEW;
  if(sh){
@@ -530,7 +538,7 @@ vp.addEventListener("pointerdown",e=>{
    drag={m:"mvg",id,sx:e.clientX,sy:e.clientY,its:[...sels].map(i=>items.find(o=>o.id===i)).filter(Boolean).map(it=>({it,ox:it.x,oy:it.y}))}}
   else{select(id);edUnsel(id);const it=items.find(i=>i.id===id);
    drag={m:rz?"rz":"mv",eg:eg?eg.dataset.e:"",oH:c.offsetHeight,it,sx:e.clientX,sy:e.clientY,ox:it.x,oy:it.y,ow:it.w,oh:it.bh,oew:it.ew||900,oppf:ED&&ED.ppf}}}
- else{if(!lkd)select(null);drag={m:"pan",sx:e.clientX,sy:e.clientY,ox:view.x,oy:view.y};vp.classList.add("pan")}
+ else{drag={m:"pan",sx:e.clientX,sy:e.clientY,ox:view.x,oy:view.y,desel:!lkd};vp.classList.add("pan")}
  ae&&ae.blur();
  vp.setPointerCapture(e.pointerId);
 });
@@ -549,10 +557,10 @@ vp.addEventListener("pointermove",e=>{
   els.forEach((el,id)=>{const r=el.getBoundingClientRect();if(el.classList.contains("lk"))return;if(el.classList.contains("box")?r.left>=x1&&r.right<=x2&&r.top>=y1&&r.bottom<=y2:r.left<x2&&r.right>x1&&r.top<y2&&r.bottom>y1)sels.add(id)});
   sel=[...sels].pop()||null;paintSel();return}
  if(drag.m==="grz"){grpResize(drag,dx/view.s,dy/view.s);return}
- if(drag.m==="mvg"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);drag.its.forEach(({it,ox,oy})=>{it.x=ox+sn.x;it.y=oy+sn.y;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
+ if(drag.m==="mvg"){const sn=snapMove(drag,dx/view.s,dy/view.s,noSnap(e));drag.its.forEach(({it,ox,oy})=>{it.x=ox+sn.x;it.y=oy+sn.y;const c=els.get(it.id);c.style.left=it.x+"px";c.style.top=it.y+"px"});if(!drag.box)hl(dropAt(e,drag.its.map(o=>o.it.id)),e);return}
  const it=drag.it,c=els.get(it.id);
- if(drag.m==="mv"){const sn=snapMove(drag,dx/view.s,dy/view.s,e.altKey);it.x=drag.ox+sn.x;it.y=drag.oy+sn.y;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
- else{const q=snapRz(drag,it,dx/view.s,dy/view.s,e.altKey);resizeBy(drag,it,c,q[0],q[1])}
+ if(drag.m==="mv"){const sn=snapMove(drag,dx/view.s,dy/view.s,noSnap(e));it.x=drag.ox+sn.x;it.y=drag.oy+sn.y;c.style.left=it.x+"px";c.style.top=it.y+"px";hl(dropAt(e,[it.id]),e)}
+ else{const q=snapRz(drag,it,dx/view.s,dy/view.s,noSnap(e));resizeBy(drag,it,c,q[0],q[1])}
 });
 const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,it=items.find(i=>i.id===m.closest(".card").dataset.id);dn={};if(it){if(m.classList.contains("sd"))m.closest(".card").classList.toggle("showsrc");else if(m.classList.contains("so"))openSrc(it);else if(m.classList.contains("cn"))copyName(it,m);else if(m.classList.contains("miss"))relink(it);else if(m.classList.contains("crbtn"))startCrop(it);else if(m.classList.contains("sqpl"))seqPlay(it.id);else if(m.classList.contains("sqed"))openEd(it.id);else if(m.classList.contains("apb"))audToggle(it);else if(m.classList.contains("awv"))audSeekAt(it,m,e.clientX);else if(m.classList.contains("vstop"))stopInline(it);else if(!m.closest(".playing"))playInline(it)}}
  $("#gx").hidden=$("#gy").hidden=true;
@@ -560,8 +568,13 @@ const up=e=>{if(dn.m&&Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<4){const m=dn.m,
  if(drag&&drag.m==="bxd"){endBoxDraw(e);drag=null;return}
  if(drag){
   if(drag.m==="box")mq.hidden=true;if(dropEl)dropIn(drag);
-  if(drag.m==="mvg"&&Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<4)select(drag.id);
-  drag=null;vp.classList.remove("pan");if(ED)edTop();save()}};
+  const still=Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<4,D=drag;
+  if(D.m==="mvg"&&still)select(D.id);
+  if(D.m==="pan"&&still&&D.desel){select(null);ctxHide()}
+  if(D.m==="box")ctxHide();
+  drag=null;vp.classList.remove("pan");if(ED)edTop();save();
+  const one=D.m==="mv"||D.m==="rz"?D.it.id:D.m==="mvg"&&(D.box||still)?D.id:null;
+  if(one&&e.type==="pointerup"&&sels.size===1&&sels.has(one))ctxShow(one)}};
 vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
 vp.addEventListener("wheel",e=>{if(e.ctrlKey&&pinched())return;e.preventDefault();
  if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.01));else{view.x-=e.deltaX;view.y-=e.deltaY;apply()}},{passive:false});
@@ -585,7 +598,7 @@ addEventListener("keydown",e=>{
  if(e.key==="Shift"&&!VIEW)document.body.classList.add("selmode");
  if(!ed&&sels.size&&(e.key==="Delete"||e.key==="Backspace")){e.preventDefault();delCards([...sels])}
  if(!ed&&sels.size&&(e.metaKey||e.ctrlKey)&&e.key==="d"){e.preventDefault();const nw=[];[...sels].forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr"){add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));nw.push(sel)}});sels.clear();nw.forEach(i=>sels.add(i));sel=nw[nw.length-1]||null;paintSel()}
- if(e.key==="Escape"){document.activeElement&&document.activeElement.blur();select(null)}
+ if(e.key==="Escape"){document.activeElement&&document.activeElement.blur();select(null);ctxHide()}
 });
 addEventListener("keyup",e=>{if(e.code==="Space")space=false;if(e.key==="Shift")document.body.classList.remove("selmode")});
 addEventListener("blur",()=>document.body.classList.remove("selmode"));
@@ -613,6 +626,9 @@ function pinchCheck(){const p=pinched(),st=$("#st");
  if(p&&!pinchMsg){pinchMsg=true;toast("The browser view is magnified, so the toolbars are cut off. Pinch out on the trackpad (or press Ctrl/⌘ and scroll down) to bring it back to normal.",[["OK",()=>{}]])}
  if(!p&&pinchMsg){pinchMsg=false;if(st.textContent.startsWith("The browser view is magnified"))st.hidden=true}}
 window.visualViewport&&visualViewport.addEventListener("resize",pinchCheck);
+/* snapping can be switched off from the guide (remembered in this browser); Alt does the opposite of the switch for a moment */
+let SNAP=true;try{SNAP=localStorage.getItem("mb-snap")!=="0"}catch(e){}
+const noSnap=e=>e.altKey===SNAP;
 /* light snapping: while moving, the edges and centres of the moving card (or group) stick to those of the
    other cards when they are a few pixels apart; hold Alt to move freely */
 function snapMove(D,dx,dy,off){
@@ -777,7 +793,11 @@ function snapRz(D,it,dx,dy,off){
  if(!D.st){D.st=[];items.forEach(i=>{if(i.id===it.id)return;const e=els.get(i.id);if(!e)return;const w=e.offsetWidth,h=e.offsetHeight;D.st.push({xs:[i.x,i.x+w/2,i.x+w],ys:[i.y,i.y+h/2,i.y+h]})})}
  const lim=7/view.s,W0=ED&&ED.id===it.id?D.oew:D.ow,H0=it.type==="box"?D.oh:D.oH,
   best=(v,k)=>{let b=null;D.st.forEach(t=>t[k].forEach(q=>{const d=q-v;if(Math.abs(d)<lim&&(!b||Math.abs(d)<Math.abs(b.d)))b={d,q}}));return b};
- if(L||Rt){const b=best(L?D.ox+dx:D.ox+W0+dx,"xs");if(b){dx+=b.d;gx.hidden=false;gx.style.left=(b.q*view.s+view.x)+"px"}}
+ const kept=(L||Rt)&&(T||B)&&it.type!=="box"&&it.type!=="txt"&&!(ED&&ED.id===it.id);
+ if(L||Rt){const b=best(L?D.ox+dx:D.ox+W0+dx,"xs");
+  if(kept&&W0){const nw=W0+(Rt?dx:-dx),h=H0*nw/W0,yb=best(T?D.oy+H0-h:D.oy+h,"ys");
+   if(yb&&(!b||Math.abs(yb.d)*W0/H0<Math.abs(b.d))){const h2=h+(T?-yb.d:yb.d),w2=W0*h2/H0;dx=Rt?w2-W0:W0-w2;gy.hidden=false;gy.style.top=(yb.q*view.s+view.y)+"px";return[dx,dy]}}
+  if(b){dx+=b.d;gx.hidden=false;gx.style.left=(b.q*view.s+view.x)+"px"}}
  if((T||B)&&(it.type==="box"||it.type==="txt"||!(L||Rt))){const b=best(T?D.oy+dy:D.oy+H0+dy,"ys");if(b){dy+=b.d;gy.hidden=false;gy.style.top=(b.q*view.s+view.y)+"px"}}
  return[dx,dy]}
 /* Purge: forget the undo history and delete from the board folder the files no longer used */
@@ -793,13 +813,15 @@ async function purge(){
 function help(){
  let h=$("#help");if(h){h.hidden=!h.hidden;return}
  h=document.createElement("div");h.id="help";h.innerHTML=HELP;document.body.append(h);
- h.querySelector(".hx").onclick=()=>h.hidden=true;h.addEventListener("pointerdown",e=>e.stopPropagation());
+ h.querySelector(".hx").onclick=()=>h.hidden=true;
+ const st=h.querySelector("#snapT");st.checked=SNAP;st.onchange=()=>{SNAP=st.checked;try{localStorage.setItem("mb-snap",SNAP?"1":"0")}catch(e){}};h.addEventListener("pointerdown",e=>e.stopPropagation());
 }
 const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
-<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Hover a card to see its menu: crop, open the source, comment, duplicate, delete. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
+<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Click a card to see its menu (crop, open the source, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
-<h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip at the bottom right, or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
-<h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar at the bottom right. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
+<h4>Snapping</h4><p>While you move or resize a card, its edges and centre stick to those of the other cards, and a blue guide shows where. Hold Alt to do the opposite for a moment.</p><label class="hsw"><input type="checkbox" id="snapT"><span></span>Snap to other cards</label>
+<h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip in the block bar (between the play button and the timeline), or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
+<h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar above the timeline when the soundtrack is selected. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
 <h4>Resizing</h4><p>Drag any side or corner of a card. With several cards selected, a dashed frame appears around them: its handles resize the whole group as if it were one card.</p>
 <h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the moodboard.html inside it works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
 <h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
@@ -821,7 +843,6 @@ const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="
 /* context menu: appears above the card under the mouse */
 const ctx=$("#ctx");let CX=null,cxT=0;
 function ctxHide(){clearTimeout(cxT);CX=null;ctx.hidden=true}
-function ctxSoon(){clearTimeout(cxT);cxT=setTimeout(ctxHide,260)}
 function ctxShow(id){
  clearTimeout(cxT);if(VIEW){ctxHide();return}
  if(drag||(ED&&ED.id===id)||(cropEdit&&cropEdit.id===id)||document.body.classList.contains("bxmode")){if(CX)ctxHide();return}
@@ -858,9 +879,6 @@ function ctxPlace(){
  let y=r.top-h-10;if(y<68)y=Math.max(68,Math.min(r.bottom+10,innerHeight-h-70));
  ctx.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";ctx.style.top=y+"px";
 }
-world.addEventListener("pointerover",e=>{const c=e.target.closest&&e.target.closest(".card");if(c&&!e.buttons)ctxShow(c.dataset.id)});
-world.addEventListener("pointerout",e=>{const c=e.target.closest&&e.target.closest(".card");if(c&&!(e.relatedTarget&&c.contains(e.relatedTarget)))ctxSoon()});
-ctx.addEventListener("pointerenter",()=>clearTimeout(cxT));ctx.addEventListener("pointerleave",ctxSoon);
 ctx.addEventListener("pointerdown",e=>e.stopPropagation());
 function editCap(id){const c=els.get(id),cp=c&&c.querySelector(".cap");if(!cp)return;c.classList.add("cedit");cp.focus();const g=document.createRange();g.selectNodeContents(cp);g.collapse(false);const sl=getSelection();sl.removeAllRanges();sl.addRange(g)}
 world.addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches(".cap")){const c=e.target.closest(".card");c&&c.classList.remove("cedit");e.target.textContent=e.target.textContent.trim()?e.target.textContent:""}});
