@@ -323,6 +323,10 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .sqok{position:absolute;top:-22px;right:-22px;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(9,78,153,.3);z-index:6;padding:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .15s;animation:pop .45s .25s cubic-bezier(.34,1.56,.64,1) backwards;line-height:0;font-size:0}
 .seqc.open .sqg{padding-right:44px}
 .sqg .bxg{--lb:#fff;--lo:rgba(9,78,153,.18);--lt:var(--blue);padding:7px 7px;border-width:2px}
+/* file name on hover, always the same size on screen */
+.fnm{position:absolute;left:8px;top:8px;z-index:3;max-width:calc((100% - 16px)/var(--iz,1));padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.92);color:var(--blue);font-size:11.5px;font-weight:600;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 4px rgba(9,78,153,.18);transform:scale(var(--iz,1));transform-origin:0 0;opacity:0;transition:opacity .15s;pointer-events:none}
+.card:hover>.fnm{opacity:1}
+.cropping>.fnm,.seqc .fnm,body.dropping .fnm{display:none}
 </style>
 </head>
 <body>
@@ -389,7 +393,7 @@ function restore(st){
 function undo(){if(cropEdit)cancelCrop();commit();if(hi<=0)return;hi--;restore(hist[hi])}
 function redo(){if(cropEdit)cancelCrop();commit();if(hi>=hist.length-1)return;hi++;restore(hist[hi])}
 
-function apply(){ctxPlace();world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`;vp.style.backgroundSize=`${24*view.s}px ${24*view.s}px`;vp.style.backgroundPosition=`${view.x}px ${view.y}px`;{const f=$("#fzw");f.style.backgroundPosition=vp.style.backgroundPosition;f.style.backgroundSize=vp.style.backgroundSize}$("#z").textContent=Math.round(view.s*100)+"%";save()}
+function apply(){ctxPlace();world.style.setProperty("--iz",Math.min(1/view.s,3));world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`;vp.style.backgroundSize=`${24*view.s}px ${24*view.s}px`;vp.style.backgroundPosition=`${view.x}px ${view.y}px`;{const f=$("#fzw");f.style.backgroundPosition=vp.style.backgroundPosition;f.style.backgroundSize=vp.style.backgroundSize}$("#z").textContent=Math.round(view.s*100)+"%";save()}
 function zoomAt(cx,cy,f){const s=Math.min(4,Math.max(.03,view.s*f)),k=s/view.s;view.x=cx-(cx-view.x)*k;view.y=cy-(cy-view.y)*k;view.s=s;apply()}
 function empty(){$("#empty").style.display=items.some(i=>!i.hid&&i.type!=="arr")?"none":"grid"}
 function fit(){if(!items.length){view={x:0,y:0,s:1};return apply()}
@@ -397,6 +401,14 @@ function fit(){if(!items.length){view={x:0,y:0,s:1};return apply()}
  const s=Math.min(innerWidth/(c-a+160),innerHeight/(d-b+160),1.5);view.s=s;view.x=(innerWidth-(c-a)*s)/2-a*s;view.y=(innerHeight-(d-b)*s)/2-b*s;apply()}
 
 /* creating items */
+/* short name shown on hover: the file name, or for web links the file name in the address (if there is one) or the site */
+function shortName(it){
+ if(it.type==="yt")return"YouTube";if(it.type==="emb")return"Vimeo";
+ let n=it.name||"";
+ if(!n&&it.url){try{const u=new URL(it.url),f=decodeURIComponent(u.pathname.split("/").pop()||"");n=/\.[a-z0-9]{2,5}$/i.test(f)&&f.length<=60?f:u.hostname.replace(/^www\./,"")}catch(e){n=""}}
+ if(!n)n=it.type==="vid"?"Pasted video":"Pasted image";
+ return n}
+const midCut=t=>t.length>32?t.slice(0,21)+"…"+t.slice(-10):t;
 function mount(it){
  if(it.type==="arr"||it.hid){const o=els.get(it.id);o&&o.remove();els.delete(it.id);arDirty=1;return}
  if(cropEdit&&cropEdit.id===it.id)cropEdit=null;
@@ -430,6 +442,7 @@ function mount(it){
   h.ondblclick=()=>{if(VIEW)return;h.contentEditable="true";h.dataset.ed="1";h.focus();const g=document.createRange();g.selectNodeContents(h);const sl=getSelection();sl.removeAllRanges();sl.addRange(g)};
   const cp0=c.querySelector(".cap");cp0?cp0.before(h):c.append(h);c.addEventListener("mouseleave",()=>{if(!h.dataset.ed)c.classList.remove("showsrc")})}
  if(sels.has(it.id))c.classList.add("sel");
+ if(/^(img|vid|emb|yt)$/.test(it.type)){const n=shortName(it),t=document.createElement("span");t.className="fnm";t.textContent=midCut(n);t.title=n;c.append(t)}
  world.append(c);els.set(it.id,c);empty();dirty();
 }
 function paintSel(){els.forEach((c,k)=>c.classList.toggle("sel",sels.has(k)))}
