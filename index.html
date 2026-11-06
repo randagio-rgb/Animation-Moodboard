@@ -337,6 +337,49 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .vpb:active{transform:scale(calc(var(--iz,1)*.9))}
 .cropping>.vpb{display:none}
 .card:has(>.vpb)>.fnm{max-width:calc((100% - 16px)/var(--iz,1) - 40px)}
+/* Split into shots */
+#shw{position:fixed;inset:0;z-index:40;background:rgba(9,78,153,.28);display:grid;place-items:center;animation:shin .2s ease}
+@keyframes shin{from{opacity:0}}
+.shp{width:min(1120px,calc(100vw - 32px));height:min(860px,calc(100vh - 32px));display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--blue);border-radius:24px;box-shadow:var(--sh);color:var(--blue);overflow:hidden;animation:pop .35s cubic-bezier(.34,1.56,.64,1)}
+.shh{display:flex;align-items:center;gap:12px;padding:14px 18px 10px 24px;font-size:15px}
+.shn{color:var(--mut);font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shx{width:36px;height:36px;border:0;border-radius:50%;background:var(--soft);color:var(--blue);font-size:22px;line-height:1;cursor:pointer}
+.shv{position:relative;flex:1;min-height:0;margin:0 24px;border-radius:18px;background:#0b1a2e;display:grid;place-items:center;overflow:hidden}
+.shv video{max-width:100%;max-height:100%;display:block}
+.shg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(215,237,240,.96);font-size:16px}
+.shg[hidden]{display:none}
+.shbr{width:min(360px,70%);height:10px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1.5px rgba(9,78,153,.25);overflow:hidden}
+.shbr i{display:block;height:100%;width:0;border-radius:999px;background:var(--blue);transition:width .2s}
+.shst,.shf button,.shc button{border:0;border-radius:999px;background:var(--soft);color:var(--blue);font:inherit;font-size:14px;font-weight:600;padding:8px 16px;cursor:pointer}
+.shf button:hover,.shc button:hover,.shst:hover{filter:brightness(.96)}
+.shc{display:flex;align-items:center;gap:8px;padding:12px 24px 8px}
+.shpl{width:44px;height:44px;padding:0!important;border-radius:50%!important;background:var(--blue)!important;color:#fff!important;font-size:15px!important}
+.shfb,.shff{width:38px;height:38px;padding:0!important;font-size:18px!important}
+.sht{min-width:150px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink);padding:0 6px}
+.shcut{background:var(--yellow)!important}
+.shsn{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut)}
+.shsn input{width:160px;accent-color:var(--blue)}
+.shtl{position:relative;height:26px;margin:4px 24px 0;border-radius:999px;background:var(--tint);cursor:pointer;overflow:hidden}
+.shseg{position:absolute;top:0;bottom:0;background:transparent}
+.shseg.on{background:rgba(9,78,153,.35)}
+.shtk{position:absolute;top:3px;bottom:3px;width:2px;margin-left:-1px;border-radius:2px;background:var(--red)}
+.shph{position:absolute;top:0;bottom:0;width:3px;margin-left:-1.5px;background:var(--blue);z-index:2}
+.shs{display:flex;align-items:center;gap:4px;overflow-x:auto;padding:14px 24px 10px;min-height:150px}
+.shti{position:relative;flex:none;width:176px;padding:6px;border-radius:16px;background:var(--tint);cursor:pointer;transition:background .15s,transform .15s}
+.shti:hover{background:rgba(9,78,153,.12)}
+.shti.on{background:var(--blue);color:#fff}
+.shti.cur{box-shadow:0 0 0 3px var(--yellow)}
+.shth{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;border-radius:11px;background:#0b1a2e}
+.shnb{position:absolute;left:12px;top:12px;min-width:24px;padding:2px 7px;border-radius:999px;background:#fff;color:var(--blue);font-size:12px;font-weight:700;text-align:center}
+.shck{position:absolute;right:12px;top:12px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.85);color:transparent;display:grid;place-items:center;font-size:14px;font-weight:800;box-shadow:inset 0 0 0 2px rgba(9,78,153,.3)}
+.shti.on .shck{background:var(--yellow);color:var(--blue);box-shadow:none}
+.shdu{display:block;padding:6px 4px 1px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.shcx{flex:none;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:#fff;color:var(--red);font-size:13px;cursor:pointer;box-shadow:inset 0 0 0 1.5px rgba(233,31,37,.35)}
+.shcx:hover{background:var(--red);color:#fff}
+.shf{display:flex;align-items:center;gap:8px;padding:10px 24px 18px;border-top:1.5px solid var(--line)}
+.shcount{font-size:14px;color:var(--mut);padding:0 8px}
+.shok{background:var(--blue)!important;color:#fff!important;padding:10px 22px!important}
+.shok:disabled{background:var(--tint)!important;color:var(--mut)!important;cursor:default}
 </style>
 </head>
 <body>
@@ -436,7 +479,10 @@ function mount(it){
   if(!v&&(/svg/.test((it.blob||f||{}).type||"")||/\.svg(\?|#|$)/i.test(it.url||"")))m.style.background="#fff";
   if(src&&v){m.muted=true;m.loop=true;m.autoplay=!it.pz;m.playsInline=true;m.setAttribute("muted","");m.preload=it.pz?"metadata":"auto";
    m.onerror=()=>{if(it.pf&&!it.url){BADPF.add(it.pf);mount(it);return}it.type="txt";it.text=it.url?"Link can't be loaded (the site blocks it or the file was removed):\n"+it.url:"Video can't be loaded";delete it.blob;mount(it);fixSave()};
-   m.src=src;if(!it.pz)m.play&&m.play().catch(()=>{});else m.addEventListener("loadeddata",()=>{try{m.currentTime=Math.min(.1,m.duration||0)}catch(e){}},{once:true})}
+   if(it.vin){const[a,b]=it.vin,hf=.5/(it.vfps||25);m.loop=false;m.addEventListener("loadedmetadata",()=>{try{m.currentTime=a+.001}catch(e){}},{once:true});
+    const back=()=>{try{m.currentTime=a+.001}catch(e){}};m.addEventListener("ended",()=>{back();m.play().catch(()=>{})});m.addEventListener("timeupdate",()=>{if(m.currentTime>=b-hf||m.currentTime<a-.05)back()});
+    if(m.requestVideoFrameCallback){const f=(n,md)=>{if(!m.isConnected)return;if(md.mediaTime>=b-hf)back();m.requestVideoFrameCallback(f)};m.requestVideoFrameCallback(f)}}
+   m.src=src;if(!it.pz)m.play&&m.play().catch(()=>{});else if(!it.vin)m.addEventListener("loadeddata",()=>{try{m.currentTime=Math.min(.1,m.duration||0)}catch(e){}},{once:true})}
   else if(src){m.onerror=()=>{if(it.pf&&!it.url){BADPF.add(it.pf);mount(it);return}if(it.url){it.type="vid"}else{it.type="txt";it.text="Image can't be loaded"}mount(it);fixSave()};m.src=src}
   if(it.type==="emb"){m.allow="autoplay; encrypted-media; picture-in-picture";m.referrerPolicy="strict-origin-when-cross-origin";m.style.aspectRatio=it.ar||"16/9"}
   if(it.type==="img"&&it.cr&&src){const cr=it.cr,w=document.createElement("div");w.className="cw";w.style.aspectRatio=String(cr[2]/cr[3]*(it.ia||1));
@@ -456,7 +502,7 @@ function mount(it){
  if(it.type==="vid"){const vd=c.querySelector("video");if(vd){const pb=document.createElement("button");pb.className="vpb"+(it.pz?" pz":"");pb.title=it.pz?"Play the video":"Pause the video";pb.innerHTML=PZI;
   pb.onpointerdown=e=>e.stopPropagation();
   pb.onclick=e=>{e.stopPropagation();const p=!vd.paused;if(p)vd.pause();else vd.play().catch(()=>{});pb.classList.toggle("pz",p);pb.title=p?"Play the video":"Pause the video";if(!VIEW){if(p)it.pz=1;else delete it.pz;persist()}};c.append(pb)}}
- if(/^(img|vid|emb|yt)$/.test(it.type)){const n=shortName(it),t=document.createElement("span");t.className="fnm";t.textContent=midCut(n);t.title=n;c.append(t)}
+ if(/^(img|vid|emb|yt)$/.test(it.type)){const n=shortName(it),cs=it.vin?` · clip ${it.clip||""} · ${sec(it.vin[1]-it.vin[0])} s`:"",t=document.createElement("span");t.className="fnm";t.textContent=midCut(n)+cs;t.title=n+cs;c.append(t)}
  world.append(c);els.set(it.id,c);empty();dirty();
 }
 function paintSel(){els.forEach((c,k)=>c.classList.toggle("sel",sels.has(k)))}
@@ -825,6 +871,144 @@ function snapRz(D,it,dx,dy,off){
   if(b){dx+=b.d;gx.hidden=false;gx.style.left=(b.q*view.s+view.x)+"px"}}
  if((T||B)&&(it.type==="box"||it.type==="txt"||!(L||Rt))){const b=best(T?D.oy+dy:D.oy+H0+dy,"ys");if(b){dy+=b.d;gy.hidden=false;gy.style.top=(b.q*view.s+view.y)+"px"}}
  return[dx,dy]}
+/* ---------- shot detection: finds the cuts inside an edited video, all in the browser ----------
+   1. the video plays muted and fast; every frame Chrome shows is shrunk to 48×27 and compared with the previous one
+      (brightness of each pixel + colour histogram) → a "change" value per frame
+   2. a frame whose change stands well above its neighbours is a possible cut
+   3. each possible cut is pinned to the exact frame by seeking back and forth between the two frames around it */
+const SHW=48,SHH=27;
+function shFeat(x,src){x.drawImage(src,0,0,SHW,SHH);const d=x.getImageData(0,0,SHW,SHH).data,n=SHW*SHH,l=new Float32Array(n),h=new Float32Array(64);
+ for(let i=0,j=0;i<n;i++,j+=4){const r=d[j],g=d[j+1],b=d[j+2];l[i]=.299*r+.587*g+.114*b;h[(r>>6)*16+(g>>6)*4+(b>>6)]++}
+ for(let k=0;k<64;k++)h[k]/=n;return{l,h}}
+function shDiff(a,b){let s=0;for(let i=0;i<a.l.length;i++)s+=Math.abs(a.l[i]-b.l[i]);let t=0;for(let k=0;k<64;k++)t+=Math.abs(a.h[k]-b.h[k]);return .5*s/a.l.length/255*2+.5*t/2}
+const shWait=(v,ev)=>new Promise((ok,no)=>{const f=()=>{v.removeEventListener(ev,f);v.removeEventListener("error",g);ok()},g=()=>{v.removeEventListener(ev,f);v.removeEventListener("error",g);no(new Error("The video can't be read"))};v.addEventListener(ev,f);v.addEventListener("error",g)});
+async function shSeek(v,t){if(Math.abs(v.currentTime-t)<1e-4&&v.readyState>=2)return;const p=shWait(v,"seeked");v.currentTime=t;await p}
+const FPSL=[23.976,24,25,29.97,30,48,50,59.94,60];
+async function shotScan(url,onp,stop){
+ const v=document.createElement("video");v.muted=true;v.playsInline=true;v.preload="auto";v.src=url;
+ await shWait(v,"loadeddata");
+ const cv=document.createElement("canvas");cv.width=SHW;cv.height=SHH;const x=cv.getContext("2d",{willReadFrequently:true});
+ try{x.drawImage(v,0,0,1,1);x.getImageData(0,0,1,1)}catch(e){throw new Error("This copy of the video can't be analysed: open the board with Open (or connect its folder) and try again")}
+ const dur=v.duration,S=[];let prev=null,steps=[];
+ if(!v.requestVideoFrameCallback)throw new Error("Splitting needs Chrome or Edge");
+ await new Promise((ok,no)=>{let n=0,last=-1,fast=false;
+  const f=(now,md)=>{if(stop.c){v.pause();ok();return}
+   const t=md.mediaTime;if(t!==last){const ft=shFeat(x,v);S.push([prev?last:t,t,prev?shDiff(prev,ft):0]);if(last>=0&&!fast)steps.push(t-last);prev=ft;last=t;n++}
+   if(!fast&&n>=14){fast=true;v.playbackRate=8}
+   onp(Math.min(.98,v.currentTime/dur)*.75);
+   if(v.ended){ok();return}v.requestVideoFrameCallback(f)};
+  v.addEventListener("ended",()=>setTimeout(ok,60),{once:true});v.onerror=()=>no(new Error("The video can't be read"));
+  v.requestVideoFrameCallback(f);v.play().catch(no)});
+ if(stop.c)return null;
+ /* frame rate: the shortest step seen while playing at normal speed, snapped to a common value */
+ steps=steps.filter(s=>s>0).sort((a,b)=>a-b);let fps=25;if(steps.length){const raw=1/steps[Math.floor(steps.length/3)];fps=FPSL.reduce((a,b)=>Math.abs(b-raw)<Math.abs(a-raw)?b:a)}
+ /* candidates: change well above the local median */
+ const D=S.map(s=>s[2]),C=[];
+ for(let i=1;i<S.length;i++){const w=D.slice(Math.max(1,i-10),i+11).filter((_,k,a)=>true).sort((a,b)=>a-b),med=w[Math.floor(w.length/2)]||0,sc=D[i]-med*1.2;
+  if(sc>.06&&D[i]>=D[i-1]&&D[i]>=(D[i+1]||0))C.push({t0:S[i][0],t1:S[i][1],sc})}
+ C.sort((a,b)=>b.sc-a.sc);const cand=C.slice(0,400);
+ /* pin each candidate to its first new frame */
+ const fr=1/fps,out=[];v.pause();v.playbackRate=1;
+ for(let k=0;k<cand.length;k++){if(stop.c)return null;const c=cand[k];onp(.75+.25*k/cand.length);
+  /* at high speed the picture read can be a few frames newer than the time Chrome reports, so the window reaches a bit further ahead */
+  let lo=Math.max(0,Math.round(c.t0*fps)-1),hi=Math.min(Math.floor(dur*fps)-1,Math.round((c.t1+.3)*fps));
+  if(hi-lo>1){await shSeek(v,(lo+.5)*fr);const A=shFeat(x,v);await shSeek(v,(hi+.5)*fr);const B=shFeat(x,v);if(shDiff(A,B)<.5*c.sc){continue}
+   while(hi-lo>1){const m=(lo+hi)>>1;await shSeek(v,(m+.5)*fr);const M=shFeat(x,v);if(shDiff(M,A)<shDiff(M,B))lo=m;else hi=m}}
+  out.push([Math.round(hi*fr*1000)/1000,Math.round(c.sc*1000)/1000])}
+ v.removeAttribute("src");v.load();
+ const m=new Map();out.forEach(q=>{const o=m.get(q[0]);if(!o||o[1]<q[1])m.set(q[0],q)});
+ const res=[...m.values()].sort((a,b)=>a[0]-b[0]);
+ return{fps,dur:Math.round(dur*1000)/1000,c:res,s:.5,add:[],rem:[]}}
+/* the cuts in use for a given sensitivity, plus the ones added and minus the ones removed by hand */
+const shThr=s=>.62-.56*s;
+function shCuts(S){const T=shThr(S.s),fr=1/S.fps,minLen=Math.max(.24,3*fr);
+ let c=S.c.filter(q=>q[1]>=T&&q[0]>fr&&q[0]<S.dur-fr).sort((a,b)=>b[1]-a[1]),keep=[];
+ c.forEach(q=>{if(keep.every(k=>Math.abs(k-q[0])>=minLen))keep.push(q[0])});
+ keep=keep.filter(t=>!S.rem.some(r=>Math.abs(r-t)<fr/2));
+ S.add.forEach(t=>{if(keep.every(k=>Math.abs(k-t)>=fr/2))keep.push(t)});
+ return keep.sort((a,b)=>a-b)}
+function shClips(S){const c=shCuts(S),b=[0,...c,S.dur];return c.length+1?b.slice(0,-1).map((a,i)=>[a,b[i+1]]):[]}
+
+/* ---------- Split into shots: window to check the cuts and pick the clips ---------- */
+let SH=null;
+const canSplit=it=>it.type==="vid"&&!it.url&&!it.vin&&!!(it.blob||files.get(it.id)||it.pf);
+async function shBlob(it){const b=it.blob||files.get(it.id);if(b)return b;
+ if(PD&&it.pf){try{const m=await PD.getDirectoryHandle("media");return await(await m.getFileHandle(it.pf)).getFile()}catch(e){}}return null}
+const shKey=a=>a.toFixed(3);
+async function openShots(it){
+ if(SH||VIEW)return;const b=await shBlob(it);
+ if(!b){toast("The video file can't be reached: open the board with Open (or relink the file) and try again.");return}
+ const w=document.createElement("div");w.id="shw";w.innerHTML=`<div class="shp" role="dialog" aria-label="Split into shots">
+<div class="shh"><b>Split into shots</b><span class="shn"></span><span style="flex:1"></span><button class="shx" title="Close (Esc)">×</button></div>
+<div class="shv"><video muted playsinline></video><div class="shg"><b>Finding the cuts…</b><div class="shbr"><i></i></div><button class="shst">Stop</button></div></div>
+<div class="shc"><button class="shpl" title="Play · pause (Space)">▶</button><button class="shfb" title="One frame back (←)">‹</button><button class="shff" title="One frame forward (→)">›</button><span class="sht"></span>
+<button class="shcut" title="Add a cut on this frame (C)">✂ Cut here</button><span style="flex:1"></span>
+<label class="shsn">Fewer cuts<input type="range" min="0" max="1" step=".01" title="How easily a change of picture counts as a cut">More cuts</label></div>
+<div class="shtl" title="Click to jump"><div class="shph"></div></div>
+<div class="shs"></div>
+<div class="shf"><button class="shall">Select all</button><button class="shnone">Select none</button><span class="shcount"></span><span style="flex:1"></span><button class="shcan">Cancel</button><button class="shok" disabled>Create clips</button></div></div>`;
+ document.body.append(w);
+ const q=x=>w.querySelector(x),pv=q("video"),url=URL.createObjectURL(b);
+ q(".shn").textContent=it.name||"Video";
+ SH={it,url,w,q,pv,S:it.shots?{...it.shots,add:[...it.shots.add],rem:[...it.shots.rem]}:null,sel:new Set(),th:new Map(),tq:[],stop:{c:false},cur:-1};
+ pv.src=url;pv.loop=true;pv.addEventListener("loadedmetadata",()=>{q(".shv").style.setProperty("--ar",pv.videoWidth/pv.videoHeight||16/9)},{once:true});
+ q(".shx").onclick=q(".shcan").onclick=closeShots;q(".shst").onclick=closeShots;
+ q(".shpl").onclick=()=>shPlay();q(".shfb").onclick=()=>shStep(-1);q(".shff").onclick=()=>shStep(1);q(".shcut").onclick=shAddCut;
+ q(".shall").onclick=()=>{shClips(SH.S).forEach(c=>SH.sel.add(shKey(c[0])));shRender()};q(".shnone").onclick=()=>{SH.sel.clear();shRender()};
+ q(".shok").onclick=shCreate;q(".shs").addEventListener("wheel",e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.currentTarget.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+ const rg=q(".shsn input");rg.oninput=()=>{shChange(()=>{SH.S.s=+rg.value})};
+ q(".shtl").onpointerdown=e=>{if(!SH.S)return;const R=e.currentTarget.getBoundingClientRect(),go=ev=>{SH.cur=-1;pv.currentTime=Math.max(0,Math.min(1,(ev.clientX-R.left)/R.width))*SH.S.dur;shTime()};go(e);
+  const mv=ev=>go(ev),up=()=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",up)};addEventListener("pointermove",mv);addEventListener("pointerup",up)};
+ const tick=(n,md)=>{if(!SH||SH.pv!==pv)return;if(SH.S&&SH.cur>=0){const c=shClips(SH.S)[SH.cur];if(c&&(md.mediaTime>=c[1]-.5/SH.S.fps||md.mediaTime<c[0]-.01))pv.currentTime=c[0]}shTime();pv.requestVideoFrameCallback(tick)};
+ pv.requestVideoFrameCallback&&pv.requestVideoFrameCallback(tick);pv.ontimeupdate=shTime;pv.onplay=pv.onpause=()=>{q(".shpl").textContent=pv.paused?"▶":"❚❚"};
+ w.addEventListener("pointerdown",e=>{if(e.target===w)closeShots()});
+ if(SH.S){q(".shg").hidden=true;shRender();return}
+ try{const S=await shotScan(url,p=>{if(SH)q(".shbr i").style.width=Math.round(p*100)+"%"},SH.stop);if(!SH||!S)return;
+  SH.S=S;q(".shg").hidden=true;shRender()}
+ catch(e){if(SH){closeShots();toast(e.message||"The video can't be analysed.")}}}
+function closeShots(){if(!SH)return;SH.stop.c=true;if(SH.S){SH.it.shots={...SH.S,add:[...SH.S.add],rem:[...SH.S.rem]};persist()}
+ SH.pv.pause();SH.pv.removeAttribute("src");SH.pv.load();URL.revokeObjectURL(SH.url);SH.w.remove();SH=null}
+function shPlay(){const v=SH.pv;if(v.paused)v.play().catch(()=>{});else v.pause()}
+function shStep(k){if(!SH.S)return;const v=SH.pv,f=1/SH.S.fps;v.pause();SH.cur=-1;v.currentTime=Math.max(0,Math.min(SH.S.dur-f,(Math.round(v.currentTime*SH.S.fps)+k+.5)*f))}
+function shTime(){if(!SH||!SH.S)return;const t=SH.pv.currentTime,f=Math.floor(t*SH.S.fps+1e-6);SH.q(".sht").textContent=`${sec(t)} s · frame ${f}`;SH.q(".shph").style.left=t/SH.S.dur*100+"%"}
+/* any change of the cuts keeps the choice: a new clip stays selected if it overlaps a clip that was selected */
+function shChange(fn){const S=SH.S,old=shClips(S).filter(c=>SH.sel.has(shKey(c[0]))),f=1/S.fps;fn();SH.sel.clear();
+ shClips(S).forEach(c=>{if(old.some(o=>Math.min(o[1],c[1])-Math.max(o[0],c[0])>f*.9))SH.sel.add(shKey(c[0]))});SH.cur=-1;shRender()}
+function shAddCut(){if(!SH.S)return;const S=SH.S,f=1/S.fps,t=Math.round(Math.floor(SH.pv.currentTime*S.fps+1e-3)*f*1000)/1000;if(t<f||t>S.dur-f)return;
+ SH.pv.pause();shChange(()=>{const r=S.rem.findIndex(x=>Math.abs(x-t)<f/2);if(r>=0)S.rem.splice(r,1);else if(!shCuts(S).some(x=>Math.abs(x-t)<f/2))S.add.push(t)})}
+function shDelCut(t){const S=SH.S,f=1/S.fps;shChange(()=>{const a=S.add.findIndex(x=>Math.abs(x-t)<f/2);if(a>=0)S.add.splice(a,1);else S.rem.push(t)})}
+function shRender(){const{S,q}=SH,C=shClips(S),st=q(".shs"),tl=q(".shtl");q(".shsn input").value=S.s;
+ st.replaceChildren();tl.querySelectorAll(".shseg,.shtk").forEach(e=>e.remove());
+ C.forEach((c,i)=>{const k=shKey(c[0]),on=SH.sel.has(k),d=document.createElement("div");d.className="shti"+(on?" on":"")+(SH.cur===i?" cur":"");d.dataset.k=k;
+  d.title="Click to choose this clip · it plays above";
+  const cv=SH.th.get(k)||document.createElement("canvas");cv.className="shth";
+  d.innerHTML=`<span class="shnb">${i+1}</span><span class="shck">✓</span><span class="shdu">${sec(c[1]-c[0])} s · ${Math.round((c[1]-c[0])*S.fps)} f</span>`;d.prepend(cv);
+  d.onclick=()=>{if(SH.sel.has(k))SH.sel.delete(k);else SH.sel.add(k);SH.cur=i;SH.pv.currentTime=c[0];SH.pv.play().catch(()=>{});shRender()};
+  st.append(d);
+  if(i<C.length-1){const x=document.createElement("button");x.className="shcx";x.textContent="✂";x.title="Remove this cut: join the two clips";x.onclick=()=>shDelCut(C[i+1][0]);st.append(x)}
+  const g=document.createElement("i");g.className="shseg"+(on?" on":"");g.style.left=c[0]/S.dur*100+"%";g.style.width=(c[1]-c[0])/S.dur*100+"%";tl.prepend(g);
+  if(i)tl.insertAdjacentHTML("beforeend",`<i class="shtk" style="left:${c[0]/S.dur*100}%"></i>`);
+  if(!SH.th.has(k)){SH.th.set(k,cv);SH.tq.push([cv,c[0]+Math.min(.25,(c[1]-c[0])/3)])}});
+ const n=[...SH.sel].length;q(".shcount").textContent=`${C.length} clip${C.length===1?"":"s"} found · ${n} selected`;
+ const ok=q(".shok");ok.disabled=!n;ok.textContent=n?`Create ${n} clip${n===1?"":"s"}`:"Choose the clips to keep";
+ const cu=st.querySelector(".shti.cur");cu&&cu.scrollIntoView({block:"nearest",inline:"nearest"});shTime();shThumbs()}
+async function shThumbs(){if(SH.tb)return;SH.tb=1;const v=document.createElement("video");v.muted=true;v.preload="auto";v.src=SH.url;
+ try{await shWait(v,"loadeddata");while(SH&&SH.tq.length){const[cv,t]=SH.tq.shift();await shSeek(v,t);const W=192,H=Math.round(W/(v.videoWidth/v.videoHeight||16/9));cv.width=W;cv.height=H;cv.getContext("2d").drawImage(v,0,0,W,H)}}catch(e){}
+ if(SH)SH.tb=0;v.removeAttribute("src");v.load()}
+/* the chosen clips become video cards next to the original, in a grid, paused on their first frame */
+function shCreate(){const{S,it,pv}=SH,C=shClips(S),pick=C.map((c,i)=>[c,i+1]).filter(([c])=>SH.sel.has(shKey(c[0])));if(!pick.length)return;
+ const ar=pv.videoWidth/pv.videoHeight||16/9,cw=Math.round(Math.min(it.w,260)),ch=cw/ar,gap=24,cols=Math.min(pick.length,Math.max(2,Math.ceil(Math.sqrt(pick.length)))),
+  x0=it.x+(els.get(it.id)?els.get(it.id).offsetWidth:it.w)+48,y0=it.y,nw=[];
+ closeShots();
+ pick.forEach(([c,k],j)=>{const o={...cl(it),x:x0+(j%cols)*(cw+gap),y:y0+Math.floor(j/cols)*(ch+gap),w:cw,cap:"",vin:[c[0],c[1]],clip:k,vfps:S.fps,pz:1};delete o.shots;delete o.lk;delete o.cr;nw.push(add(o,files.get(it.id)).id)});
+ sels.clear();nw.forEach(i=>sels.add(i));sel=nw[nw.length-1];paintSel();
+ const R=document.body.getBoundingClientRect(),gx=x0*view.s+view.x,gy=y0*view.s+view.y,gw=(cols*(cw+gap))*view.s,gh=Math.ceil(pick.length/cols)*(ch+gap)*view.s;
+ if(gx+gw>R.width-20||gy+gh>R.height-20){view.x-=Math.max(0,gx+gw-R.width+60);view.y-=Math.max(0,gy+gh-R.height+80);apply()}
+ toast(`${pick.length} clip${pick.length>1?"s":""} added next to the video, paused on their first frame. Drag them onto a sequence to use them.`)}
+addEventListener("keydown",e=>{if(!SH)return;const k=e.key;if(e.target.tagName==="INPUT"&&e.target.type!=="range")return;
+ if(k==="Escape")closeShots();else if(k===" ")shPlay();else if(k==="ArrowLeft")shStep(e.shiftKey?-10:-1);else if(k==="ArrowRight")shStep(e.shiftKey?10:1);
+ else if(k==="c"||k==="C")shAddCut();else if(k==="Enter"){if(!SH.q(".shok").disabled)shCreate()}else{e.stopImmediatePropagation();return}
+ e.preventDefault();e.stopImmediatePropagation()},true);
 /* Purge: forget the undo history and delete from the board folder the files no longer used */
 async function purge(){
  const saved=!!PD;
@@ -842,20 +1026,20 @@ function help(){
 h.addEventListener("pointerdown",e=>e.stopPropagation());
 }
 const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
-<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Click a card to see its menu (crop, open the source, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
+<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Click a card to see its menu (crop, open the source, split a video into shots, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
 <h4>Snapping</h4><p>Start moving or resizing a card, then hold Shift: its edges and centre stick to those of the other cards, and a blue guide shows where. Let go of Shift to move freely again.</p>
 <h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip in the block bar (between the play button and the timeline), or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
 <h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar above the timeline when the soundtrack is selected. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
-<h4>Resizing</h4><p>Drag any side or corner of a card. With several cards selected, a dashed frame appears around them: its handles resize the whole group as if it were one card.</p>
-<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, moodboard.html): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the .html file inside it (it has the same name as the folder) works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
+<h4>Resizing</h4><p>Click a card: a dashed frame with eight handles appears around it. Drag a handle (or any side or corner of the card) to resize it. With several cards selected, the frame goes around all of them and resizes the whole group as if it were one card.</p>
+<h4>Splitting a video into shots</h4><p>For an edited video from your computer, open its menu and press the scissors. The program finds every cut and shows the clips: click the ones you want to keep (each one plays above), remove a wrong cut with ✂ between two clips, or stop on a frame and press Cut here (C) to add one. The slider finds fewer or more cuts. Create adds the chosen clips next to the video as cards that play only their part, paused on their first frame; dragged onto a sequence, a clip keeps its real length. The file stays one: nothing is copied.</p>
+<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, a README and a copy of the program named like the folder): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the .html file inside it (it has the same name as the folder) works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
 <h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
 <h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
-<h4>Moving cards</h4><p>While you move a card, its edges and centre snap to those of nearby cards (red guide lines). Hold Alt to move freely.</p>
 <h4>Shortcuts · board</h4><table>
 <tr><td>Double-click background</td><td>new note</td></tr><tr><td>Drag background · Space+drag</td><td>move around</td></tr>
-<tr><td>Ctrl/⌘+scroll · pinch</td><td>zoom</td></tr><tr><td>Shift+click · Shift+drag</td><td>select several cards</td></tr>
-<tr><td>Alt while dragging</td><td>move without snapping</td></tr><tr><td>Ctrl/⌘+V</td><td>paste images, files or links</td></tr>
+<tr><td>Alt/⌥+scroll · pinch</td><td>zoom</td></tr><tr><td>Shift+click · Shift+drag</td><td>select several cards</td></tr>
+<tr><td>Shift while moving or resizing</td><td>snap to other cards</td></tr><tr><td>Ctrl/⌘+V</td><td>paste images, files or links</td></tr>
 <tr><td>Delete · Backspace</td><td>delete selected cards</td></tr><tr><td>Ctrl/⌘+D</td><td>duplicate</td></tr>
 <tr><td>Ctrl/⌘+Z · Ctrl/⌘+Shift+Z</td><td>undo · redo</td></tr><tr><td>Esc</td><td>deselect · stop drawing boxes or arrows</td></tr>
 <tr><td>Enter · Esc while cropping</td><td>apply · cancel the crop</td></tr></table>
@@ -863,7 +1047,7 @@ const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="
 <tr><td>Space</td><td>play · pause</td></tr><tr><td>← →  (Shift ×10)</td><td>one frame back · forward</td></tr>
 <tr><td>Alt+← →  (Shift ×5)</td><td>shorten · lengthen the selected block</td></tr><tr><td>Alt+drag a video or GIF block</td><td>choose which part plays</td></tr>
 <tr><td>F</td><td>fill · fit the selected block</td></tr><tr><td>Scroll on the timeline · Shift+scroll</td><td>zoom · scroll the timeline</td></tr>
-<tr><td>Ctrl/⌘+D · Delete</td><td>duplicate · remove the block</td></tr><tr><td>Esc · Enter · OK</td><td>close the sequence</td></tr></table>
+<tr><td>Ctrl/⌘+D · Delete</td><td>duplicate · remove the block</td></tr><tr><td>Esc · Enter · ✓</td><td>close the sequence</td></tr></table>
 <p class="hn">Saving, opening and Purge need Chrome or Edge. YouTube and Vimeo play inside the card when the program is opened from its web address.</p></div>`;
 /* context menu: appears above the card under the mouse */
 const ctx=$("#ctx");let CX=null,cxT=0;
@@ -885,8 +1069,8 @@ function ctxBuild(){
   if(PLAYING.has(it.id))btn("no","Stop and close the player",()=>stopInline(it));
   btn("link",it.type==="yt"?"Open on YouTube":it.type==="emb"?"Open on Vimeo":web?"Open the original page":it.name?"Open the file in a new tab":"Open the pasted copy in a new tab",()=>openSrc(it));
   if(it.name)btn("name","Copy the file name, to find it in Finder or Spotlight",b=>copyName(it,b));
-  btn("info","Show the source (double-click it to edit)",()=>{const c=els.get(it.id);c&&c.classList.toggle("showsrc")});
  }
+ if(canSplit(it))btn("cut","Split into shots: find the cuts inside this video and keep the clips you want",()=>{ctxHide();openShots(it)});
  if(it.type!=="txt"&&it.type!=="box")btn("cmt",it.cap?"Edit the comment":"Add a comment",()=>{ctxHide();editCap(it.id)});
  if(B.length){const i=document.createElement("i");B.push(i)}
  btn("dup","Duplicate (Ctrl/⌘+D)",()=>{const o=it;add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id));ctxHide()});
@@ -999,7 +1183,7 @@ addEventListener("message",e=>{
 });
 /* non-destructive crop: only the window proportions are saved, never a copy of the image */
 const svgI=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,
-IC={arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),unlock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
+IC={cut:svgI('<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M20 4 8.2 15.8"/><path d="M14.5 14.5 20 20"/><path d="M8.2 8.2 12 12"/>'),arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),unlock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
 function startCrop(it){
  if(VIEW||it.type!=="img")return;
  if(cropEdit)cancelCrop();
@@ -1132,8 +1316,8 @@ function frame(cv,it,f,play,key){const cx=cv.getContext("2d"),o=at(it,f),r=o&&re
 function info(it){const T=ftot(it),n=it.blocks.length,ph=it.blocks.filter(isPh).length;return`${sec(it.fps)} fps · ${sec(T/it.fps)} s · ${n} ${n===1?"block":"blocks"}`+(ph?` · ${ph} to relink`:"")}
 function order(a){const rows=[];a.map(i=>({i,h:(els.get(i.id)||{}).offsetHeight||100})).sort((p1,q)=>p1.i.y-q.i.y).forEach(o=>{const r=rows[rows.length-1];if(r&&o.i.y<r.y+r.h*.5)r.list.push(o.i);else rows.push({y:o.i.y,h:o.h,list:[o.i]})});return rows.flatMap(r=>r.list.sort((p1,q)=>p1.x-q.x))}
 function dflt(it){const b=(ED&&ED.it===it&&selB())||it.blocks[it.blocks.length-1];return b?b.d:12/it.fps}
-function nb(r,d){const x={id:uid(),ref:r.id,d,note:""};if(isGif(r)){x.vin=0;const g=gifOf(r);if(g)x.d=Math.min(3,Math.round(g.dur*1000)/1000)}if(r.type==="vid"){x.vin=0;const du=vdur(r),bv=els.get(r.id)&&els.get(r.id).querySelector("video"),dd=du>0?du:bv&&bv.duration>0?bv.duration:2;x.d=Math.min(3,dd)}return x}
-function setRef(b,r){b.ref=r.id;if(r.type==="vid"||isGif(r))b.vin=0;else delete b.vin}
+function nb(r,d){const x={id:uid(),ref:r.id,d,note:""};if(isGif(r)){x.vin=0;const g=gifOf(r);if(g)x.d=Math.min(3,Math.round(g.dur*1000)/1000)}if(r.type==="vid"&&r.vin){x.vin=r.vin[0];x.d=Math.round((r.vin[1]-r.vin[0])*1000)/1000}else if(r.type==="vid"){x.vin=0;const du=vdur(r),bv=els.get(r.id)&&els.get(r.id).querySelector("video"),dd=du>0?du:bv&&bv.duration>0?bv.duration:2;x.d=Math.min(3,dd)}return x}
+function setRef(b,r){b.ref=r.id;if(r.type==="vid"&&r.vin)b.vin=r.vin[0];else if(r.type==="vid"||isGif(r))b.vin=0;else delete b.vin}
 
 /* sequence card on the board (closed: loop) */
 function seqCard(c,it){
@@ -1423,7 +1607,7 @@ document.querySelectorAll(".tb,.ett,.etp").forEach(t=>t.addEventListener("click"
 /* package */
 async function wr(d,n,t){const w=await(await d.getFileHandle(n,{create:true})).createWritable();await w.write(t);await w.close()}
 function ser(i){
- const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh,pz:i.pz};
+ const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh,pz:i.pz,vin:i.vin,clip:i.clip,vfps:i.vfps,shots:i.shots};
  if(i.type==="arr"){o.a=i.a;o.b=i.b;o.pa=i.pa;o.pb=i.pb}
  if(i.type==="seq"&&i.au)o.au={...i.au};
  if(i.type==="seq"){o.fps=i.fps;o.fmt=i.fmt;o.ew=i.ew;o.blocks=i.blocks.map(b=>({ref:b.ref,d:b.d,note:b.note||"",vin:b.vin,fit:b.fit}))}
@@ -1432,7 +1616,7 @@ const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box"&&i.type!=="arr";
 /* boards are folders: board.js + media/ + a copy of the program (moodboard.html) */
 
 function showName(){$("#bt").textContent=BNAME||"Moodboard";document.title=(BNAME?BNAME+" · ":"")+"Moodboard"}
-function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
+function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,vin:o.vin,clip:o.clip,vfps:o.vfps,shots:o.shots,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
  if(o.src){if(/^(https?|blob):/i.test(o.src))it.url=o.src;else it.pf=o.src.replace(/^media\//,"")}
  Object.keys(it).forEach(k=>it[k]===undefined&&delete it[k]);return it}
 function fixOld(i){if(i.url&&!/^(https?|blob):/i.test(i.url)){i.pf=i.url.replace(/^media\//,"");delete i.url}
@@ -1535,6 +1719,8 @@ async function savePkg(force){
    if(!confirm("This board was changed somewhere else (another tab or another person) after you opened it. Replace those changes with your version?\n\nCancel stops saving here, so you can reopen the board and check it.")){PD=null;pkStat("Changed elsewhere · not saved","err");pkBusy=false;return}}
   const md=await PD.getDirectoryHandle("media",{create:true}),names=new Set();let k=0;
   for await(const[n,h]of md.entries())if(h.kind==="file"){names.add(n);const m=/^(\d+)_/.exec(n);if(m)k=Math.max(k,+m[1])}
+  /* cards that show the same file (clips of one video, duplicates) share one copy in media */
+  const byF=new Map();items.forEach(i=>{const f=files.get(i.id)||i.blob;if(f&&i.pf&&names.has(i.pf)&&!byF.has(f))byF.set(f,i.pf)});
   const out=[];
   for(const i of [...items].sort((a,b)=>(a.z||0)-(b.z||0))){
    const o=ser(i);
@@ -1542,8 +1728,8 @@ async function savePkg(force){
     if(i.url)o.src=i.url;
     else{const f=files.get(i.id)||i.blob;
      if(f&&(!i.pf||!names.has(i.pf))){
-      const base=i.name||("pasted."+((f.type.split("/")[1]||"bin").replace("svg+xml","svg"))),fn=i.pf||String(++k).padStart(3,"0")+"_"+base.replace(/[^\w.\-]+/g,"_");
-      await f.stream().pipeTo(await(await md.getFileHandle(fn,{create:true})).createWritable());names.add(fn);BADPF.delete(fn);
+      const base=i.name||("pasted."+((f.type.split("/")[1]||"bin").replace("svg+xml","svg"))),same=byF.get(f),fn=same||i.pf||String(++k).padStart(3,"0")+"_"+base.replace(/[^\w.\-]+/g,"_");
+      if(!same){await f.stream().pipeTo(await(await md.getFileHandle(fn,{create:true})).createWritable());names.add(fn);BADPF.delete(fn);byF.set(f,fn)}
       const had=!!i.pf;i.pf=fn;i.name=base;delete i.h;delete i.blob;files.set(i.id,f);
       if(!had)hist.forEach(h=>h.s.forEach(q=>{if(q.id===i.id&&!q.pf&&!q.url){q.pf=fn;q.name=base;delete q.h;delete q.blob}}))}
      if(i.pf)o.src="media/"+i.pf}
