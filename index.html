@@ -961,8 +961,11 @@ function edAudio(){
   if(r){const o=peaksOf(r);
    if(a.auto&&o.done){if(o.ok)a.d=Math.max(1,Math.round((r.ain?r.ain[1]-r.ain[0]:o.dur)*it.fps))/it.fps;delete a.auto;ED.dt=1}
    const sr=auSrc(r),have=Math.max(0,Math.min(a.d,sr.B-a.ain)),sw=a.d?have/a.d*w:w,sn=document.createElement("div");sn.className="asnd";sn.style.width=sw+"px";
-   const cv=document.createElement("canvas"),cw=Math.max(1,Math.min(sw,8000/k));cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(64*k);sn.append(cv);d.append(sn);
-   ED.auW.push({cv,o,ain:a.ain,len:have,st:a0/it.fps});
+   /* long blocks: the waveform is split into several canvases (a canvas cannot be wider than a few thousand pixels), each one covering its own piece of time */
+   const cmax=Math.max(200,Math.floor(8000/k)),nc=Math.max(1,Math.ceil(sw/cmax));sn.style.display="flex";
+   for(let c=0;c<nc;c++){const x0=sw*c/nc,x1=sw*(c+1)/nc,cw=Math.max(1,x1-x0),cv=document.createElement("canvas");cv.style.width=cw+"px";cv.style.flex="none";cv.width=Math.round(cw*k);cv.height=Math.round(64*k);sn.append(cv);
+    const f0=sw?x0/sw:0,f1=sw?x1/sw:1;ED.auW.push({cv,o,ain:a.ain+have*f0,len:have*(f1-f0),st:a0/it.fps+have*f0})}
+   d.append(sn);
    d.insertAdjacentHTML("beforeend",`<span class="anb"></span>`);d.querySelector(".anb").textContent="♪ "+(r.name||"Audio");
    d.title="♪ "+(r.name||"Audio")+` · ${n} frames · ${sec(n/it.fps)} s`+(have<a.d-.01?` · the sound ends after ${sec(have)} s, the rest is silent`:"")+(VIEW?"":"\nClick to choose which part plays · drag to move · drag the right edge to change the length · Alt+drag to slide the sound")}
   else{d.innerHTML='<span class="anb">Audio card removed from the board</span>'}
