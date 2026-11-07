@@ -514,6 +514,22 @@ body.frozen #arl .lhit{pointer-events:none}
 #shw.au .shv{flex:0 0 220px}
 #shw.au .shp{height:auto}
 #shw.au .shth{background:var(--green);width:192px;height:99px;aspect-ratio:auto}
+/* audio lane: blocks like the picture blocks */
+.eau.lane:not(.none):not(.gone){background:transparent!important;box-shadow:none!important;display:flex;overflow:visible;cursor:default}
+.aupc .pdu{width:40px;height:40px;border:0;border-radius:50%;background:none;color:var(--blue);display:grid;place-items:center;cursor:pointer;transition:background-color .15s}
+.aupc .pdu svg{width:22px;height:22px}
+.aupc .pdu:hover{background:var(--yellow)!important}
+.ablk{position:relative;flex:none;height:76px;border-radius:20px;box-sizing:border-box;border-right:3px solid #fff;cursor:grab;
+ background:repeating-linear-gradient(45deg,rgba(0,93,65,.16) 0 8px,rgba(0,93,65,.06) 8px 16px);box-shadow:inset 0 0 0 2px rgba(0,93,65,.3)}
+.ablk:active{cursor:grabbing}
+.asnd{position:absolute;left:0;top:0;bottom:0;border-radius:20px;background:var(--green);overflow:hidden}
+.asnd canvas{display:block;height:64px!important;margin-top:6px!important}
+.ablk .anb{position:absolute;left:12px;top:6px;max-width:calc(100% - 30px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:11.5px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.35);pointer-events:none}
+.ablk.gone{background:repeating-linear-gradient(45deg,rgba(233,31,37,.12) 0 8px,rgba(233,31,37,.04) 8px 16px)}
+.ablk.gone .anb{color:var(--red);text-shadow:none}
+.ablk.on{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--yellow);z-index:2}
+.abh{position:absolute;right:-5px;top:16px;bottom:16px;width:10px;border-radius:999px;background:#fff;box-shadow:0 0 0 2px var(--green);cursor:ew-resize;opacity:.55;z-index:3}
+.ablk:hover .abh,.ablk.on .abh{opacity:1}
 </style>
 </head>
 <body>
@@ -597,7 +613,7 @@ function shortName(it){
  return n}
 const midCut=t=>t.length>32?t.slice(0,21)+"…"+t.slice(-10):t;
 const PZI='<svg class="i-pa" viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="3.6" height="14" rx="1.4"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.4"/></svg><svg class="i-pl" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
-function mount(it){
+function mount(it){if(it.type==="seq")auMig(it);
  if(it.type==="arr"||it.hid){const o=els.get(it.id);o&&o.remove();els.delete(it.id);arDirty=1;return}
  if(cropEdit&&cropEdit.id===it.id)cropEdit=null;
  const old=els.get(it.id);old&&old.remove();
@@ -916,56 +932,85 @@ function audToggle(it){const a=audEl(it);if(!a){relink(it);return}AP.forEach((x,
  if(a.paused&&it.ain&&(a.currentTime<it.ain[0]||a.currentTime>=it.ain[1]-.02))a.currentTime=it.ain[0];a.paused?a.play().catch(()=>{}):a.pause()}
 function audSeekAt(it,m,cx){const a=audEl(it);if(!a)return;const r=m.getBoundingClientRect(),A0=it.ain?it.ain[0]:0,d=it.ain?it.ain[1]-A0:a.duration||(peaksOf(it).dur||0);if(!d)return;a.currentTime=A0+Math.max(0,Math.min(d,(cx-r.left)/r.width*d));audDraw(it)}
 /* soundtrack of the sequence being edited: follows play, pause, seek and the loop */
-const sndOf=it=>it&&it.au?items.find(i=>i.id===it.au.ref)||null:null;
-function audSync(now){const it=ED.it,r=sndOf(it);
- if(!ED.play||!r){audStop();return}
- const s=srcOf(r);if(!s)return;if(!ED.ae||ED.ae._s!==s){audStop();ED.ae=new Audio(s);ED.ae._s=s}
- const a=ED.ae,T=ftot(it),t=it.au.off+(((ED.f0+(now-ED.t0)/1000*it.fps)%T+T)%T)/it.fps;a.volume=Math.max(0,Math.min(1,it.au.vol==null?1:it.au.vol));
- AP.forEach(x=>{if(!x.paused)x.pause()});
- if(isFinite(a.duration)&&t>=a.duration||r.ain&&t>=r.ain[1]){if(!a.paused)a.pause();return}
- if(a.paused){try{a.currentTime=t}catch(e){}a.play().catch(()=>{})}else if(Math.abs(a.currentTime-t)>.15){try{a.currentTime=t}catch(e){}}}
-function audStop(){if(ED&&ED.ae&&!ED.ae.paused)ED.ae.pause()}
+/* sound of the sequence: a lane of audio blocks, one after the other like the picture blocks.
+   each block = a part of an audio card (ref), starting at ain seconds in the file, d seconds long, with its own volume */
+const aN=(it,a)=>Math.max(1,Math.round(a.d*it.fps)),atot=it=>(it.aus||[]).reduce((s,a)=>s+aN(it,a),0);
+function auMig(it){if(it.type!=="seq")return;if(!it.aus)it.aus=[];
+ if(it.au){const a=it.au;if(!it.aus.length&&a.ref)it.aus.push({id:uid(),ref:a.ref,ain:a.off||0,d:Math.max(1,ftot(it))/it.fps,vol:a.vol==null?1:a.vol});delete it.au}}
+function auSrc(r){const o=peaksOf(r);return{A:r.ain?r.ain[0]:0,B:r.ain?r.ain[1]:o.ok?o.dur:Infinity}}
+/* a new block plays the whole audio card (or its part), with its real length */
+function auNew(it,r){const o=peaksOf(r),L=r.ain?r.ain[1]-r.ain[0]:o.ok?o.dur:0,a={id:uid(),ref:r.id,ain:r.ain?r.ain[0]:0,d:L?Math.max(1,Math.round(L*it.fps))/it.fps:4,vol:1};if(!L)a.auto=1;return a}
+function audSync(now){const it=ED.it;auMig(it);const T=ftot(it);
+ if(!ED.play||!it.aus.length||!T){audStop();return}
+ const t=(((ED.f0+(now-ED.t0)/1000*it.fps)%T+T)%T)/it.fps;let st=0,cur=null;
+ for(const a of it.aus){const L=aN(it,a)/it.fps;if(t>=st&&t<st+L){cur={a,off:t-st};break}st+=L}
+ ED.aes=ED.aes||new Map();AP.forEach(x=>{if(!x.paused)x.pause()});let el=null;
+ if(cur){const r=items.find(x=>x.id===cur.a.ref),sr=r&&srcOf(r);
+  if(sr){el=ED.aes.get(sr);if(!el){el=new Audio(sr);el.preload="auto";ED.aes.set(sr,el)}
+   const tt=cur.a.ain+cur.off,end=Math.min(auSrc(r).B,isFinite(el.duration)?el.duration:Infinity);
+   if(tt>=end-.01)el=null;
+   else{el.volume=Math.max(0,Math.min(1,cur.a.vol==null?1:cur.a.vol));if(el.paused){try{el.currentTime=tt}catch(e){}el.play().catch(()=>{})}else if(Math.abs(el.currentTime-tt)>.15){try{el.currentTime=tt}catch(e){}}}}}
+ ED.aes.forEach(x=>{if(x!==el&&!x.paused)x.pause()})}
+function audStop(){if(ED&&ED.aes)ED.aes.forEach(x=>{if(!x.paused)x.pause()})}
 function edAudio(){
- const el=eq(".eau");if(!el)return;const it=ED.it,P=ED.ppf,W=Math.max(1,(ftot(it)+tailN())*P);el.style.width=W+"px";el.classList.toggle("on",!!ED.selA&&!!it.au);
- if(!it.au){el.className="eau none";el.innerHTML=VIEW?"":'<span class="eah">♪ Drag an audio card here, or use + Audio, to add a soundtrack</span>';return}
- const r=sndOf(it);
- if(!r){el.className="eau gone"+(ED.selA?" on":"");el.innerHTML='<span class="eah">Soundtrack removed from the board · drop an audio card here to replace it</span>';return}
- el.className="eau"+(ED.selA?" on":"");let cv=el.querySelector("canvas");if(!cv){el.innerHTML='<canvas></canvas>';cv=el.querySelector("canvas")}
- const o=peaksOf(r),k=DPR(),cw=Math.min(W,16000/k),sec0=it.au.off,sec1=sec0+cw/(P*it.fps);
- cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(64*k);ED.auW={cv,o,sec0,sec1};edAudWave();
- const f=o.ok&&sec0+ftot(it)/it.fps>(r.ain?r.ain[1]:o.dur)?" · ends before the sequence":"";
- el.title="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f+(VIEW?"":"\nClick to choose which part of the music plays");
- el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;if(sels.size){sels.clear();sel=null;paintSel()}eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
-  if(!o.ok)return;el.setPointerCapture(e.pointerId);const x0=e.clientX,f0=it.au.off;
-  el.onpointermove=ev=>{if(!ev.buttons)return;it.au.off=Math.round(Math.max(0,Math.min(o.dur-.05,f0-(ev.clientX-x0)/view.s/(P*it.fps)))*100)/100;edAudio();audPanel()};
-  el.onpointerup=el.onpointercancel=()=>{el.onpointermove=null;if(it.au.off!==f0){save();ED.lf=-1}}};
+ const el=eq(".eau");if(!el)return;const it=ED.it;auMig(it);const P=ED.ppf,W=Math.max(1,(ftot(it)+tailN())*P);el.style.width=W+"px";
+ if(!it.aus.length){el.className="eau none";el.innerHTML=VIEW?"":'<span class="eah">♪ Drag an audio card here, or use + → Audio, to add sound</span>';el.onpointerdown=null;ED.auW=[];return}
+ el.className="eau lane";el.innerHTML="";ED.auW=[];const k=DPR();let a0=0;
+ it.aus.forEach(a=>{const r=items.find(x=>x.id===a.ref),n=aN(it,a),w=n*P,d=document.createElement("div");
+  d.className="ablk"+(a.id===ED.selA?" on":"")+(r?"":" gone");d.dataset.a=a.id;d.style.width=w+"px";
+  if(r){const o=peaksOf(r);
+   if(a.auto&&o.done){if(o.ok)a.d=Math.max(1,Math.round((r.ain?r.ain[1]-r.ain[0]:o.dur)*it.fps))/it.fps;delete a.auto;ED.dt=1}
+   const sr=auSrc(r),have=Math.max(0,Math.min(a.d,sr.B-a.ain)),sw=a.d?have/a.d*w:w,sn=document.createElement("div");sn.className="asnd";sn.style.width=sw+"px";
+   const cv=document.createElement("canvas"),cw=Math.max(1,Math.min(sw,8000/k));cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(64*k);sn.append(cv);d.append(sn);
+   ED.auW.push({cv,o,ain:a.ain,len:have,st:a0/it.fps});
+   d.insertAdjacentHTML("beforeend",`<span class="anb"></span>`);d.querySelector(".anb").textContent="♪ "+(r.name||"Audio");
+   d.title="♪ "+(r.name||"Audio")+` · ${n} frames · ${sec(n/it.fps)} s`+(have<a.d-.01?` · the sound ends after ${sec(have)} s, the rest is silent`:"")+(VIEW?"":"\nClick to choose which part plays · drag to move · drag the right edge to change the length · Alt+drag to slide the sound")}
+  else{d.innerHTML='<span class="anb">Audio card removed from the board</span>'}
+  if(!VIEW)d.insertAdjacentHTML("beforeend",'<i class="abh"></i>');el.append(d);a0+=n});
+ edAudWave();
+ if(VIEW){el.onpointerdown=e=>{const d=e.target.closest(".ablk");if(!d)return;e.stopPropagation();ED.selA=d.dataset.a;ED.sel=null;edAudio();edPanel()};return}
+ el.onpointerdown=e=>{const d=e.target.closest(".ablk");if(!d)return;e.preventDefault();e.stopPropagation();const a=it.aus.find(x=>x.id===d.dataset.a);if(!a)return;
+  ED.sel=null;ED.selA=a.id;if(sels.size){sels.clear();sel=null;paintSel()}eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.querySelectorAll(".ablk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
+  el.setPointerCapture(e.pointerId);let st=0;for(const q of it.aus){if(q===a)break;st+=aN(it,q)}
+  ED.adr=e.target.classList.contains("abh")?{m:"rs",a,n0:aN(it,a),sx:e.clientX}:e.altKey?{m:"in",a,v0:a.ain,sx:e.clientX}:{m:"ord",a,sx:e.clientX,l0:st*ED.ppf,mv:false}};
+ el.onpointermove=e=>{const D=ED&&ED.adr;if(!D)return;const dx=(e.clientX-D.sx)/view.s,P=ED.ppf;
+  if(D.m==="rs"){const n=Math.max(1,D.n0+Math.round(dx/P));if(n!==aN(it,D.a)){D.a.d=n/it.fps;D.ch=1;edLayout();edPanel()}return}
+  if(D.m==="in"){const r=items.find(x=>x.id===D.a.ref);if(!r)return;const sr=auSrc(r),v=Math.round(Math.max(sr.A,Math.min(Math.max(sr.A,sr.B-.05),D.v0+dx/P/it.fps))*100)/100;if(v!==D.a.ain){D.a.ain=v;D.ch=1;edAudio();edPanel()}return}
+  if(Math.abs(dx)>4)D.mv=true;if(!D.mv)return;
+  const cc=D.l0+dx+aN(it,D.a)*P/2,oth=it.aus.filter(q=>q!==D.a);let x=0,j=0;for(const q of oth){const w=aN(it,q)*P;if(x+w/2<cc)j++;x+=w}
+  if(it.aus.indexOf(D.a)!==j){oth.splice(j,0,D.a);it.aus.splice(0,it.aus.length,...oth);D.ch=1;edAudio()}};
+ el.onpointerup=el.onpointercancel=()=>{const D=ED&&ED.adr;if(!D)return;ED.adr=null;if(D.ch){save();ED.lf=-1;edLayout();edPanel()}};
 }
+function dupA(){const it=ED.it,a=(it.aus||[]).find(x=>x.id===ED.selA);if(!a)return;const x={...a,id:uid()};it.aus.splice(it.aus.indexOf(a)+1,0,x);ED.selA=x.id;edAll();save()}
+function delA(){const it=ED.it,a=(it.aus||[]).find(x=>x.id===ED.selA);if(!a)return;const i=it.aus.indexOf(a);audStop();it.aus.splice(i,1);ED.selA=(it.aus[i]||it.aus[i-1]||{}).id||null;edAll();save()}
 /* the played part of the music turns yellow, the rest is white */
-function edAudWave(){const w=ED&&ED.auW;if(!w||!w.cv.isConnected)return;const it=ED.it,t=w.sec0+ED.f/it.fps;wave(w.cv,w.o,w.sec0,w.sec1,"#FBCC0A","#fff",ED.f>0||ED.play?t:w.sec0-1)}
+function edAudWave(){if(!ED||!ED.auW)return;const it=ED.it,t=ED.f/it.fps,on=ED.f>0||ED.play;
+ ED.auW.forEach(w=>{if(!w.cv.isConnected)return;const sp=!on||t<w.st?w.ain-1:t>=w.st+w.len?w.ain+w.len+1:w.ain+(t-w.st);wave(w.cv,w.o,w.ain,w.ain+Math.max(.01,w.len),"#FBCC0A","#fff",sp)})}
 function audPanel(){
- const it=ED.it,r=sndOf(it),o=r&&peaksOf(r),P=eq(".eaup");if(!P)return;P.hidden=false;
- P.innerHTML=`<div class="aupw" title="Drag the yellow window to choose which part of the music plays"><canvas></canvas><div class="vwin"></div></div><div class="aupc"><span class="anm"></span><span class="atw"></span><span style="flex:1"></span><label title="Volume">Vol <input class="avl" type="range" min="0" max="1" step="0.05"></label><button class="pde ib" title="Remove the soundtrack from this sequence (the audio card stays on the board)">${IC.del}</button></div>`;
- P.querySelector(".anm").textContent=r?"♪ "+(r.name||"Audio"):"Soundtrack removed from the board";
- const vl=P.querySelector(".avl");vl.value=it.au.vol==null?1:it.au.vol;
- vl.oninput=()=>{it.au.vol=parseFloat(vl.value);if(ED.ae)ED.ae.volume=it.au.vol;save()};
- P.querySelector(".pde").onclick=()=>{audStop();delete it.au;ED.selA=false;edAll();save()};
- const bx=P.querySelector(".aupw"),cv=bx.querySelector("canvas"),win=bx.querySelector(".vwin"),tw=P.querySelector(".atw");
- const A0=r&&r.ain?r.ain[0]:0,B0=()=>r&&r.ain?r.ain[1]:o.dur,LEN=()=>B0()-A0;
- const draw=()=>{if(!o||!o.ok)return;const k=DPR(),W=Math.max(10,bx.clientWidth),H=bx.clientHeight;cv.width=Math.round(W*k);cv.height=Math.round(H*k);cv.style.width=W+"px";wave(cv,o,A0,B0(),"#fff","#fff");place()};
- const place=()=>{if(!o||!o.ok)return;const L=ftot(it)/it.fps;win.style.left=(it.au.off-A0)/LEN()*100+"%";win.style.width=Math.min(1,L/LEN())*100+"%";
-  tw.textContent=`${tfmt(it.au.off-A0)}–${tfmt(Math.min(LEN(),it.au.off-A0+L))} of ${tfmt(LEN())}`+(it.au.off+L>B0()+.01?" · ends before the sequence":"")};
+ const it=ED.it,P=eq(".eaup");if(!P)return;const a=(it.aus||[]).find(x=>x.id===ED.selA);if(!a){P.hidden=true;P.innerHTML="";return}
+ const r=items.find(x=>x.id===a.ref),o=r&&peaksOf(r);P.hidden=false;
+ P.innerHTML=`<div class="aupw" title="Drag the yellow window to choose which part of the sound plays in this block"><canvas></canvas><div class="vwin"></div></div><div class="aupc"><span class="anm"></span><span class="atw"></span><span style="flex:1"></span><label title="Volume of this block">Vol <input class="avl" type="range" min="0" max="1" step="0.05"></label><button class="pdu ib" title="Duplicate (Ctrl/⌘+D)">${IC.dup}</button><button class="pde ib" title="Remove this audio block (Delete) · the audio card stays on the board">${IC.del}</button></div>`;
+ P.querySelector(".anm").textContent=r?"♪ "+(r.name||"Audio"):"Audio card removed from the board";
+ const vl=P.querySelector(".avl");vl.value=a.vol==null?1:a.vol;vl.oninput=()=>{a.vol=parseFloat(vl.value);save()};
+ P.querySelector(".pdu").onclick=dupA;P.querySelector(".pde").onclick=delA;
+ if(VIEW){P.querySelectorAll(".pdu,.pde,label").forEach(x=>x.remove())}
+ if(!r||!o)return;
+ const bx=P.querySelector(".aupw"),cv=bx.querySelector("canvas"),win=bx.querySelector(".vwin"),tw=P.querySelector(".atw"),SR=()=>auSrc(r),LEN=()=>SR().B-SR().A;
+ const draw=()=>{if(!o.ok)return;const k=DPR(),W=Math.max(10,bx.clientWidth),H=bx.clientHeight;cv.width=Math.round(W*k);cv.height=Math.round(H*k);cv.style.width=W+"px";wave(cv,o,SR().A,SR().B,"#fff","#fff");place()};
+ const place=()=>{if(!o.ok)return;const A=SR().A,N=LEN();win.style.left=(a.ain-A)/N*100+"%";win.style.width=Math.min(1,a.d/N)*100+"%";
+  tw.textContent=`${tfmt(a.ain-A)}–${tfmt(Math.min(N,a.ain-A+a.d))} of ${tfmt(N)}`+(a.ain+a.d>SR().B+.01?` · silent after ${sec(SR().B-a.ain)} s`:"")};
  requestAnimationFrame(()=>{draw();const rb=ED&&ED.c&&ED.c.getBoundingClientRect();if(rb&&rb.bottom>innerHeight-16){view.y-=rb.bottom-innerHeight+24;apply()}});
  if(VIEW)return;
- bx.onpointerdown=e=>{if(!o||!o.ok)return;e.preventDefault();e.stopPropagation();bx.setPointerCapture(e.pointerId);if(ED.play)edPlay();
-  const rc=bx.getBoundingClientRect(),L=ftot(it)/it.fps,N=LEN(),mx=Math.max(0,N-Math.min(L,N)),x0=(e.clientX-rc.left)/rc.width*N,v0=it.au.off-A0,grab=x0>=v0&&x0<=v0+L?x0-v0:Math.min(L,N)/2;
-  const mv=ev=>{it.au.off=A0+Math.round(Math.min(mx,Math.max(0,(ev.clientX-rc.left)/rc.width*N-grab))*100)/100;place();edAudio()};mv(e);
+ bx.onpointerdown=e=>{if(!o.ok)return;e.preventDefault();e.stopPropagation();bx.setPointerCapture(e.pointerId);if(ED.play)edPlay();
+  const rc=bx.getBoundingClientRect(),A=SR().A,N=LEN(),L=Math.min(a.d,N),mx=Math.max(0,N-L),x0=(e.clientX-rc.left)/rc.width*N,v0=a.ain-A,grab=x0>=v0&&x0<=v0+L?x0-v0:L/2;
+  const mv=ev=>{a.ain=A+Math.round(Math.min(mx,Math.max(0,(ev.clientX-rc.left)/rc.width*N-grab))*100)/100;place();edAudio()};mv(e);
   bx.onpointermove=ev=>{if(ev.buttons)mv(ev)};bx.onpointerup=bx.onpointercancel=()=>{bx.onpointermove=null;save();ED.lf=-1}};
 }
 async function edAudFile(){
  if(!ED)return;const it=ED.it,pt={x:it.x+EWc()+40,y:it.y};let r=null;
  try{if(window.showOpenFilePicker){const[h]=await showOpenFilePicker({types:[{description:"Audio",accept:{"audio/*":[".mp3",".wav",".m4a",".aac",".ogg",".flac",".aif",".aiff"]}}]});r=await addLocal(h,await h.getFile(),pt)}
   else{const f=await new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept="audio/*";i.onchange=()=>res(i.files[0]);i.click()});if(!f)return;r=await addLocal(null,f,pt)}}catch(e){return}
- if(r&&ED&&r.type==="aud"){ED.it.au={ref:r.id,off:r.ain?r.ain[0]:0,vol:1};ED.sel=null;ED.selA=true;edAll();edTop();save()}
+ if(r&&ED&&r.type==="aud"){auMig(ED.it);const a=auNew(ED.it,r);ED.it.aus.push(a);ED.sel=null;ED.selA=a.id;edAll();edTop();save()}
 }
 /* group resize: with several cards selected, one frame with handles scales them all together */
 const GRP=document.createElement("div");GRP.id="grp";GRP.innerHTML=PTS0().map(k=>`<i class="gh ${k}" data-e="${k}"></i>`).join("");world.append(GRP);
@@ -1025,11 +1070,11 @@ function freeze(on){
 /* deleting cards: if a card is used in a sequence, ask whether to remove it from the sequence too */
 function delCards(ids){
  ids=ids.filter(id=>{const i=items.find(o=>o.id===id);return i&&!i.lk});if(!ids.length)return;
- const inS=(s,id)=>s.blocks.some(b=>b.ref===id)||(s.au&&s.au.ref===id),seqs=items.filter(s=>s.type==="seq"&&ids.some(id=>inS(s,id))),used=ids.filter(id=>seqs.some(s=>inS(s,id)));
+ const inS=(s,id)=>s.blocks.some(b=>b.ref===id)||(s.aus||[]).some(a=>a.ref===id),seqs=items.filter(s=>s.type==="seq"&&ids.some(id=>inS(s,id))),used=ids.filter(id=>seqs.some(s=>inS(s,id)));
  if(!used.length){ids.forEach(del);commit();return}
  const n=used.length,k=seqs.length;
  toast(`${n===1?(ids.length===1?"This card is":"One of these cards is"):n+" of these cards are"} used in ${k===1?"a sequence":k+" sequences"}.`,[
-  ["Delete everywhere",()=>{seqs.forEach(s=>{s.blocks=s.blocks.filter(b=>!ids.includes(b.ref));if(s.au&&ids.includes(s.au.ref))delete s.au;mount(s)});ids.forEach(del);if(ED)edSync();commit()}],
+  ["Delete everywhere",()=>{seqs.forEach(s=>{s.blocks=s.blocks.filter(b=>!ids.includes(b.ref));if(s.aus)s.aus=s.aus.filter(a=>!ids.includes(a.ref));mount(s)});ids.forEach(del);if(ED)edSync();commit()}],
   ["Keep in the sequence",()=>{ids.forEach(id=>used.includes(id)?hideCard(id):del(id));if(ED)edSync();commit()}],
   ["Cancel",()=>{}]]);
 }
@@ -1162,7 +1207,7 @@ addEventListener("keydown",e=>{if(!SH)return;const k=e.key;if(e.target.tagName==
 async function purge(){
  const saved=!!PD;
  if(!confirm("Purge\n\n• Clears the undo history: the changes made so far can no longer be undone with Ctrl/⌘+Z.\n"+(saved?"• Deletes for good, from the board folder, every media file that is no longer on the board (files of deleted cards that undo was keeping).\n":"• Frees the memory used by cards you deleted (the board isn't saved in a folder yet, so no file is touched).\n")+"\nThe board itself doesn't change. Continue?"))return;
- items=items.filter(i=>!i.hid||items.some(q=>q.type==="seq"&&(q.blocks.some(b=>b.ref===i.id)||(q.au&&q.au.ref===i.id))));
+ items=items.filter(i=>!i.hid||items.some(q=>q.type==="seq"&&(q.blocks.some(b=>b.ref===i.id)||(q.aus||[]).some(a=>a.ref===i.id))));
  hist=[];hi=-1;hp=false;clearTimeout(ht);commit();
  let n=0;if(saved){n=await pkClean();await savePkg(true)}
  toast(saved?(n?`Purged: undo history cleared, ${n} unused file${n>1?"s":""} deleted from the board folder.`:"Purged: undo history cleared, the board folder had no unused files."):"Purged: undo history cleared.");
@@ -1179,7 +1224,7 @@ const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
 <h4>Snapping</h4><p>Start moving or resizing a card, then hold Shift: its edges and centre stick to those of the other cards, and a blue guide shows where. Let go of Shift to move freely again.</p>
 <h4>Sequences (animatics)</h4><p>Select images or videos with Shift and press + Sequence, or drag cards onto the timeline of an open sequence. Every block is a reference that lasts a number of frames. With a video or GIF block selected, choose which part plays from the strip in the block bar (between the play button and the timeline), or Alt+drag the block. While you edit a sequence the board turns light yellow, so it is clear you are inside the sequence.</p>
-<h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. A sequence can have one soundtrack: drag an audio card onto an open sequence, or use + Audio. Drag the waveform under the timeline to choose where the music starts; the start point and the volume are also in the bar above the timeline when the soundtrack is selected. The soundtrack plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
+<h4>Sound</h4><p>Audio files (MP3, WAV, M4A, AAC, OGG, FLAC, AIFF) become audio cards with their waveform: press play to listen, click the waveform to jump. In a sequence the sound is a lane of blocks under the timeline, like the pictures: drag an audio card onto an open sequence, or use + Audio, and a block appears with the real length of the sound. Drag its right edge to make it shorter or longer (past the end of the sound it is silent, shown hatched), drag the block to change the order, Alt+drag to slide the sound inside it. Ctrl+D or the duplicate button copies the selected block, Delete removes it, Alt+← → changes its length by one frame. Under the lane, the selected block shows which part of the sound it plays (move the yellow window) and its volume. The sound plays together with the sequence while you edit it; the sequence card on the board stays silent.</p>
 <h4>Resizing</h4><p>Click a card: a dashed frame with eight handles appears around it. Drag a handle (or any side or corner of the card) to resize it. With several cards selected, the frame goes around all of them and resizes the whole group as if it were one card.</p>
 <h4>Cutting a video or a sound into clips</h4><p>For an edited video from your computer (or an audio card), open its menu and press the scissors. Play the video or move frame by frame (← →), stop on the first frame of a new shot and press Cut here (C): every cut makes a new clip. Click the clips you want to keep (each one plays above); the chain between two clips removes that cut. Create adds the chosen clips next to the video as cards that play only their part, paused on their first frame; dragged onto a sequence, a clip keeps its real length. With a sound, Cut here works while it plays: press it on the beat. The file stays one: nothing is copied.</p>
 <h4>The sound of a video</h4><p>Videos on the board are silent. To use the sound of a video from your computer, open its menu and press the note: an audio card appears next to it, tied by a green wire. While they are tied they move together and the video plays with its sound. Click the wire to cut it: the audio card becomes independent. The audio card can go into a sequence as soundtrack, or be cut into clips, right away; deleting one of the two leaves the other.</p>
@@ -1389,7 +1434,7 @@ const EWc=()=>ED&&ED.it&&ED.it.ew||900,EHc=()=>Math.round(EWc()*.49);
 const fr=(it,b)=>Math.max(1,Math.round(b.d*it.fps));
 const ftot=it=>it.blocks.reduce((a,b)=>a+fr(it,b),0);
 const sec=x=>(Math.round(x*100)/100).toLocaleString("en-US",{maximumFractionDigits:2});
-const cl=i=>i.blocks?{...i,blocks:i.blocks.map(b=>({...b})),au:i.au&&{...i.au}}:{...i};
+const cl=i=>i.blocks?{...i,blocks:i.blocks.map(b=>({...b})),aus:i.aus&&i.aus.map(a=>({...a})),au:i.au&&{...i.au}}:{...i};
 let ED=null,dropEl=null,HM="";
 function dirty(){SV.forEach(v=>v.last=-1);if(ED)ED.dt=1}
 function srcOf(it){if(it.url)return it.url;const b=it.blob||files.get(it.id);if(!b)return it.pf&&!BADPF.has(it.pf)?"media/"+it.pf:null;if(!ou.has(b))ou.set(b,URL.createObjectURL(b));return ou.get(b)}
@@ -1509,7 +1554,7 @@ function dropIn(D){
  const s=items.find(i=>i.id===dropEl.dataset.id),list=D.m==="mv"?[{it:D.it,ox:D.ox,oy:D.oy}]:D.m==="mvg"?D.its:[],open=!!(ED&&s&&s.id===ED.id),di=open?ED.di:null,dpb=open?ED.dpb:null;
  hl(null);if(!s||s.type!=="seq"||!list.length)return;
  const use=D.lk?list.filter(o=>o.it===D.lk):list,imgs=order(use.map(o=>o.it).filter(i=>MED(i.type))),snd=use.map(o=>o.it).find(i=>i.type==="aud");
- if(snd){s.au={ref:snd.id,off:snd.ain?snd.ain[0]:0,vol:s.au&&s.au.vol!=null?s.au.vol:1};if(open){ED.selA=true;ED.sel=null}}
+ if(snd){auMig(s);const a=auNew(s,snd);s.aus.push(a);if(open){ED.selA=a.id;ED.sel=null}}
  list.forEach(({it,ox,oy})=>{it.x=ox;it.y=oy;const c=els.get(it.id);c.style.left=ox+"px";c.style.top=oy+"px"});
  const dd=dflt(s);let ins=imgs.map(i=>nb(i,dd));const bl=s.blocks;
  if(open){
@@ -1524,7 +1569,7 @@ function dropIn(D){
 
 /* while a sequence is open, picking a card on the board deselects the block (or soundtrack) inside the sequence,
    and picking a block deselects the board cards: Delete and Ctrl/⌘+D always act on what is highlighted */
-function edUnsel(id){if(!ED||id===ED.id||(!ED.sel&&!ED.selA))return;ED.sel=null;ED.selA=false;ED.c&&ED.c.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));const a=ED.c&&eq(".eau");a&&a.classList.remove("on");edPanel()}
+function edUnsel(id){if(!ED||id===ED.id||(!ED.sel&&!ED.selA))return;ED.sel=null;ED.selA=false;ED.c&&ED.c.querySelectorAll(".blk.on,.ablk.on").forEach(q=>q.classList.remove("on"));edPanel()}
 /* smooth transitions: the card morphs from its old size to the new one while the board camera glides */
 const EASE="cubic-bezier(.65,0,.35,1)";let caT=0;
 function morph(el,w0,h0){const w1=el.offsetWidth,h1=el.offsetHeight;if(!w1||!h1)return;
@@ -1572,7 +1617,7 @@ function edBuild(c,it){
  tr.onpointerdown=e=>{
   const d=e.target.closest(".blk");if(!d||!ED)return;e.preventDefault();
   const bl=ED.it.blocks,b=bl.find(q=>q.id===d.dataset.b);if(!b)return;
-  ED.sel=b.id;ED.selA=false;if(sels.size){sels.clear();sel=null;paintSel()}eq(".eau").classList.remove("on");tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
+  ED.sel=b.id;ED.selA=false;if(sels.size){sels.clear();sel=null;paintSel()}eq(".eau").querySelectorAll(".ablk.on").forEach(q=>q.classList.remove("on"));tr.querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));d.classList.add("on");edPanel();
   if(VIEW){edSeekB(b);return}
   tr.setPointerCapture(e.pointerId);
   let a=0;for(const q of bl){if(q===b)break;a+=fr(ED.it,q)}
@@ -1610,7 +1655,7 @@ function edLayout(){
  const it=ED.it,T=ftot(it);ED.ppf=Math.min(ED.ppf,30000/(Math.max(T,1)*DPR()));
  if(ED.f>T-1)ED.f=Math.max(0,T-1);
  edRuler();edTrack();edAudio();ED.lf=-1}
-function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-64;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
+function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-64;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1,atot(it)-T+Math.round(it.fps))}
 function edRuler(){
  const it=ED.it,T=ftot(it)+tailN(),P=ED.ppf,W=Math.max(T*P,1),c=eq(".erc"),d=DPR();
  eq(".ein").style.width=W+"px";c.style.width=W+"px";c.width=Math.round(W*d);c.height=Math.round(30*d);
@@ -1663,7 +1708,7 @@ function edSeekB(b){let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED
 function edStep(k){if(!ED)return;if(ED.play)edPlay();const T=ftot(ED.it);if(T)edSeek(((ED.f+k)%T+T)%T)}
 function edPanel(){
  const P=Q.bar4,it=ED.it,b=selB();
- const ap=eq(".eaup");if(!b&&ED.selA&&it.au){P.innerHTML="";audPanel();return}if(ap){ap.hidden=true;ap.innerHTML=""}
+ const ap=eq(".eaup");if(!b&&ED.selA&&(it.aus||[]).some(a=>a.id===ED.selA)){P.innerHTML="";audPanel();return}if(ap){ap.hidden=true;ap.innerHTML=""}
  if(!b){P.innerHTML="";return}
  const i=it.blocks.indexOf(b),n=fr(it,b),ph=isPh(b),st=bState(b),r=refOf(b);
  if(VIEW){P.innerHTML=`<span class="pm"></span>`;P.querySelector(".pm").textContent=`${n} frames = ${sec(n/it.fps)} s`+(r&&r.type==="vid"?" · video from "+sec(b.vin||0)+" s":"")+(b.note?" · "+b.note:"")+(st?" · "+st:"");edLinkRow(P,r);return}
@@ -1731,15 +1776,17 @@ function edKey(e){
  const tg=e.target,inp=tg&&(/^(INPUT|SELECT|TEXTAREA)$/.test(tg.tagName)||tg.isContentEditable),k=e.key,kl=(k||"").toLowerCase(),mod=e.ctrlKey||e.metaKey;
  if(inp){if(k==="Escape"||(k==="Enter"&&!tg.isContentEditable)){e.preventDefault();tg.blur()}return}
  if(e.code==="Space"){e.preventDefault();edPlay()}
- else if(e.altKey&&(k==="ArrowLeft"||k==="ArrowRight")){e.preventDefault();const b=selB();if(b&&!VIEW){const it=ED.it,n=Math.max(1,fr(it,b)+(k==="ArrowLeft"?-1:1)*(e.shiftKey?5:1));b.d=n/it.fps;edLayout();edPanel();edReveal(b);save();dirty()}}
+ else if(e.altKey&&(k==="ArrowLeft"||k==="ArrowRight")){e.preventDefault();const b=selB(),au=!b&&(ED.it.aus||[]).find(x=>x.id===ED.selA);
+  if(au&&!VIEW){au.d=Math.max(1,aN(ED.it,au)+(k==="ArrowLeft"?-1:1)*(e.shiftKey?5:1))/ED.it.fps;edLayout();edPanel();save()}
+  if(b&&!VIEW){const it=ED.it,n=Math.max(1,fr(it,b)+(k==="ArrowLeft"?-1:1)*(e.shiftKey?5:1));b.d=n/it.fps;edLayout();edPanel();edReveal(b);save();dirty()}}
  else if(k==="ArrowLeft"||k==="ArrowRight"){e.preventDefault();edStep((k==="ArrowLeft"?-1:1)*(e.shiftKey?10:1))}
  else if(k==="Home"){e.preventDefault();if(ED.play)edPlay();edSeek(0)}
  else if(k==="Escape"||(k==="Enter"&&!mod)){e.preventDefault();closeEd()}
  else if(VIEW)return;
  else if(mod&&(kl==="z"||kl==="y")){e.preventDefault();(kl==="y"||e.shiftKey)?redo():undo();edSync()}
- else if(mod&&kl==="d"){e.preventDefault();if(selB())dupB();else{const l=[...sels].filter(id=>id!==ED.id);if(l.length){const nw=[];l.forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr")nw.push(add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id)).id)});sels.clear();nw.forEach(i=>sels.add(i));paintSel()}}}
+ else if(mod&&kl==="d"){e.preventDefault();if(selB())dupB();else if((ED.it.aus||[]).some(x=>x.id===ED.selA))dupA();else{const l=[...sels].filter(id=>id!==ED.id);if(l.length){const nw=[];l.forEach(id=>{const o=items.find(i=>i.id===id);if(o&&o.type!=="arr")nw.push(add({...cl(o),x:o.x+24,y:o.y+24},files.get(o.id)).id)});sels.clear();nw.forEach(i=>sels.add(i));paintSel()}}}
  else if(kl==="f"&&!mod&&!e.altKey){e.preventDefault();const b=selB();if(b&&!isPh(b))setFit(b,!b.fit)}
- else if(k==="Delete"||k==="Backspace"){e.preventDefault();if(selB())delB();else if(ED.selA&&ED.it.au){audStop();delete ED.it.au;ED.selA=false;edAll();save()}else{const l=[...sels].filter(id=>id!==ED.id);if(l.length)delCards(l)}}
+ else if(k==="Delete"||k==="Backspace"){e.preventDefault();if(selB())delB();else if((ED.it.aus||[]).some(x=>x.id===ED.selA))delA();else{const l=[...sels].filter(id=>id!==ED.id);if(l.length)delCards(l)}}
 }
 /* toolbar controls in sequence mode */
 
@@ -1764,14 +1811,14 @@ async function wr(d,n,t){const w=await(await d.getFileHandle(n,{create:true})).c
 function ser(i){
  const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh,pz:i.pz,vin:i.vin,clip:i.clip,vfps:i.vfps,shots:i.shots,lnk:i.lnk,ain:i.ain};
  if(i.type==="arr"){o.a=i.a;o.b=i.b;o.pa=i.pa;o.pb=i.pb}
- if(i.type==="seq"&&i.au)o.au={...i.au};
+ if(i.type==="seq"&&i.aus)o.aus=i.aus.map(a=>({...a}));
  if(i.type==="seq"){o.fps=i.fps;o.fmt=i.fmt;o.ew=i.ew;o.blocks=i.blocks.map(b=>({ref:b.ref,d:b.d,note:b.note||"",vin:b.vin,fit:b.fit}))}
  return o}
 const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box"&&i.type!=="arr";
 /* boards are folders: board.js + media/ + a copy of the program (moodboard.html) */
 
 function showName(){$("#bt").textContent=BNAME||"Moodboard";document.title=(BNAME?BNAME+" · ":"")+"Moodboard"}
-function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,vin:o.vin,clip:o.clip,vfps:o.vfps,shots:o.shots,lnk:o.lnk,ain:o.ain,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
+function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,vin:o.vin,clip:o.clip,vfps:o.vfps,shots:o.shots,lnk:o.lnk,ain:o.ain,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,aus:o.aus,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
  if(o.src){if(/^(https?|blob):/i.test(o.src))it.url=o.src;else it.pf=o.src.replace(/^media\//,"")}
  Object.keys(it).forEach(k=>it[k]===undefined&&delete it[k]);return it}
 function fixOld(i){if(i.url&&!/^(https?|blob):/i.test(i.url)){i.pf=i.url.replace(/^media\//,"");delete i.url}
