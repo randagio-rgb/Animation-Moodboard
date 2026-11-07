@@ -219,7 +219,7 @@ body.focus #vp{background-color:#fbefc8}
 body.armode #vp,body.armode #vp *{cursor:crosshair!important}
 body.frozen #arl .ahit{pointer-events:none}
 body.frozen #ctx,body.frozen #help,body.frozen .gl{display:none!important}
-body.frozen .rz,body.frozen .eg,body.frozen .sqb,body.frozen .yt .play,body.frozen .vgrip,body.frozen .vstop{display:none!important}
+body.frozen .rz,body.frozen .eg,body.frozen .sqed,body.frozen .yt .play,body.frozen .vgrip,body.frozen .vstop{display:none!important}
 #unf{position:fixed;top:16px;right:16px;z-index:12;display:none;align-items:center;gap:8px;padding:8px 18px 8px 14px;border:1.5px solid var(--blue);border-radius:var(--pill);background:var(--blue);color:#fff;font:inherit;font-weight:600;cursor:pointer;box-shadow:var(--sh)}
 #unf svg{width:16px;height:16px}
 /* box title label: the four colour pairs of the studio menu; the body is a light tint so the references keep their colours */
@@ -475,6 +475,13 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .epill:hover select,.epill:hover span{color:var(--blue)!important}
 #bar4 .pde:hover,.aupc .pde:hover{background:var(--red)!important;color:#fff!important}
 .epill:hover .chev{opacity:1}
+/* sequence cards wear green: their play button, and the outline on hover */
+.sqb .sqpl{background:var(--green)!important}
+.sqb .sqpl:hover{background:#00714f!important}
+.sqw.paused .sqb{opacity:1}
+body.frozen .sqw.paused .sqb{opacity:1}
+body:not(.ro) .seqc:not(.sel):not(.open):hover{outline-color:var(--green)}
+body.frozen .seqc:hover{outline:2.5px solid var(--green);outline-offset:3px}
 </style>
 </head>
 <body>
@@ -684,7 +691,7 @@ vp.addEventListener("pointerdown",e=>{
  const sh=e.shiftKey&&!VIEW&&e.button===0&&!space,ae=document.activeElement;
  if(sh&&ae&&ae.isContentEditable&&ae.contains(e.target))return;
  const bgp=!e.target.closest(".card")||e.button===1||space||VIEW;if(!bgp)ctxHide();
- dn={x:e.clientX,y:e.clientY,m:sh||VIEW?null:e.target.closest(".apb,.awv,.vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
+ dn={x:e.clientX,y:e.clientY,m:sh?null:VIEW?e.target.closest(".sqpl"):e.target.closest(".apb,.awv,.vstop,.miss,.yt,.so,.cn,.sd,.crbtn,.sqpl,.sqed")};
  const c=e.target.closest(".card"),pan=e.button===1||space||VIEW;
  if(sh){
   ae&&ae.blur();
@@ -1433,9 +1440,9 @@ function seqCard(c,it){
  const cv=document.createElement("canvas");w.append(cv);
  w.insertAdjacentHTML("beforeend",`<div class="sqb"><div class="sqpl" title="Play / pause"></div><div class="sqed" title="Edit the sequence (or double-click the card)">${IC.edit}</div></div>`);
  const inf=document.createElement("div");inf.className="sqi";c.append(w,inf);capEl(c,it);
- const o=SV.get(it.id);SV.set(it.id,{it,cv,w,inf,pl:w.querySelector(".sqpl"),t0:o?o.t0:performance.now(),f:o?o.f:0,play:o?o.play:true,last:-1,pi:null});
+ const o=SV.get(it.id);SV.set(it.id,{it,cv,w,inf,pl:w.querySelector(".sqpl"),t0:o?o.t0:performance.now(),f:o?o.f:0,play:o?o.play:true,last:-1,pi:null});if(o&&!o.play)w.classList.add("paused");
 }
-function seqPlay(id){const v=SV.get(id);if(!v)return;v.play=!v.play;v.last=-1;if(v.play)v.t0=performance.now()-v.f*1000/v.it.fps;v.last=-1}
+function seqPlay(id){const v=SV.get(id);if(!v)return;v.play=!v.play;v.w.classList.toggle("paused",!v.play);v.last=-1;if(v.play)v.t0=performance.now()-v.f*1000/v.it.fps;v.last=-1}
 function tick(now){
  SV.forEach((v,id)=>{
   if(!v.cv.isConnected){SV.delete(id);return}
