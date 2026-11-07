@@ -17,7 +17,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
 #world{position:absolute;left:0;top:0;transform-origin:0 0}
 .card{position:absolute;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);user-select:none}
 /* blue outline only while hovering a card that is not selected; a selected card shows the dashed frame with handles */
-body:not(.ro) .card:not(.sel):hover{outline:2.5px solid var(--acc);outline-offset:3px}
+body:not(.ro) .card:not(.sel):not(.open):hover{outline:2.5px solid var(--acc);outline-offset:3px}
 .card iframe{display:block;width:100%;height:auto;border:0;border-radius:var(--r) var(--r) 0 0;pointer-events:none;background:#000}
 .card img,.card video{display:block;width:100%;height:auto;border-radius:var(--r) var(--r) 0 0;pointer-events:none;-webkit-user-drag:none;background:var(--soft)}
 .cap,.nt{outline:none;white-space:pre-wrap;word-break:break-word;user-select:text;cursor:text}
@@ -101,7 +101,7 @@ body.dropping .card.sel{opacity:.4;transition:opacity .1s}
 .blk.dph{box-shadow:inset 0 0 0 3px var(--yellow);background:rgba(251,204,10,.3);border-radius:var(--rs)}
 .blk.cur .bf{color:var(--acc);font-weight:600}
 #bar4{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:6px 8px;margin:10px 18px 0;padding:7px 10px;min-height:52px;border-radius:26px;background:var(--soft);color:var(--blue);font-size:14px}
-#bar4:empty{visibility:hidden}
+#bar4:empty{display:none!important}
 body.sqmode:has(#bar4:not(:empty)) #hint{display:none}
 #bar4 b{padding:0 4px 0 8px}
 #bar4 label{display:flex;align-items:center;gap:6px;padding:0 4px;cursor:default}
@@ -380,13 +380,90 @@ body.sqmode #bar,body.sqmode #bar2{display:none}
 .shcount{font-size:14px;color:var(--mut);padding:0 8px}
 .shok{background:var(--blue)!important;color:#fff!important;padding:10px 22px!important}
 .shok:disabled{background:var(--tint)!important;color:var(--mut)!important;cursor:default}
+/* sequence card, edit mode: light blue frame, white panel inside */
+.seqc.open{background:var(--sky)!important;border-radius:36px!important;box-shadow:0 18px 50px rgba(9,40,80,.16)!important;border:0!important}
+.seqc.open .sqg{height:64px;background:transparent;padding:0 150px 0 28px!important;color:var(--blue);font-size:18px;border-radius:36px 36px 0 0}
+.seqc.open .sqg b{font-size:18px;font-weight:700}
+.seqc.open .sqx{background:#fff;border-radius:28px;margin:0 14px 14px;padding-bottom:16px;overflow:hidden}
+.sqhand{position:absolute;top:-22px;right:44px;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:grab;box-shadow:0 6px 18px rgba(9,78,153,.3);z-index:6}
+.sqhand:active{cursor:grabbing}
+.sqhand svg{width:24px;height:24px;display:block}
+/* top row */
+.ett{justify-content:flex-start!important;gap:10px!important;padding:16px 18px 2px!important}
+.ett>i{display:none}
+.eaddw{position:relative}
+.eadd{width:46px;height:46px;padding:0!important;border-radius:50%!important;background:var(--blue)!important;color:#fff!important;display:grid;place-items:center}
+.eadd svg{width:24px;height:24px}
+.eaddm{position:absolute;left:0;top:54px;z-index:8;display:flex;flex-direction:column;gap:2px;padding:6px;min-width:150px;background:#fff;border:1.5px solid var(--blue);border-radius:18px;box-shadow:var(--sh);animation:pop .25s cubic-bezier(.34,1.56,.64,1)}
+.eaddm[hidden]{display:none}
+.eaddm button{display:flex!important;align-items:center;gap:10px;padding:9px 12px!important;border-radius:12px!important;font-weight:600;text-align:left}
+.eaddm button:hover{background:var(--soft)!important}
+.eaddm .mi{display:grid;place-items:center}.eaddm .mi svg{width:20px;height:20px}
+.epill{height:44px;display:flex!important;align-items:center;gap:6px;padding:0 16px 0 18px!important;border-radius:999px;background:var(--blue)!important;color:#fff!important;font-weight:700;font-size:15px;cursor:pointer;position:relative}
+.epill select{appearance:none;-webkit-appearance:none;background:none!important;border:0!important;color:#fff!important;font:inherit!important;font-weight:700!important;padding:0!important;margin:0!important;cursor:pointer;outline:none;box-shadow:none!important}
+.epill select option{color:var(--blue);font-weight:500}
+.epill select{field-sizing:content;min-width:0}
+.seqc.open .eg::after{display:none}
+.epill .chev{width:16px;height:16px;opacity:.85;pointer-events:none}
+.epill:focus-within{box-shadow:0 0 0 3px var(--sky),0 0 0 5px var(--blue)}
+.sqx .ev{margin-top:14px!important;border-radius:22px!important}
+/* transport */
+.etp{padding:16px 18px 2px!important}
+.etp button{height:48px!important;min-width:48px!important;border-width:2px!important;border-color:var(--line)!important}
+#qpl{width:60px!important;height:60px!important}
+/* block bar */
+#bar4{justify-content:flex-start!important;gap:10px!important;margin:16px 18px 0!important;padding:12px 14px!important;min-height:76px!important;border-radius:24px!important;background:var(--tint)!important;flex-wrap:nowrap!important}
+#bar4 .pn{width:min(240px,30%)!important;height:44px;border-radius:999px;background:#fff;border:1.5px solid var(--line);padding:0 16px;font-size:14px!important}
+#bar4 .pfit{height:44px;padding:0 20px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(9,78,153,.18);font-weight:700;font-size:15px}
+#bar4 .pall{height:44px;padding:0 18px;border-radius:999px;font-weight:700;font-size:15px;box-shadow:inset 0 0 0 2px var(--line)!important}
+#bar4 .psp{flex:1}
+#bar4 .ib{width:40px!important;height:40px!important}
+#bar4 .ib svg{width:22px;height:22px}
+#bar4 .vst{order:9}
+#bar4 .vti{display:none}
+.vsb{width:300px!important;height:52px!important;border-radius:14px!important}
+.vwin{border:3.5px solid var(--yellow)!important;border-radius:14px!important;box-shadow:0 0 0 9999px rgba(9,20,40,.62)!important}
+.vwin::before,.vwin::after{content:"";position:absolute;top:50%;width:6px;height:22px;margin-top:-11px;border-radius:3px;background:var(--yellow)}
+.vwin::before{left:-5px}.vwin::after{right:-5px}
+/* timeline */
+.erc{margin-top:6px}
+.bfr.px{background:var(--fc)!important;border-radius:0!important;-webkit-mask-repeat:repeat-x;mask-repeat:repeat-x}
+.bfr:not(.px){background:var(--fc)!important;border-radius:8px}
+.blk{--fc:var(--blue)!important}
+.blk.alt{--fc:rgba(9,78,153,.55)!important}
+.etail .bfr{--fc:#e3e9ef!important}
+.ephc{top:28px!important;height:42px!important;border-radius:6px!important;box-shadow:0 0 0 3px #fff;z-index:3;min-width:10px;margin-left:0}
+.eph{display:none!important}
+.blk .btl{background:#f1f7f8!important;box-shadow:inset 0 0 0 2px var(--line)!important;border-radius:22px!important}
+.blk.alt .btl{background:#f1f7f8!important}
+.blk.on .btl{box-shadow:inset 0 0 0 3.5px var(--blue)!important}
+.blk .bf b{color:var(--red)!important;font-size:20px!important}
+.bh{background:var(--blue)!important;width:12px!important;opacity:.35}
+.bh:hover,.blk.on .bh{opacity:1}
+/* soundtrack */
+.eau:not(.none):not(.gone){background:var(--green)!important;height:76px!important;border-radius:22px!important;cursor:pointer}
+.eau canvas{height:64px!important;margin-top:6px!important}
+.eau.on{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--yellow)!important}
+.eau.none{border:2px dashed var(--line);background:transparent!important}
+.eaup{margin:12px 18px 0;padding:12px 14px;border-radius:22px;background:var(--tint);animation:shin .2s ease}
+.eaup[hidden]{display:none}
+.aupw{position:relative;height:56px;border-radius:14px;overflow:hidden;background:var(--green);cursor:ew-resize;touch-action:none}
+.aupw canvas{display:block;height:100%}
+.aupc{display:flex;align-items:center;gap:12px;padding:10px 4px 0;font-size:14px}
+.aupc .anm{font-weight:700}
+.aupc .atw{color:var(--mut);font-variant-numeric:tabular-nums}
+.aupc label{display:flex;align-items:center;gap:8px;color:var(--mut)}
+.aupc .avl{width:110px;accent-color:var(--blue)}
+.aupc .pde{width:40px;height:40px;border:0;border-radius:50%;background:none;color:var(--red);display:grid;place-items:center;cursor:pointer}
+.aupc .pde:hover{background:rgba(233,31,37,.1)}
+.aupc .pde svg{width:22px;height:22px}
 </style>
 </head>
 <body>
 <div id="bar" class="tb"><b id="bt">Moodboard</b><button id="off" title="This is the offline copy of the program">Offline</button><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden></div>
 <div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button></div>
 <div id="park" hidden>
-<div class="ett tbi"><button id="qlk" class="ed" title="Add an image or video from a link to the board and the sequence">+ Link</button><button id="qfi" class="ed" title="Add an image or video from your computer to the board and the sequence">+ File</button><button id="qau" class="ed" title="Add a soundtrack from your computer (it is also added to the board as an audio card)">+ Audio</button><i></i><label class="ed">fps<select id="qfps"></select></label><label class="ed">format<select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select></label></div>
+<div class="ett tbi"><div class="eaddw ed"><button class="eadd" title="Add a link, a file or a soundtrack"></button><div class="eaddm" hidden><button id="qlk" title="Add an image or video from a link to the board and the sequence"><i class="mi"></i>Link</button><button id="qfi" title="Add an image or video from your computer to the board and the sequence"><i class="mi"></i>File</button><button id="qau" title="Add a soundtrack from your computer (it is also added to the board as an audio card)"><i class="mi"></i>Audio</button></div></div><span style="flex:1"></span><label class="epill ed" title="Frames per second"><select id="qfps"></select><span>fps</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></label><label class="epill ed" title="Format of the frame"><span>Format</span><select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></label></div>
 <div class="etp"><div class="etl1"><button id="qpr" title="Previous frame (←, Shift+← = 10)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 6v12l-8-6z"/><rect x="5" y="6" width="2.4" height="12" rx="1"/></svg></button><button id="qpl" title="Play / pause (Space)">▶</button><button id="qnx" title="Next frame (→, Shift+→ = 10)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 6v12l8-6z"/><rect x="16.6" y="6" width="2.4" height="12" rx="1"/></svg></button><span id="qfr"></span></div><span style="flex:1"></span><div class="etl2"><span class="tl">timeline</span><button id="qzo" title="Zoom out the timeline">−</button><button id="qzi" title="Zoom in the timeline (or scroll over the timeline)">+</button><button id="qfit" title="Fit the timeline to the card">Fit</button></div></div>
 <div id="bar4" class="tbi"></div>
 <button id="qok" class="sqok" title="Done (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
@@ -766,24 +843,35 @@ function edAudio(){
  if(!it.au){el.className="eau none";el.innerHTML=VIEW?"":'<span class="eah">♪ Drag an audio card here, or use + Audio, to add a soundtrack</span>';return}
  const r=sndOf(it);
  if(!r){el.className="eau gone"+(ED.selA?" on":"");el.innerHTML='<span class="eah">Soundtrack removed from the board · drop an audio card here to replace it</span>';return}
- el.className="eau"+(ED.selA?" on":"");let cv=el.querySelector("canvas");if(!cv){el.innerHTML='<canvas></canvas><span class="eal"></span>';cv=el.querySelector("canvas")}
+ el.className="eau"+(ED.selA?" on":"");let cv=el.querySelector("canvas");if(!cv){el.innerHTML='<canvas></canvas>';cv=el.querySelector("canvas")}
  const o=peaksOf(r),k=DPR(),cw=Math.min(W,16000/k),sec0=it.au.off,sec1=sec0+cw/(P*it.fps);
- cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(50*k);wave(cv,o,sec0,sec1,"#094E99","#094E99");
+ cv.style.width=cw+"px";cv.width=Math.round(cw*k);cv.height=Math.round(64*k);ED.auW={cv,o,sec0,sec1};edAudWave();
  const f=o.ok&&sec0+ftot(it)/it.fps>o.dur?" · ends before the sequence":"";
- el.querySelector(".eal").textContent="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f;
+ el.title="♪ "+(r.name||"Audio")+" · from "+tfmt(sec0)+f+(VIEW?"":"\nClick to choose which part of the music plays");
  el.onpointerdown=e=>{if(VIEW)return;e.preventDefault();e.stopPropagation();ED.sel=null;ED.selA=true;if(sels.size){sels.clear();sel=null;paintSel()}eq(".etr").querySelectorAll(".blk.on").forEach(q=>q.classList.remove("on"));el.classList.add("on");edPanel();
   if(!o.ok)return;el.setPointerCapture(e.pointerId);const x0=e.clientX,f0=it.au.off;
-  el.onpointermove=ev=>{if(!ev.buttons)return;it.au.off=Math.round(Math.max(0,Math.min(o.dur-.05,f0-(ev.clientX-x0)/view.s/(P*it.fps)))*100)/100;edAudio();const q=$("#bar4 .aof");q&&(q.value=it.au.off)};
+  el.onpointermove=ev=>{if(!ev.buttons)return;it.au.off=Math.round(Math.max(0,Math.min(o.dur-.05,f0-(ev.clientX-x0)/view.s/(P*it.fps)))*100)/100;edAudio();audPanel()};
   el.onpointerup=el.onpointercancel=()=>{el.onpointermove=null;if(it.au.off!==f0){save();ED.lf=-1}}};
 }
-function audPanel(P,it){
- const r=sndOf(it),o=r&&peaksOf(r);
- P.innerHTML=`<b>Soundtrack</b><span class="pm anm"></span><label title="Where the audio starts at the first frame (you can also drag the waveform)">Starts at <input class="aof" type="number" min="0" step="0.1"> s</label><label title="Volume">Vol <input class="avl" type="range" min="0" max="1" step="0.05"></label><button class="pde ib" title="Remove the soundtrack from this sequence (the audio card stays on the board)">${IC.del}</button>`;
- P.querySelector(".anm").textContent=r?(r.name||"Audio")+(o&&o.ok?" · "+tfmt(o.dur):""):"removed";
- const of=P.querySelector(".aof"),vl=P.querySelector(".avl");of.value=it.au.off;vl.value=it.au.vol==null?1:it.au.vol;
- of.oninput=()=>{const v=parseFloat(of.value);if(v>=0){it.au.off=v;edAudio();save()}};
+/* the played part of the music turns yellow, the rest is white */
+function edAudWave(){const w=ED&&ED.auW;if(!w||!w.cv.isConnected)return;const it=ED.it,t=w.sec0+ED.f/it.fps;wave(w.cv,w.o,w.sec0,w.sec1,"#FBCC0A","#fff",ED.f>0||ED.play?t:w.sec0-1)}
+function audPanel(){
+ const it=ED.it,r=sndOf(it),o=r&&peaksOf(r),P=eq(".eaup");if(!P)return;P.hidden=false;
+ P.innerHTML=`<div class="aupw" title="Drag the yellow window to choose which part of the music plays"><canvas></canvas><div class="vwin"></div></div><div class="aupc"><span class="anm"></span><span class="atw"></span><span style="flex:1"></span><label title="Volume">Vol <input class="avl" type="range" min="0" max="1" step="0.05"></label><button class="pde ib" title="Remove the soundtrack from this sequence (the audio card stays on the board)">${IC.del}</button></div>`;
+ P.querySelector(".anm").textContent=r?"♪ "+(r.name||"Audio"):"Soundtrack removed from the board";
+ const vl=P.querySelector(".avl");vl.value=it.au.vol==null?1:it.au.vol;
  vl.oninput=()=>{it.au.vol=parseFloat(vl.value);if(ED.ae)ED.ae.volume=it.au.vol;save()};
  P.querySelector(".pde").onclick=()=>{audStop();delete it.au;ED.selA=false;edAll();save()};
+ const bx=P.querySelector(".aupw"),cv=bx.querySelector("canvas"),win=bx.querySelector(".vwin"),tw=P.querySelector(".atw");
+ const draw=()=>{if(!o||!o.ok)return;const k=DPR(),W=Math.max(10,bx.clientWidth),H=bx.clientHeight;cv.width=Math.round(W*k);cv.height=Math.round(H*k);cv.style.width=W+"px";wave(cv,o,0,o.dur,"#fff","#fff");place()};
+ const place=()=>{if(!o||!o.ok)return;const L=ftot(it)/it.fps;win.style.left=it.au.off/o.dur*100+"%";win.style.width=Math.min(1,L/o.dur)*100+"%";
+  tw.textContent=`${tfmt(it.au.off)}–${tfmt(Math.min(o.dur,it.au.off+L))} of ${tfmt(o.dur)}`+(it.au.off+L>o.dur+.01?" · ends before the sequence":"")};
+ requestAnimationFrame(()=>{draw();const rb=ED&&ED.c&&ED.c.getBoundingClientRect();if(rb&&rb.bottom>innerHeight-16){view.y-=rb.bottom-innerHeight+24;apply()}});
+ if(VIEW)return;
+ bx.onpointerdown=e=>{if(!o||!o.ok)return;e.preventDefault();e.stopPropagation();bx.setPointerCapture(e.pointerId);if(ED.play)edPlay();
+  const rc=bx.getBoundingClientRect(),L=ftot(it)/it.fps,mx=Math.max(0,o.dur-Math.min(L,o.dur)),x0=(e.clientX-rc.left)/rc.width*o.dur,v0=it.au.off,grab=x0>=v0&&x0<=v0+L?x0-v0:Math.min(L,o.dur)/2;
+  const mv=ev=>{it.au.off=Math.round(Math.min(mx,Math.max(0,(ev.clientX-rc.left)/rc.width*o.dur-grab))*100)/100;place();edAudio()};mv(e);
+  bx.onpointermove=ev=>{if(ev.buttons)mv(ev)};bx.onpointerup=bx.onpointercancel=()=>{bx.onpointermove=null;save();ED.lf=-1}};
 }
 async function edAudFile(){
  if(!ED)return;const it=ED.it,pt={x:it.x+EWc()+40,y:it.y};let r=null;
@@ -1183,7 +1271,7 @@ addEventListener("message",e=>{
 });
 /* non-destructive crop: only the window proportions are saved, never a copy of the image */
 const svgI=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,
-IC={cut:svgI('<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M20 4 8.2 15.8"/><path d="M14.5 14.5 20 20"/><path d="M8.2 8.2 12 12"/>'),arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),unlock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
+IC={plus:svgI('<path d="M12 5v14"/><path d="M5 12h14"/>'),music:svgI('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),hand:svgI('<path d="M18 11V6a2 2 0 0 0-4 0v1"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>'),cut:svgI('<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M20 4 8.2 15.8"/><path d="M14.5 14.5 20 20"/><path d="M8.2 8.2 12 12"/>'),arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),unlock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),info:svgI('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
 function startCrop(it){
  if(VIEW||it.type!=="img")return;
  if(cropEdit)cancelCrop();
@@ -1406,9 +1494,9 @@ function closeEd(){
 }
 function edBuild(c,it){
  ED.c=c;ED.it=it;c.classList.add("open");c.style.width=EWc()+"px";
- c.insertAdjacentHTML("beforeend",`<div class="sqg" title="${VIEW?"":"Drag here to move the sequence"}"><b>Sequence</b><span style="flex:1"></span>${VIEW?"":'<span class="bxg"><i></i><i></i><i></i><i></i><i></i><i></i></span>'}</div>
+ c.insertAdjacentHTML("beforeend",`<div class="sqg" title="${VIEW?"":"Drag here to move the sequence"}"><b>Sequence</b><span style="flex:1"></span>${VIEW?"":'<span class="sqhand" title="Drag to move the sequence">'+IC.hand+'</span>'}</div>
 <div class="sqx"><div class="etth"></div><div class="ev"><canvas class="ecv" title="Click to play / pause"></canvas></div><div class="en"></div><div class="etph"></div><div class="eb4h"></div>
-<div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eau"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div></div>`);
+<div class="etl"><div class="ein"><canvas class="erc"></canvas><div class="etr"></div><div class="eau"></div><div class="eph"></div><div class="ephc"></div><div class="eins"></div></div></div><div class="eaup" hidden></div></div>`);
  c.querySelector(".etph").replaceWith(ETP);c.querySelector(".etth").replaceWith(ETT);c.querySelector(".eb4h").replaceWith(Q.bar4);c.append(Q.qok);Q.qok.onpointerdown=e=>e.stopPropagation();
  const x=c.querySelector(".sqx");x.addEventListener("pointerdown",e=>e.stopPropagation());
  eq(".ecv").onclick=edPlay;
@@ -1444,22 +1532,22 @@ function edBuild(c,it){
 function edFps(){const s=Q.qfps,L=[12,24,25,30,60],f=ED.it.fps,all=L.includes(f)?L:[...L,f].sort((a,b)=>a-b);
  s.innerHTML=all.map(v=>`<option value="${v}">${sec(v)}</option>`).join("")+'<option value="x">Other…</option>';s.value=String(f)}
 function edResize(p){if(!ED||!ED.c)return;eq(".ev").style.height=EHc()+"px";edSize();if(p)ED.ppf=p;edLayout()}
-function edSize(){eq(".ev").style.height=EHc()+"px";const cv=eq(".ecv"),r=R(ED.it.fmt),aw=EWc()-60,ah=EHc()-24;let w=aw,h=w/r;if(h>ah){h=ah;w=h*r}
+function edSize(){eq(".ev").style.height=EHc()+"px";const cv=eq(".ecv"),r=R(ED.it.fmt),aw=EWc()-88,ah=EHc()-24;let w=aw,h=w/r;if(h>ah){h=ah;w=h*r}
  cv.style.width=w+"px";cv.style.height=h+"px";cv.width=Math.round(w*DPR());cv.height=Math.round(h*DPR());ED.lf=-1}
-function fitPPF(){const T=Math.max(ftot(ED.it),1);return Math.min(40,Math.max(.5,(EWc()-36)/T))}
+function fitPPF(){const T=Math.max(ftot(ED.it),1);return Math.min(40,Math.max(.5,(EWc()-64)/T))}
 function edZoomAt(cx,k){if(!ED)return;const tl=eq(".etl"),rc=tl.getBoundingClientRect(),off=(cx-rc.left)/view.s,fp=(off+tl.scrollLeft-12)/ED.ppf;
  ED.ppf=Math.min(80,Math.max(.5,ED.ppf*k));edLayout();tl.scrollLeft=Math.max(0,fp*ED.ppf+12-off)}
 function edZoom(k){if(!ED)return;const rc=eq(".etl").getBoundingClientRect();edZoomAt(rc.left+rc.width/2,k)}
 function edFit(){if(!ED)return;ED.ppf=fitPPF();edLayout();eq(".etl").scrollLeft=0}
 function edReveal(b){if(!b)return;const tl=eq(".etl");let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED.it,q)}const x=a*ED.ppf,w=fr(ED.it,b)*ED.ppf;
  if(x<tl.scrollLeft||x+w>tl.scrollLeft+tl.clientWidth-24)tl.scrollLeft=Math.max(0,x+w/2-tl.clientWidth/2)}
-function edAfterAdd(){const T=ftot(ED.it);if(T*ED.ppf>EWc()-36){const f=fitPPF();if(f>=3)ED.ppf=f}else if(ED.it.blocks.length===1)ED.ppf=fitPPF();edAll();edReveal(selB())}
+function edAfterAdd(){const T=ftot(ED.it);if(T*ED.ppf>EWc()-64){const f=fitPPF();if(f>=3)ED.ppf=f}else if(ED.it.blocks.length===1)ED.ppf=fitPPF();edAll();edReveal(selB())}
 function edAll(){edLayout();edPanel()}
 function edLayout(){
  const it=ED.it,T=ftot(it);ED.ppf=Math.min(ED.ppf,30000/(Math.max(T,1)*DPR()));
  if(ED.f>T-1)ED.f=Math.max(0,T-1);
  edRuler();edTrack();edAudio();ED.lf=-1}
-function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-36;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
+function tailN(){const it=ED.it,T=ftot(it),vis=EWc()-64;return Math.max(Math.round(it.fps*2),Math.ceil((vis-T*ED.ppf)/ED.ppf)+1)}
 function edRuler(){
  const it=ED.it,T=ftot(it)+tailN(),P=ED.ppf,W=Math.max(T*P,1),c=eq(".erc"),d=DPR();
  eq(".ein").style.width=W+"px";c.style.width=W+"px";c.width=Math.round(W*d);c.height=Math.round(30*d);
@@ -1471,7 +1559,10 @@ function edRuler(){
  for(let s=0;s*it.fps<=T+1e-6;s++){const X=Math.round(s*it.fps*P)+.5;x.beginPath();x.moveTo(X,s%ls?18:4);x.lineTo(X,30);x.stroke();if(s%ls===0)x.fillText(s+" s",X+5,2)}
 }
 function cellK(){let k=1;for(const q of [1,2,5,10,25,50,100,250]){k=q;if(q*ED.ppf>=4)break}return k}
-function strip(el,a,P,K){const fw=K*P,g=fw>=10?2:1;el.style.backgroundSize=fw+"px 100%";el.style.backgroundPosition=(-((a%K)*P))+"px 0";el.style.setProperty("--g",g+"px")}
+function strip(el,a,P,K){const fw=K*P,pos=(-((a%K)*P))+"px 0";
+ if(K===1&&fw>=6){const g=Math.max(2,Math.round(fw*.16)),w=fw-g,rx=Math.min(6,w/2),m=`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${fw}' height='30'%3E%3Crect x='${g/2}' width='${w}' height='30' rx='${rx}'/%3E%3C/svg%3E")`;
+  el.classList.add("px");el.style.webkitMaskImage=el.style.maskImage=m;el.style.webkitMaskSize=el.style.maskSize=fw+"px 100%";el.style.webkitMaskPosition=el.style.maskPosition=pos}
+ else{el.classList.remove("px");el.style.webkitMaskImage=el.style.maskImage="none"}}
 function edTrack(){
  const t=eq(".etr"),it=ED.it,h=70,tw=Math.round(h*R(it.fmt)),k=DPR(),P=ED.ppf,K=cellK();t.innerHTML="";
  t.title=K>1?`Zoomed out: each cell is ${K} frames · scroll over the timeline to zoom in`:"";
@@ -1496,7 +1587,7 @@ function edTick(now){
  if(ED.play&&T)ED.f=(ED.f0+Math.floor((now-ED.t0)/1000*it.fps))%T;
  audSync(now);
  if(ED.f===ED.lf)return;ED.lf=ED.f;
- frame(eq(".ecv"),it,ED.f,ED.play,"e"+ED.id);const o=at(it,ED.f);
+ frame(eq(".ecv"),it,ED.f,ED.play,"e"+ED.id);const o=at(it,ED.f);edAudWave();
  eq(".eph").style.left=ED.f*ED.ppf+"px";const pc=eq(".ephc");pc.style.left=ED.f*ED.ppf+"px";pc.style.width=Math.max(2,ED.ppf)+"px";pc.style.display=ftot(it)?"block":"none";
  Q.qfr.textContent=T?`frame ${ED.f} / ${T} · ${sec(ED.f/it.fps)} / ${sec(T/it.fps)} s`:"0 frames";
  eq(".en").textContent=o&&o.b.note||"";
@@ -1509,19 +1600,16 @@ function edSeekB(b){let a=0;for(const q of ED.it.blocks){if(q===b)break;a+=fr(ED
 function edStep(k){if(!ED)return;if(ED.play)edPlay();const T=ftot(ED.it);if(T)edSeek(((ED.f+k)%T+T)%T)}
 function edPanel(){
  const P=Q.bar4,it=ED.it,b=selB();
- if(!b&&ED.selA&&it.au){audPanel(P,it);return}
+ const ap=eq(".eaup");if(!b&&ED.selA&&it.au){P.innerHTML="";audPanel();return}if(ap){ap.hidden=true;ap.innerHTML=""}
  if(!b){P.innerHTML="";return}
  const i=it.blocks.indexOf(b),n=fr(it,b),ph=isPh(b),st=bState(b),r=refOf(b);
  if(VIEW){P.innerHTML=`<span class="pm"></span>`;P.querySelector(".pm").textContent=`${n} frames = ${sec(n/it.fps)} s`+(r&&r.type==="vid"?" · video from "+sec(b.vin||0)+" s":"")+(b.note?" · "+b.note:"")+(st?" · "+st:"");edLinkRow(P,r);return}
- P.innerHTML=`<label title="Duration in frames (Alt+← → to change by one frame)"><input class="pd" type="number" min="1" step="1"><span class="pm ps"></span></label><input class="pn" placeholder="Note, e.g. slows down here" title="Note shown under the preview while this block plays">${ph?'<span class="pph"></span>':`<span class="seg" title="Fill: the media covers the whole frame (edges may be cropped) · Fit: the whole media is visible, with bars where it doesn't match the format (F)"><button data-v="fill" class="${b.fit?"":"on"}">Fill</button><button data-v="fit" class="${b.fit?"on":""}">Fit</button></span><button class="pall" title="Use ${b.fit?"Fit":"Fill"} for every block in this sequence">All</button>`}<button class="pdu ib" title="Duplicate block (Ctrl/⌘+D)">${IC.dup}</button><button class="pde ib" title="Remove block (Delete)">${IC.del}</button>`;
+ P.innerHTML=`<input class="pn" placeholder="Note, e.g. slows down here" title="Note shown under the preview while this block plays">${ph?'<span class="pph"></span>':`<button class="pfit" title="${b.fit?"Fit: the whole picture is visible, with bars where it doesn't match the format":"Fill: the picture covers the whole frame (edges may be cropped)"} · click to switch (F)">${b.fit?"Fit":"Fill"}</button><button class="pall" title="Use ${b.fit?"Fit":"Fill"} for every block in this sequence">All</button>`}<span class="psp"></span><button class="pdu ib" title="Duplicate block (Ctrl/⌘+D)">${IC.dup}</button><button class="pde ib" title="Remove block (Delete)">${IC.del}</button>`;
  if(ph){const x=P.querySelector(".pph");x.textContent=st+" · drop a card on the yellow block";x.title=st+": drop a board card on the striped block to relink it"}
- const pd=P.querySelector(".pd"),ps=P.querySelector(".ps"),pn=P.querySelector(".pn");
- pd.value=n;ps.textContent="frames";pn.value=b.note||"";
- pd.oninput=()=>{const v=parseInt(pd.value);if(v>=1&&v<=100000){b.d=v/it.fps;edLayout();save();dirty()}};
- pd.onblur=()=>{pd.value=fr(it,b)};
+ const pn=P.querySelector(".pn");pn.value=b.note||"";
  pn.oninput=()=>{b.note=pn.value;const d=ED.c.querySelector(`.blk[data-b="${b.id}"] .bn`);d&&(d.textContent=b.note||(isPh(b)?bState(b):lbl(b)));ED.lf=-1;save()};
  P.querySelector(".pdu").onclick=dupB;P.querySelector(".pde").onclick=delB;
- P.querySelectorAll(".seg button").forEach(x=>x.onclick=()=>setFit(b,x.dataset.v==="fit"));
+ const pf=P.querySelector(".pfit");pf&&(pf.onclick=()=>setFit(b,!b.fit));
  const pa=P.querySelector(".pall");pa&&(pa.onclick=()=>{it.blocks.forEach(q=>{if(b.fit)q.fit=true;else delete q.fit});edAll();save();dirty()});
  edLinkRow(P,r);if(r&&(r.type==="vid"||isGif(r))&&!st)edVidRow(P,b,r);
 }
@@ -1532,12 +1620,12 @@ function edVidRow(P,b,r){
  const gif=isGif(r),G=gif&&gifOf(r),gs=gif&&GD.get(gKey(r)),s=srcOf(r),o=gif?null:tvOf(s),du=gif?(G?G.dur:NaN):o.dur,row=document.createElement("div");row.className="vst";P.append(row);
  if(!(du>0)){row.innerHTML=`<span class="pm">${gif?(!window.ImageDecoder?"Choosing a part of a GIF needs Chrome or Edge":gs&&gs.done?"This GIF can't be read frame by frame here: it plays as a still image":"Reading the GIF…"):o.ok?"Loading video…":"Video can't be loaded"}</span>`;return}
  row.innerHTML='<div class="vsb" title="Drag to choose which part plays"><canvas class="vfs"></canvas><div class="vwin"></div></div><span class="pm vti"></span>';
- const sb=row.querySelector(".vsb"),cv=row.querySelector(".vfs"),win=row.querySelector(".vwin"),ti=row.querySelector(".vti"),SW=200,SH=30,N=6,k=DPR();
+ const sb=row.querySelector(".vsb"),cv=row.querySelector(".vfs"),win=row.querySelector(".vwin"),ti=row.querySelector(".vti"),SW=320,SH=52,N=6,k=DPR();
  cv.width=SW*k;cv.height=SH*k;const cx=cv.getContext("2d");cx.fillStyle="#000";cx.fillRect(0,0,cv.width,cv.height);
  for(let j=0;j<N;j++){const c=gif?gFrame(G,gAt(G,du*(j+.5)/N)):thumbOf(s,du*(j+.5)/N);if(!c)continue;const x0=j*cv.width/N,w=cv.width/N,kk=Math.max(w/c.width,cv.height/c.height),dw=c.width*kk,dh=c.height*kk;
   cx.save();cx.beginPath();cx.rect(x0,0,w,cv.height);cx.clip();try{cx.drawImage(c,x0+(w-dw)/2,(cv.height-dh)/2,dw,dh)}catch(e){}cx.restore()}
  const place=()=>{const L=Math.min(b.d,du);win.style.left=(b.vin||0)/du*100+"%";win.style.width=L/du*100+"%";
-  const hold=b.d>du-(b.vin||0)+.01;ti.textContent=`${sec(b.vin||0)}–${sec(Math.min(du,(b.vin||0)+b.d))} s / ${sec(du)} s`+(hold?gif?" · loops":" · holds":"");ti.title=hold?gif?"The block is longer than the rest of the GIF: it starts again from the beginning":"The block is longer than this part of the video: the last frame holds":"";};place();
+  const hold=b.d>du-(b.vin||0)+.01;ti.textContent=`${sec(b.vin||0)}–${sec(Math.min(du,(b.vin||0)+b.d))} s / ${sec(du)} s`+(hold?gif?" · loops":" · holds":"");sb.title="Drag the yellow window to choose which part plays · "+ti.textContent+(hold?gif?"\nThe block is longer than the rest of the GIF: it starts again from the beginning":"\nThe block is longer than this part of the video: the last frame holds":"");};place();
  sb.onpointerdown=e=>{e.preventDefault();sb.setPointerCapture(e.pointerId);if(ED.play)edPlay();ED.vd=1;
   const rc=sb.getBoundingClientRect(),W=rc.width,len=Math.min(b.d,du),max=gif?du-.01:Math.max(0,du-len),x0=(e.clientX-rc.left)/W*du,v0=b.vin||0,grab=x0>=v0&&x0<=v0+len?x0-v0:len/2;
   const mv=ev=>{b.vin=Math.round(Math.min(max,Math.max(0,(ev.clientX-rc.left)/W*du-grab))*100)/100;place();edSeekB(b)};mv(e);
@@ -1592,7 +1680,11 @@ function edKey(e){
 }
 /* toolbar controls in sequence mode */
 
-$("#hp").innerHTML=IC.book;$("#fz").innerHTML=IC.lock;$("#ba").innerHTML=IC.arrow;
+$("#hp").innerHTML=IC.book;
+{const ad=$(".eadd"),m=$(".eaddm");ad.innerHTML=IC.plus;Q.qlk.querySelector(".mi").innerHTML=IC.link;Q.qfi.querySelector(".mi").innerHTML=IC.name;Q.qau.querySelector(".mi").innerHTML=IC.music;
+ ad.onclick=e=>{e.stopPropagation();m.hidden=!m.hidden};[Q.qlk,Q.qfi,Q.qau].forEach(b=>b.addEventListener("click",()=>m.hidden=true));
+ addEventListener("pointerdown",e=>{if(!m.hidden&&!e.target.closest(".eaddw"))m.hidden=true},true);
+ addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden){m.hidden=true;e.preventDefault();e.stopImmediatePropagation()}},true)}$("#fz").innerHTML=IC.lock;$("#ba").innerHTML=IC.arrow;
 Q.qfps.onchange=e=>{if(!ED)return;let v=e.target.value;if(v==="x"){v=prompt("Frames per second (1–120)",ED.it.fps);v=parseFloat(String(v||"").replace(",","."))}else v=+v;
  if(v>=1&&v<=120){ED.it.fps=Math.round(v*1000)/1000;if(ED.play){ED.f0=ED.f;ED.t0=performance.now()}save();dirty()}edFps();edAll();e.target.blur()};
 Q.qfmt.onchange=e=>{if(!ED)return;ED.it.fmt=e.target.value;mount(ED.it);save();e.target.blur()};
