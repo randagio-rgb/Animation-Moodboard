@@ -339,7 +339,8 @@ body.frozen #tch [data-m],body.frozen #tch [data-k],body.frozen #tch i{display:n
 body.frozen #tch{display:none!important}
 @media (pointer:coarse){
  #tch{display:flex}
- .vpb,.card.sel>.fnm{opacity:1!important}
+ .vpb,.card.sel>.fnm,.vtl{opacity:1!important}
+ .vtl{height:calc(40px*var(--iz,1))}
  #arl .lcut{opacity:1!important}
  #arl .lnk .lhit{stroke-width:28px}
  .gh::before{inset:calc(-16px*var(--k,1))!important}
@@ -383,6 +384,17 @@ body.frozen #tch{display:none!important}
 /* play / pause on video cards: shows on hover, always visible while paused */
 .vpb{position:absolute;right:8px;top:8px;z-index:3;width:30px;height:30px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;background:rgba(var(--glass),.92);color:var(--ink);box-shadow:0 1px 4px rgba(var(--srgb),.25);cursor:pointer;transform:scale(var(--iz,1));transform-origin:100% 0;opacity:0;transition:opacity .15s,background .15s}
 .vpb svg{width:15px;height:15px}
+/* video timeline */
+.vtl{position:absolute;z-index:3;height:calc(26px*var(--iz,1));transform:translateY(-100%);cursor:pointer;opacity:0;transition:opacity .15s;touch-action:none}
+.card:hover>.vtl,.vtl.on{opacity:1}
+.vtl .vtr{position:absolute;left:calc(8px*var(--iz,1));right:calc(8px*var(--iz,1));bottom:calc(9px*var(--iz,1));height:calc(4px*var(--iz,1));border-radius:99px;background:rgba(255,255,255,.4);box-shadow:0 0 0 calc(.5px*var(--iz,1)) rgba(0,0,0,.25)}
+.vtl:hover .vtr,.vtl.on .vtr{height:calc(6px*var(--iz,1));bottom:calc(8px*var(--iz,1))}
+.vtl .vtf{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;background:var(--yellow)}
+.vtl .vtk{position:absolute;top:50%;width:calc(13px*var(--iz,1));height:calc(13px*var(--iz,1));margin:calc(-6.5px*var(--iz,1)) 0 0 calc(-6.5px*var(--iz,1));border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35);opacity:0;transition:opacity .15s}
+.vtl:hover .vtk,.vtl.on .vtk{opacity:1}
+.vtl .vtt{position:absolute;right:calc(8px*var(--iz,1));bottom:calc(22px*var(--iz,1));padding:calc(2px*var(--iz,1)) calc(8px*var(--iz,1));border-radius:99px;background:rgba(0,0,0,.6);color:#fff;font-size:calc(11px*var(--iz,1));font-variant-numeric:tabular-nums;white-space:nowrap;opacity:0;pointer-events:none}
+.vtl.on .vtt{opacity:1}
+.cropping>.vtl{display:none}
 .vpb .i-pl,.vpb.pz .i-pa{display:none}
 .vpb.pz .i-pl{display:block}
 .card:hover>.vpb,.vpb.pz{opacity:1}
@@ -711,7 +723,7 @@ function mount(it){if(it.type==="seq")auMig(it);
   pb.onpointerdown=e=>e.stopPropagation();
   pb.onclick=e=>{e.stopPropagation();const p=!vd.paused;
    if(!p&&items.some(a=>a.type==="aud"&&a.lnk===it.id)){document.querySelectorAll("#world video").forEach(x=>{if(x!==vd)x.muted=true});AP.forEach(x=>{if(!x.paused)x.pause()});vd.muted=false}
-   if(p){vd.pause();vd.muted=true}else vd.play().catch(()=>{});pb.classList.toggle("pz",p);pb.title=p?"Play the video":"Pause the video";if(!VIEW){if(p)it.pz=1;else delete it.pz;persist()}};c.append(pb)}}
+   if(p){vd.pause();vd.muted=true}else vd.play().catch(()=>{});pb.classList.toggle("pz",p);pb.title=p?"Play the video":"Pause the video";if(!VIEW){if(p)it.pz=1;else delete it.pz;persist()}};c.append(pb);vtl(c,it,vd,pb)}}
  if(/^(img|vid|emb|yt)$/.test(it.type)){const n=shortName(it),cs=it.vin?` · clip ${it.clip||""} · ${sec(it.vin[1]-it.vin[0])} s`:"",t=document.createElement("span");t.className="fnm";t.textContent=midCut(n)+cs;t.title=n+cs;c.append(t)}
  world.append(c);els.set(it.id,c);empty();dirty();if(it.type==="vid")offQ();
 }
@@ -1184,6 +1196,20 @@ function offQ(){if(offR)return;offR=requestAnimationFrame(()=>{offR=0;const W=in
   if(!see&&!v.paused&&!mine){v.pause();v.dataset.off=1}
   else if(see&&v.dataset.off){delete v.dataset.off;if(!mine)v.play().catch(()=>{})}})})}
 addEventListener("resize",offQ);
+/* timeline on a video card: shows where the video is, drag or click it to move through the video (a clip moves only inside its part);
+   a video that was playing goes on playing from the new point, the loop stays as it is */
+function vtl(c,it,vd,pb){const b=document.createElement("div");b.className="vtl";b.title="Drag to move through the video";b.innerHTML='<i class="vtr"><i class="vtf"></i><i class="vtk"></i></i><span class="vtt"></span>';c.append(b);
+ const fl=b.querySelector(".vtf"),kn=b.querySelector(".vtk"),tt=b.querySelector(".vtt"),rg=()=>it.vin?[it.vin[0],it.vin[1]]:[0,vd.duration||0];
+ const place=()=>{if(!b.isConnected)return;b.style.left=vd.offsetLeft+"px";b.style.width=vd.offsetWidth+"px";b.style.top=vd.offsetTop+vd.offsetHeight+"px"};
+ const fmt=t=>{const m=Math.floor(t/60),x=t-m*60;return m+":"+(x<10?"0":"")+x.toFixed(1)};
+ const draw=()=>{const[a,z]=rg(),d=z-a;if(!(d>0))return;const f=Math.max(0,Math.min(1,(vd.currentTime-a)/d));fl.style.width=f*100+"%";kn.style.left=f*100+"%";if(b.classList.contains("on"))tt.textContent=fmt(vd.currentTime-a)+" / "+fmt(d)};
+ if(vd.requestVideoFrameCallback){const fr=()=>{if(!vd.isConnected)return;draw();vd.requestVideoFrameCallback(fr)};vd.requestVideoFrameCallback(fr)}
+ ["timeupdate","seeked","loadedmetadata"].forEach(t=>vd.addEventListener(t,()=>{draw();if(t==="loadedmetadata")place()}));
+ new ResizeObserver(place).observe(vd);requestAnimationFrame(place);
+ b.onpointerdown=e=>{e.stopPropagation();e.preventDefault();const[a,z]=rg();if(!(z>a))return;b.setPointerCapture(e.pointerId);const was=!vd.paused;vd.pause();b.classList.add("on");
+  const go=ev=>{const R=b.getBoundingClientRect(),f=Math.max(0,Math.min(1,(ev.clientX-R.left)/R.width));try{vd.currentTime=Math.min(z-.04,a+f*(z-a))}catch(x){}draw()};go(e);
+  b.onpointermove=ev=>go(ev);b.onpointerup=b.onpointercancel=()=>{b.onpointermove=b.onpointerup=b.onpointercancel=null;b.classList.remove("on");if(was)vd.play().catch(()=>{})}};
+ b.ondblclick=e=>e.stopPropagation()}
 function freeze(on){
  if(on){if(ED)closeEd();if(cropEdit)cancelCrop();if(BXD)boxMode(false);if(ARM)arrMode(false);const a=document.activeElement;a&&a.blur&&a.blur();select(null);ctxHide();const h=$("#help");h&&(h.hidden=true)}
  const fb=on?$("#fz"):$("#unf");fzWipe(on,fb);VIEW=on;document.body.classList.toggle("frozen",on);document.body.classList.toggle("ro",on);
