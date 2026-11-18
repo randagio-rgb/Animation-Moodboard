@@ -169,7 +169,7 @@ body.bxmode #vp,body.bxmode #vp *{cursor:crosshair!important}
 #st button{margin-left:10px;border:0;border-radius:var(--pill);padding:4px 12px;font:inherit;cursor:pointer;background:var(--card);color:var(--ink)}
 /* clean cards: media keeps its own rounded shape, the comment sits in its own box below */
 .card:not(.note):not(.box):not(.open){background:transparent;box-shadow:none}
-.card>img,.card>video,.card>iframe,.card>.yt,.card>.cw,.card>.miss,.card>.sqw,.card>.aud{border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.card>img,.card>video,.card>iframe,.card>.yt,.card>.pinc,.card>.cw,.card>.miss,.card>.sqw,.card>.aud{border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
 .card .cap{margin-top:8px;padding:8px 12px;min-height:0;background:var(--card);border-radius:var(--rs);box-shadow:var(--sh);font-size:13px}
 .card .cap:empty{display:none}
 .card.cedit .cap{display:block;outline:2px solid var(--acc);outline-offset:0}
@@ -235,14 +235,40 @@ body.frozen #ctx,body.frozen #help,body.frozen .gl{display:none!important}
 body.frozen .rz,body.frozen .eg,body.frozen .sqed,body.frozen .yt .play,body.frozen .vgrip,body.frozen .vstop{display:none!important}
 #unf{position:fixed;top:16px;right:16px;z-index:12;display:none;align-items:center;gap:8px;padding:8px 18px 8px 14px;border:1.5px solid var(--ink);border-radius:var(--pill);background:var(--blue);color:#fff;font:inherit;font-weight:600;cursor:pointer;box-shadow:var(--sh)}
 #unf svg{width:16px;height:16px}
+/* sections: the board name opens the list of boxes, a click flies to one */
+#secb{display:flex;align-items:center;gap:4px;padding:6px 10px 6px 12px}
+#secb b{padding:0}
+#secb svg{width:14px;height:14px;opacity:.7;transition:transform .2s}
+#secb.on svg{transform:rotate(180deg);opacity:1}
+#secm{position:fixed;left:16px;top:64px;z-index:11;display:flex;flex-direction:column;gap:2px;padding:6px;min-width:200px;max-width:min(340px,calc(100vw - 32px));max-height:calc(100vh - 150px);overflow-y:auto;background:var(--card);border:1.5px solid var(--ink);border-radius:18px;box-shadow:var(--sh);animation:pop .25s cubic-bezier(.34,1.56,.64,1);transform-origin:20px 0;touch-action:pan-y}
+#secm[hidden]{display:none}
+#secm button{display:flex;align-items:center;min-height:40px;padding:6px 8px;border:0;border-radius:12px;background:none;font:inherit;cursor:pointer;text-align:left;transition:background-color .15s}
+#secm button:hover{background:rgba(251,204,10,.35)}
+.schip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--lb);color:var(--lt);border:2px solid var(--lo);border-radius:11px;padding:2px 12px 3px;font-size:13px;font-weight:700}
+.schip.unt{font-weight:500;font-style:italic}
+#secm .sme{padding:10px 12px;color:var(--mut);font-size:13px;line-height:1.45}
+@media (pointer:coarse){#secm button{min-height:48px}}
+/* Instagram posts: the official embed inside the card; click it to use it (play a reel, swipe a carousel) */
+.yt.igw{background:#fff;aspect-ratio:auto}
+.yt.igw iframe{display:block;width:100%;height:100%;border:0;border-radius:0}
+/* TikTok: the official player, drawn at the size TikTok needs (330x586) and scaled to the card */
+.yt.ttw{background:#000;aspect-ratio:330/586}
+.yt.ttw iframe{position:absolute;left:0;top:0;width:330px;height:586px;border:0;border-radius:0;transform-origin:0 0}
+.card.playing .yt.ttw iframe{inset:auto;left:0;top:0;width:330px;height:586px!important}
+/* Pinterest pins that only open on Pinterest: the first frame, and the round button with an arrow */
+.pinc{position:relative;width:100%;background:#000;line-height:0}
+.pinc img{width:100%;height:100%;object-fit:cover;border-radius:0!important}
+.pinc .pinl{display:none}
+.pinc.ph{background:var(--soft);display:grid;place-items:center;line-height:1.4}
+.pinc.ph .pinl{display:block;color:var(--mut);font-weight:600;font-size:14px}
 /* box title label: the four colour pairs of the studio menu; the body is a light tint so the references keep their colours */
 .box{box-shadow:none;border:1.5px solid rgba(var(--brgb),.18);border-radius:28px;pointer-events:none;background:var(--bxb);border-color:var(--bxl)}
 .box .bxt:empty::before{color:var(--lt);opacity:.55}
 .box .bxt[contenteditable="true"]{outline:2px solid var(--lo);outline-offset:3px;box-shadow:none}
-.box.bc0{--lb:#FBCC0A;--lt:#005D41;--lo:#005D41;--bxb:rgba(251,204,10,.12);--bxl:rgba(0,93,65,.25)}
-.box.bc1{--lb:#fff;--lt:#e91f25;--lo:#e91f25;--bxb:rgba(255,255,255,.55);--bxl:rgba(233,31,37,.3)}
-.box.bc2{--lb:#094E99;--lt:#fff;--lo:#094E99;--bxb:rgba(var(--brgb),.08);--bxl:rgba(var(--brgb),.25)}
-.box.bc3{--lb:#e91f25;--lt:#fff;--lo:#e91f25;--bxb:rgba(233,31,37,.07);--bxl:rgba(233,31,37,.25)}
+.box.bc0,.schip.bc0{--lb:#FBCC0A;--lt:#005D41;--lo:#005D41;--bxb:rgba(251,204,10,.12);--bxl:rgba(0,93,65,.25)}
+.box.bc1,.schip.bc1{--lb:#fff;--lt:#e91f25;--lo:#e91f25;--bxb:rgba(255,255,255,.55);--bxl:rgba(233,31,37,.3)}
+.box.bc2,.schip.bc2{--lb:#094E99;--lt:#fff;--lo:#094E99;--bxb:rgba(var(--brgb),.08);--bxl:rgba(var(--brgb),.25)}
+.box.bc3,.schip.bc3{--lb:#e91f25;--lt:#fff;--lo:#e91f25;--bxb:rgba(233,31,37,.07);--bxl:rgba(233,31,37,.25)}
 .card.flash{animation:fl 1.5s ease-out}
 @keyframes fl{0%,40%{outline:4px solid var(--yellow);outline-offset:4px}100%{outline:4px solid rgba(251,204,10,0);outline-offset:4px}}
 .box .bxh{position:absolute;left:0;bottom:100%;padding:0 0 12px;border-radius:0;white-space:nowrap}
@@ -276,6 +302,8 @@ body.offline #off{display:inline-block}
 #vp.anim{transition:background-position .44s cubic-bezier(.65,0,.35,1),background-size .44s cubic-bezier(.65,0,.35,1),background-color .25s}
 .tb{position:fixed;display:flex;gap:2px;align-items:center;background:var(--card);border:1.5px solid var(--ink);color:var(--ink);border-radius:var(--pill);box-shadow:var(--sh);padding:5px 6px;z-index:9;transition:opacity .3s ease,transform .42s cubic-bezier(.34,1.56,.64,1),visibility 0s}
 body.frozen .tb{opacity:0;transform:scale(.9);visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .2s ease,visibility 0s .2s}
+body.frozen #bar{opacity:1;transform:none;visibility:visible;pointer-events:auto}
+body.frozen #bar .ed{display:none!important}
 body.frozen #unf{display:flex;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
 body.frozen #unf svg{animation:shut .6s .15s ease-out}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:none}}
@@ -598,7 +626,7 @@ body.frozen #arl .lhit{pointer-events:none}
 </style>
 </head>
 <body>
-<div id="bar" class="tb"><b id="bt">Moodboard</b><button id="off" title="This is the offline copy of the program">Offline</button><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden></div>
+<div id="bar" class="tb"><button id="secb" title="Sections: jump to a box"><b id="bt">Moodboard</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><button id="off" title="This is the offline copy of the program">Offline</button><button id="bf" class="ed" title="Add images, videos or audio from your computer">+ File</button><button id="bl" class="ed" title="Add images or videos from links">+ Link</button><button id="bx" class="ed" title="Draw a box behind cards to group them: click, then drag on the board (Esc to cancel)">+ Box</button><button id="ba" class="ed ib" title="Draw arrows: drag from one card to another. Press again or Esc to stop"></button><button id="bs" class="ed" title="Create an animatic: first Shift-select the images and videos to use">+ Sequence</button><input id="fi" type="file" accept="image/*,video/*,audio/*,.heic,.heif" multiple hidden></div>
 <div id="bar2" class="tb"><button id="sv" title="Save the board as a folder: from then on every change is saved there automatically">Save</button><button id="im" title="Open a board folder and keep saving into it">Open</button><button id="rl" title="Reconnect files from your computer">Relink</button><button id="pg" title="Clear the undo history and delete unused files from the board folder">Purge</button><button id="fz" class="ib" title="Freeze: read-only mode, so nothing moves by accident during a call or a meeting"></button></div>
 <div id="park" hidden>
 <div class="ett tbi"><div class="eaddw ed"><button class="eadd" title="Add a link, a file or a soundtrack"></button><div class="eaddm" hidden><button id="qlk" title="Add an image or video from a link to the board and the sequence"><i class="mi"></i>Link</button><button id="qfi" title="Add an image or video from your computer to the board and the sequence"><i class="mi"></i>File</button><button id="qau" title="Add a soundtrack from your computer (it is also added to the board as an audio card)"><i class="mi"></i>Audio</button></div></div><span style="flex:1"></span><label class="epill ed efps" title="Frames per second"><select id="qfps"></select><span>fps</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></label><label class="epill ed efmt" title="Format of the frame"><span>Format</span><select id="qfmt"><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="1/1">1:1</option><option value="4/5">4:5</option></select><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></label></div>
@@ -614,6 +642,7 @@ body.frozen #arl .lhit{pointer-events:none}
 <button id="unf" title="Back to editing">Unlock</button>
 <div id="gx" class="gl" hidden></div><div id="gy" class="gl" hidden></div>
 <div id="ctx" class="tb" hidden></div>
+<div id="secm" hidden></div>
 <div id="hint">Paste with Ctrl/⌘+V or drop images, videos and links (links stay links, nothing is copied; files from your computer stay where they are) · Shift+click or Shift+drag to select several cards · drag the background to move around · Alt/⌥+scroll to zoom · double-click the background for a note · select images and press + Sequence for an animatic, or drag cards onto a sequence</div>
 <div id="vp"><div id="fzw"></div><div id="world"></div></div>
 <script>
@@ -676,7 +705,7 @@ function fit(){if(!items.length){view={x:0,y:0,s:1};return apply()}
 /* creating items */
 /* short name shown on hover: the file name, or for web links the file name in the address (if there is one) or the site */
 function shortName(it){
- if(it.type==="yt")return"YouTube";if(it.type==="emb")return"Vimeo";
+ if(it.pin)return"Pinterest";if(it.type==="ig")return"Instagram";if(it.type==="tt"||/tiktok\.com/i.test(it.page||""))return"TikTok";if(it.type==="yt")return"YouTube";if(it.type==="emb")return"Vimeo";
  let n=it.name||"";
  if(!n&&it.url){try{const u=new URL(it.url),f=decodeURIComponent(u.pathname.split("/").pop()||"");n=/\.[a-z0-9]{2,5}$/i.test(f)&&f.length<=60?f:u.hostname.replace(/^www\./,"")}catch(e){n=""}}
  if(!n)n=it.type==="vid"?"Pasted video":"Pasted image";
@@ -689,16 +718,16 @@ function mount(it){if(it.type==="seq")auMig(it);
  const old=els.get(it.id);old&&old.remove();
  const c=document.createElement("div");c.className="card"+(it.type==="txt"?" note":it.type==="box"?" box bc"+((it.col||0)%4):"")+(it.lk?" lk":"");c.dataset.id=it.id;
  c.style.cssText=`left:${it.x}px;top:${it.y}px;width:${it.w}px;z-index:${zOf(it)}`+(it.type==="box"?`;height:${it.bh}px`:"");
- if(it.type==="box"){boxCard(c,it)}else if(it.type==="aud"){audCard(c,it)}else if(it.type==="seq"){seqCard(c,it)}else if(it.type==="yt"){ytCard(c,it)}else if(it.type==="txt"){
+ if(it.type==="box"){boxCard(c,it)}else if(it.type==="pin"&&(it.pin||it.page)||it.pin&&it._pf){pinCard(c,it)}else if(it.type==="ig"){igCard(c,it)}else if(it.type==="tt"){ttCard(c,it)}else if(it.type==="aud"){audCard(c,it)}else if(it.type==="seq"){seqCard(c,it)}else if(it.type==="yt"){ytCard(c,it)}else if(it.type==="txt"){
   c.innerHTML='<div class="grip"></div><div class="nt" contenteditable="true" data-ph="Write a note…"></div>';
   const t=c.querySelector(".nt");t.textContent=it.text||"";if(VIEW)t.contentEditable="false";t.oninput=()=>{it.text=t.textContent;persist()};
  }else{
-  const v=it.type==="vid",f=files.get(it.id),src=it.url||(it.blob?URL.createObjectURL(it.blob):f?URL.createObjectURL(f):it.pf&&!BADPF.has(it.pf)?"media/"+it.pf:null),m=document.createElement(src?(v?"video":it.type==="emb"?"iframe":"img"):"div");
+  const v=it.type==="vid",f=files.get(it.id),src=it.url||(it.blob?URL.createObjectURL(it.blob):f?URL.createObjectURL(f):it.pf&&!BADPF.has(it.pf)?mURL(it.pf):null),m=document.createElement(src?(v?"video":it.type==="emb"?"iframe":"img"):"div");
   if(!src){m.className="miss";m.innerHTML="<b></b>File not linked · click to relink";m.firstChild.textContent=it.name||"File"}
   m.referrerPolicy="no-referrer";m.draggable=false;
   if(!v&&(/svg/.test((it.blob||f||{}).type||"")||/\.svg(\?|#|$)/i.test(it.url||"")))m.style.background="#fff";
   if(src&&v){m.muted=true;m.loop=true;m.autoplay=!it.pz;m.playsInline=true;m.setAttribute("muted","");m.preload=it.pz?"metadata":"auto";
-   m.onerror=()=>{if(it.pf&&!it.url){BADPF.add(it.pf);mount(it);return}it.type="txt";it.text=it.url?"Link can't be loaded (the site blocks it or the file was removed):\n"+it.url:"Video can't be loaded";delete it.blob;mount(it);fixSave()};
+   m.onerror=()=>{if(it.pin){it._pf=1;mount(it);return}if(it.pf&&!it.url){BADPF.add(it.pf);mount(it);return}it.type="txt";it.text=it.url?"Link can't be loaded (the site blocks it or the file was removed):\n"+it.url:"Video can't be loaded";delete it.blob;mount(it);fixSave()};
    if(it.vin){const[a,b]=it.vin,hf=.5/(it.vfps||25);m.loop=false;m.addEventListener("loadedmetadata",()=>{try{m.currentTime=a+.001}catch(e){}},{once:true});
     const back=()=>{try{m.currentTime=a+.001}catch(e){}};m.addEventListener("ended",()=>{back();m.play().catch(()=>{})});m.addEventListener("timeupdate",()=>{if(m.currentTime>=b-hf||m.currentTime<a-.05)back()});
     if(m.requestVideoFrameCallback){const f=(n,md)=>{if(!m.isConnected)return;if(md.mediaTime>=b-hf)back();m.requestVideoFrameCallback(f)};m.requestVideoFrameCallback(f)}}
@@ -713,7 +742,7 @@ function mount(it){if(it.type==="seq")auMig(it);
  }
  c.insertAdjacentHTML("beforeend",'<div class="rz" data-e="se"></div><i class="eg n" data-e="n"></i><i class="eg s" data-e="s"></i><i class="eg w" data-e="w"></i><i class="eg e" data-e="e"></i><i class="eg nw" data-e="nw"></i><i class="eg ne" data-e="ne"></i><i class="eg sw" data-e="sw"></i>');
  if(it.type==="txt"&&it.nh)c.style.minHeight=it.nh+"px";
- if(it.type!=="txt"&&it.type!=="seq"&&it.type!=="box"){const lb=it.pf?"In the board folder: media/"+it.pf:it.name?"Local file: "+it.name:it.url?it.url:"Pasted from the clipboard (copy saved in the program)",h=document.createElement("div");h.className="src";h.textContent=lb;h.title=VIEW?lb:lb+"\n(double-click to edit)";
+ if(it.type!=="txt"&&it.type!=="seq"&&it.type!=="box"){const lb=it.pf?"In the board folder: media/"+it.pf:it.name?"Local file: "+it.name:it.pin?it.pin:it.page?it.page:it.url?it.url:"Pasted from the clipboard (copy saved in the program)",h=document.createElement("div");h.className="src";h.textContent=lb;h.title=VIEW?lb:lb+"\n(double-click to edit)";
   h.onblur=()=>{if(h.dataset.ed){delete h.dataset.ed;h.contentEditable="false";setSource(it,h.textContent,lb)}};
   h.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();h.blur()}else if(e.key==="Escape"){delete h.dataset.ed;h.textContent=lb;h.contentEditable="false";h.blur()}};
   h.ondblclick=()=>{if(VIEW)return;h.contentEditable="true";h.dataset.ed="1";h.focus();const g=document.createRange();g.selectNodeContents(h);const sl=getSelection();sl.removeAllRanges();sl.addRange(g)};
@@ -724,7 +753,7 @@ function mount(it){if(it.type==="seq")auMig(it);
   pb.onclick=e=>{e.stopPropagation();const p=!vd.paused;
    if(!p&&items.some(a=>a.type==="aud"&&a.lnk===it.id)){document.querySelectorAll("#world video").forEach(x=>{if(x!==vd)x.muted=true});AP.forEach(x=>{if(!x.paused)x.pause()});vd.muted=false}
    if(p){vd.pause();vd.muted=true}else vd.play().catch(()=>{});pb.classList.toggle("pz",p);pb.title=p?"Play the video":"Pause the video";if(!VIEW){if(p)it.pz=1;else delete it.pz;persist()}};c.append(pb);vtl(c,it,vd,pb)}}
- if(/^(img|vid|emb|yt)$/.test(it.type)){const n=shortName(it),cs=it.vin?` · clip ${it.clip||""} · ${sec(it.vin[1]-it.vin[0])} s`:"",t=document.createElement("span");t.className="fnm";t.textContent=midCut(n)+cs;t.title=n+cs;c.append(t)}
+ if(/^(img|vid|emb|yt|pin|ig|tt)$/.test(it.type)){const n=shortName(it),cs=it.vin?` · clip ${it.clip||""} · ${sec(it.vin[1]-it.vin[0])} s`:"",t=document.createElement("span");t.className="fnm";t.textContent=midCut(n)+cs;t.title=n+cs;c.append(t)}
  world.append(c);els.set(it.id,c);empty();dirty();if(it.type==="vid")offQ();
 }
 function paintSel(){els.forEach((c,k)=>c.classList.toggle("sel",sels.has(k)))}
@@ -758,7 +787,40 @@ async function addBlob(b,pt){const fp=await fpOf(b),d=await dupFile(fp,b.name||"
 function embedOf(u){let m;
  if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i))return{yt:m[1],ar:/shorts\//i.test(u)?"9/16":"16/9"}
  if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/i))return{url:`https://player.vimeo.com/video/${m[1]}?background=1&autoplay=1&loop=1&muted=1`,ar:"16/9"}}
-async function addURL(u,pt){u=u.trim();const dl=dupLink(u);if(dl)return dl;const e=embedOf(u);if(e){return add(e.yt?{type:"yt",yt:e.yt,url:"https://youtu.be/"+e.yt,ar:e.ar,w:e.ar==="9/16"?240:380,cap:"",x:pt.x,y:pt.y}:{type:"emb",url:e.url,ar:e.ar,w:380,cap:"",x:pt.x,y:pt.y});return}
+/* Pinterest: its player can't be embedded, but Pinterest's public widget data gives the first frame and, for most video pins,
+   an MP4 that plays in the card like any video link. When there is no MP4 the card shows the first frame and opens the pin */
+const PINRX=/^https?:\/\/(?:[a-z]{2,3}\.)?(?:www\.)?pinterest\.[a-z.]+\/pin\/(?:[^\/?#]*--)?(\d+)/i;
+function pinOf(u){const m=PINRX.exec(u);if(m)return{id:m[1],url:"https://www.pinterest.com/pin/"+m[1]+"/"};if(/^https?:\/\/pin\.it\//i.test(u))return{url:u};return null}
+async function pinInfo(id){try{const r=await fetch("https://widgets.pinterest.com/v3/pidgets/pins/info/?pin_ids="+id),d=((await r.json()).data||[])[0];if(!d)return null;
+ const vl=d.videos&&d.videos.video_list||{},vs=Object.values(vl),mp=vl.V_720P&&/\.mp4/i.test(vl.V_720P.url)?vl.V_720P:vs.find(v=>/\.mp4(\?|$)/i.test(v.url||"")),any=mp||vs[0],im=d.images||{},big=im.orig||im["736x"]||im["564x"]||Object.values(im).pop(),sz=any||big||{};
+ return{video:!!(d.is_video||vs.length),mp4:mp&&mp.url,thumb:any&&any.thumbnail||big&&big.url,ar:sz.width&&sz.height?sz.width+"/"+sz.height:undefined}}catch(e){return null}}
+async function addPin(pn,pt){const dl=dupLink(pn.url);if(dl)return dl;toast("Reading the Pinterest pin…");
+ const P=pn.id?await pinInfo(pn.id):null,st=$("#st"),base={pin:pn.url,cap:"",x:pt.x,y:pt.y};if(st.textContent.startsWith("Reading the Pinterest"))st.hidden=true;if(P&&P.ar)base.ar=P.ar;
+ if(P&&P.mp4)return add({...base,type:"vid",url:P.mp4,thumb:P.thumb,w:380});
+ if(P&&!P.video&&P.thumb)return add({...base,type:"img",url:P.thumb,w:320});
+ return add({...base,type:"pin",url:P&&P.thumb||"",thumb:P&&P.thumb||undefined,w:300})}
+const IGRX=/^https?:\/\/(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]+)/i;
+function igOf(u){const m=IGRX.exec(u);if(!m)return null;const k=/^reel/i.test(m[1])?"reel":m[1].toLowerCase(),page=`https://www.instagram.com/${k}/${m[2]}/`;return{page,embed:page+"embed/"}}
+function igCard(c,it){const b=document.createElement("div");b.className="yt igw";b.style.height=(it.ih||540)+"px";
+ const f=document.createElement("iframe");f.src=it.url;f.loading="lazy";f.allow="autoplay; encrypted-media; picture-in-picture";f.referrerPolicy="strict-origin-when-cross-origin";f.title="Instagram post";b.append(f);
+ if(!VIEW)b.insertAdjacentHTML("beforeend",'<div class="play" title="Click to use the post here (play, swipe)" style="background:none"></div>');c.append(b);capEl(c,it)}
+/* the Instagram embed tells its height: the card follows it */
+addEventListener("message",e=>{if(!/(^|\.)instagram\.com$/.test((()=>{try{return new URL(e.origin).hostname}catch(x){return""}})()))return;
+ let d;try{d=typeof e.data==="string"?JSON.parse(e.data):e.data}catch(x){return}if(!d||d.type!=="MEASURE"||!d.details||!(d.details.height>50))return;
+ for(const it of items){if(it.type!=="ig")continue;const c=els.get(it.id),f=c&&c.querySelector(".igw iframe");if(f&&f.contentWindow===e.source){const h=Math.round(d.details.height);if(h!==it.ih){it.ih=h;f.parentNode.style.height=h+"px";arDirty=1;persist()}break}}});
+const TTRX=/^https?:\/\/(?:[\w-]+\.)?tiktok\.com\/(?:@[\w.-]+\/(?:video|photo)\/|v\/|embed\/(?:v2\/)?|player\/v1\/)(\d{8,})/i,TTSHORT=/^https?:\/\/(?:vm|vt)\.tiktok\.com\/|^https?:\/\/(?:www\.)?tiktok\.com\/t\//i;
+const TTQ="autoplay=1&loop=1&muted=1&progress_bar=0&play_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0";
+const ttSrc=(it,on)=>`https://www.tiktok.com/player/v1/${it.tt}?${TTQ}&controls=${on?1:0}&volume_control=${on?1:0}&fullscreen_button=${on?1:0}`;
+function ttCard(c,it){const b=document.createElement("div");b.className="yt ttw";const f=document.createElement("iframe");f.src=ttSrc(it,false);f.allow="autoplay; encrypted-media; fullscreen";f.title="TikTok video";b.append(f);
+ new ResizeObserver(()=>{f.style.transform=`scale(${b.clientWidth/330})`}).observe(b);
+ if(!VIEW)b.insertAdjacentHTML("beforeend",'<div class="play" title="Click to use the video here (sound, controls)" style="background:none"></div>');c.append(b);capEl(c,it)}
+function pinCard(c,it){const th=it.thumb||(it.type==="pin"?it.url:""),b=document.createElement("div");b.className="pinc";b.style.aspectRatio=it.ar||"4/5";
+ if(th){const im=document.createElement("img");im.referrerPolicy="no-referrer";im.draggable=false;im.onerror=()=>{im.remove();b.classList.add("ph")};im.src=th;b.append(im)}else b.classList.add("ph");
+ b.insertAdjacentHTML("beforeend",'<span class="pinl">'+shortName(it)+' video</span>');c.append(b);capEl(c,it);
+ const pb=document.createElement("button");pb.className="vpb pz";pb.title="Watch it on "+shortName(it)+" (opens in a new tab)";pb.innerHTML=IC.arrow;
+ pb.onpointerdown=e=>e.stopPropagation();pb.onclick=e=>{e.stopPropagation();window.open(it.pin||it.page,"_blank","noopener")};c.append(pb)}
+async function addURL(u,pt){u=u.trim();const pn=pinOf(u);if(pn)return addPin(pn,pt);{const m=TTRX.exec(u);if(m||TTSHORT.test(u)){const page=m?u.split(/[?#]/)[0]:u,dl=dupLink(page);if(dl)return dl;return add(m?{type:"tt",tt:m[1],page,url:"",w:300,cap:"",x:pt.x,y:pt.y}:{type:"pin",page,url:"",w:300,cap:"",x:pt.x,y:pt.y})}}
+ const ig=igOf(u);if(ig){const dl=dupLink(ig.page);if(dl)return dl;return add({type:"ig",page:ig.page,url:ig.embed,w:360,cap:"",x:pt.x,y:pt.y})}const dl=dupLink(u);if(dl)return dl;const e=embedOf(u);if(e){return add(e.yt?{type:"yt",yt:e.yt,url:"https://youtu.be/"+e.yt,ar:e.ar,w:e.ar==="9/16"?240:380,cap:"",x:pt.x,y:pt.y}:{type:"emb",url:e.url,ar:e.ar,w:380,cap:"",x:pt.x,y:pt.y});return}
  if(isAU(u))return add({type:"aud",url:u,name:decodeURIComponent(u.split(/[?#]/)[0].split("/").pop()||"audio"),w:360,cap:"",x:pt.x,y:pt.y});
  u=u.replace(/\.gifv(\?|#|$)/i,".mp4$1");const v=isV(u);return add({type:v?"vid":"img",url:u,w:v?380:320,cap:"",x:pt.x,y:pt.y})}
 async function addLocal(h,f,pt){const fp=await fpOf(f),d=await dupFile(fp,f.name);if(d)return d;if(isHeic(f))return fromHeic(f,pt,fp);const v=f.type[0]==="v",au=isAud(f);return add({type:au?"aud":v?"vid":"img",h:h||undefined,name:f.name,fp,w:au?360:v?380:320,cap:"",x:pt.x,y:pt.y},f)}
@@ -776,7 +838,7 @@ async function dupFile(fp,name){
  return null}
 function dupLink(u){
  const e=embedOf(u),n=x=>(x||"").trim().replace(/\/$/,"");
- const i=items.find(i=>!i.hid&&(e&&e.yt?i.type==="yt"&&i.yt===e.yt:e?i.type==="emb"&&i.url===e.url:n(i.url)===n(u)));
+ const i=items.find(i=>!i.hid&&(e&&e.yt?i.type==="yt"&&i.yt===e.yt:e?i.type==="emb"&&i.url===e.url:n(i.url)===n(u)||!!i.pin&&n(i.pin)===n(u)||!!i.page&&n(i.page)===n(u)));
  if(!i)return null;flash(i.id);
  return confirm("This link is already on the board (the card now highlighted in yellow).\n\nOK adds it again, Cancel keeps only the one already there.")?null:i}
 /* HEIC photos (iPhone): Chrome can't show them, so they are converted to JPEG. The converter (about 1 MB) is
@@ -809,6 +871,7 @@ function ingest(dt,pt,paste){
  if(!urls.length)urls=(uri||"").split(/\r?\n/).filter(l=>/^https?:/i.test(l));
  (async()=>{
   if(svg){addBlob(new Blob([svg],{type:"image/svg+xml"}),at());return}
+  {const pm=/pinterest\.[a-z.]+\/pin\/(?:[^\/?#"\s]*--)?(\d+)|href="\/pin\/(\d+)/i.exec([uri,txt,html].join(" "));if(pm&&(!jobs.length||urls.some(u=>/pinimg\.com/i.test(u)))){await addURL("https://www.pinterest.com/pin/"+(pm[1]||pm[2])+"/",at());return}}
   const hs=[];for(const j of jobs)hs.push(j.hp?await j.hp:null);
   if(hs.some(Boolean)){for(let i=0;i<jobs.length;i++){const h=hs[i]&&hs[i].kind==="file"?hs[i]:null;await addLocal(h,h?await h.getFile():jobs[i].f,at())}return}
   if(urls.length){for(const u of new Set(urls))await addURL(u,at());return}
@@ -955,8 +1018,9 @@ addEventListener("keyup",e=>{if(e.code==="Space")space=false;if(e.key==="Shift")
 addEventListener("blur",()=>document.body.classList.remove("selmode"));
 /* open the source / copy the file name */
 function openSrc(it){
+ if(it.pin||it.page){window.open(it.pin||it.page,"_blank","noopener");return}
  if(it.url&&(/^https?:/i.test(it.url)||it.type==="yt")){const m=it.type==="emb"&&/video\/(\d+)/.exec(it.url);window.open(it.type==="yt"?"https://www.youtube.com/watch?v="+it.yt:m?"https://vimeo.com/"+m[1]:it.url,"_blank","noopener");return}
- const f=it.blob||files.get(it.id),u=f?URL.createObjectURL(f):it.pf?"media/"+it.pf:it.url;
+ const f=it.blob||files.get(it.id),u=f?URL.createObjectURL(f):it.pf?mURL(it.pf):it.url;
  if(!u){relink(it);return}
  const w=window.open("","_blank");if(!w)return;const v=it.type==="vid",d=w.document;
  d.title=it.name||"Pasted";d.body.style.cssText="margin:0;height:100vh;display:grid;place-items:center;background:#111";
@@ -1001,7 +1065,7 @@ const tfmt=t=>{t=Math.max(0,t||0);const m=Math.floor(t/60),x=t-m*60;return m+":"
 function peaksOf(r){const k=srcOf(r)||r.id;let o=PK.get(k);if(o)return o;o={ok:false,done:false};PK.set(k,o);
  (async()=>{try{let buf=null;const f=r.blob||files.get(r.id);
   if(f)buf=await f.arrayBuffer();
-  else if(r.pf&&PD){const md=await PD.getDirectoryHandle("media");buf=await(await(await md.getFileHandle(r.pf)).getFile()).arrayBuffer()}
+  else if(r.pf&&PD){const md=await PD.getDirectoryHandle("media");buf=await(await mFile(md,r.pf)).arrayBuffer()}
   else if(r.url&&/^https?:/i.test(r.url))buf=await(await fetch(r.url)).arrayBuffer();
   if(!buf)return;ACX=ACX||new(window.AudioContext||window.webkitAudioContext)();const ab=await ACX.decodeAudioData(buf);
   const ch=ab.getChannelData(0),N=6000,st=Math.max(1,Math.floor(ch.length/N)),pk=new Float32Array(Math.ceil(ch.length/st));let mx=1e-4;
@@ -1160,7 +1224,7 @@ AL.innerHTML='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" marker
 world.prepend(AL);
 const PTS=["nw","n","ne","e","se","s","sw","w"];let ARM=false,ARD=null,arHov=null,arDirty=1,arLast="";
 function geo(id){const it=items.find(i=>i.id===id),e=els.get(id);if(!it||!e)return null;
- const m=!e.classList.contains("open")&&e.querySelector(":scope>img,:scope>video,:scope>iframe,:scope>.yt,:scope>.cw,:scope>.miss,:scope>.sqw,:scope>.aud");
+ const m=!e.classList.contains("open")&&e.querySelector(":scope>img,:scope>video,:scope>iframe,:scope>.yt,:scope>.pinc,:scope>.cw,:scope>.miss,:scope>.sqw,:scope>.aud");
  return{x:it.x,y:it.y,w:e.offsetWidth,h:m?m.offsetHeight:e.offsetHeight}}
 function anc(g,p){return{x:p.includes("w")?g.x:p.includes("e")?g.x+g.w:g.x+g.w/2,y:p.includes("n")?g.y:p.includes("s")?g.y+g.h:g.y+g.h/2}}
 function nearA(g,x,y){let b="n",bd=1e18;PTS.forEach(k=>{const a=anc(g,k),d=(a.x-x)**2+(a.y-y)**2;if(d<bd){bd=d;b=k}});return b}
@@ -1211,6 +1275,7 @@ function vtl(c,it,vd,pb){const b=document.createElement("div");b.className="vtl"
   b.onpointermove=ev=>go(ev);b.onpointerup=b.onpointercancel=()=>{b.onpointermove=b.onpointerup=b.onpointercancel=null;b.classList.remove("on");if(was)vd.play().catch(()=>{})}};
  b.ondblclick=e=>e.stopPropagation()}
 function freeze(on){
+ secHide();
  if(on){if(ED)closeEd();if(cropEdit)cancelCrop();if(BXD)boxMode(false);if(ARM)arrMode(false);const a=document.activeElement;a&&a.blur&&a.blur();select(null);ctxHide();const h=$("#help");h&&(h.hidden=true)}
  const fb=on?$("#fz"):$("#unf");fzWipe(on,fb);VIEW=on;document.body.classList.toggle("frozen",on);document.body.classList.toggle("ro",on);
  const keep={...view};items.forEach(mount);view=keep;apply();
@@ -1260,7 +1325,7 @@ const shClips=S=>{const b=[0,...S.cuts,S.dur];return b.slice(0,-1).map((a,i)=>[a
 let SH=null;
 const canSplit=it=>(it.type==="vid"&&!it.vin||it.type==="aud"&&!it.ain)&&!it.url&&!!(it.blob||files.get(it.id)||it.pf);
 async function shBlob(it){const b=it.blob||files.get(it.id);if(b)return b;
- if(PD&&it.pf){try{const m=await PD.getDirectoryHandle("media");return await(await m.getFileHandle(it.pf)).getFile()}catch(e){}}return null}
+ if(PD&&it.pf){try{const m=await PD.getDirectoryHandle("media");return await mFile(m,it.pf)}catch(e){}}return null}
 const shKey=a=>a.toFixed(3);
 /* cuts saved by the earlier automatic version are kept as cuts placed by hand */
 function shOld(o){if(o.cuts)return{...o,cuts:[...o.cuts]};const f=1/(o.fps||25),T=.62-.56*(o.s==null?.5:o.s);
@@ -1359,7 +1424,8 @@ async function purge(){
  items=items.filter(i=>!i.hid||items.some(q=>q.type==="seq"&&(q.blocks.some(b=>b.ref===i.id)||(q.aus||[]).some(a=>a.ref===i.id))));
  hist=[];hi=-1;hp=false;clearTimeout(ht);commit();
  let n=0;if(saved){n=await pkClean();await savePkg(true)}
- toast(saved?(n?`Purged: undo history cleared, ${n} unused file${n>1?"s":""} deleted from the board folder.`:"Purged: undo history cleared, the board folder had no unused files."):"Purged: undo history cleared.");
+ const msg=saved?(n?`Purged: undo history cleared, ${n} unused file${n>1?"s":""} deleted from the board folder.`:"Purged: undo history cleared, the board folder had no unused files."):"Purged: undo history cleared.";
+ if(saved&&orgNeeded())toast(msg+" "+ORGQ,[["Sort into folders",organize],["Not now",()=>{}]]);else toast(msg);
 }
 /* help panel */
 function help(){
@@ -1369,8 +1435,8 @@ function help(){
 h.addEventListener("pointerdown",e=>e.stopPropagation());
 }
 const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
-<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo) anywhere. Double-click the background to write a note: it takes the width of the nearest card. Drag a note by its top strip. Click a card to see its menu (crop, open the source, cut a video into clips, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
-<h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
+<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo, Pinterest, Instagram, TikTok) anywhere. A TikTok video plays muted and in a loop; click it for sound and controls (or to accept TikTok's cookie notice), the × at the top right gives the card back. An Instagram post shows up as Instagram shows it on other sites: click it to play a reel or swipe a carousel, the × at the top right gives the card back. A Pinterest video plays in the card like any video link; when Pinterest doesn't hand over the video, the card shows its first frame and a button with an arrow that opens the pin. Its menu can open the video file in a new tab, to download it and drop it on the board. Double-click the background to write a note: it takes the width of the nearest card. Drag a note by its top strip. Click a card to see its menu (crop, open the source, cut a video into clips, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
+<h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. To find a section again, click the board name at the top left: the list of boxes opens, click one to fly to it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
 <h4>Snapping</h4><p>Start moving or resizing a card, then hold Shift: its edges and centre stick to those of the other cards, and a blue guide shows where. Let go of Shift to move freely again. In the timeline of a sequence it is the other way round: when you change the length of a block (picture or sound) its edge always sticks to the cuts of the other row, the playhead, the end of the sequence and the natural end of the video or sound, and a yellow line shows where; hold Shift to change it freely, frame by frame.</p>
 <h4>On iPad and touch screens</h4><p>One finger moves cards, resizes them from the edges and moves the board on the background; two fingers move the board and pinch to zoom (on the timeline of a sequence they scroll and zoom the timeline). A double tap works as a double-click. On the left, Shift and Alt stay on until you tap them again and act like the keys (select several cards, drag to duplicate, change a length freely…); below them: undo, redo, duplicate, delete. On iPad no browser can open or save board folders: what you do stays in that browser.</p>
 <h4>Cutting on the beat</h4><p>In a sequence, play the music and press Beat (or B) in time with it: every press leaves a yellow mark on the timeline. When you change the length of a block its edge sticks to the marks, so the cuts fall on the beat. Drag a mark to move it, double-click it to remove it; the × next to Beat removes them all.</p>
@@ -1379,9 +1445,9 @@ const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="
 <h4>Resizing</h4><p>Click a card: a dashed frame with eight handles appears around it. Drag a handle (or any side or corner of the card) to resize it. With several cards selected, the frame goes around all of them and resizes the whole group as if it were one card.</p>
 <h4>Cutting a video or a sound into clips</h4><p>For an edited video from your computer (or an audio card), open its menu and press the scissors. Play the video or move frame by frame (← →), stop on the first frame of a new shot and press Cut here (C): every cut makes a new clip. Click the clips you want to keep (each one plays above); the chain between two clips removes that cut. Create adds the chosen clips next to the video as cards that play only their part, paused on their first frame; dragged onto a sequence, a clip keeps its real length. With a sound, Cut here works while it plays: press it on the beat. The file stays one: nothing is copied.</p>
 <h4>The sound of a video</h4><p>Videos on the board are silent. To use the sound of a video from your computer, open its menu and press the note: an audio card appears next to it, tied by a green wire. While they are tied they move together and the video plays with its sound. Click the wire to cut it: the audio card becomes independent. The audio card can go into a sequence as soundtrack, or be cut into clips, right away; deleting one of the two leaves the other.</p>
-<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, a README and a copy of the program named like the folder): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the .html file inside it (it has the same name as the folder) works too. Purge clears the undo history and deletes from the folder the files no longer used.</p>
+<h4>Saving</h4><p>Save turns the board into a folder (board.js, media, a README and a copy of the program named like the folder): from then on every change is saved there by itself, and the folder is ready to be sent. Open picks up a board folder again; double-clicking the .html file inside it (it has the same name as the folder) works too. Purge clears the undo history and deletes from the folder the files no longer used. Purge, and opening a board, also offer to sort the files: inside media every box gets its own folder, named like the box, with its files (a file used in two boxes is copied into both) and a Links.txt with the links of that box. Look at those folders and copy from them, but don't move or rename the files there: the board would lose them.</p>
 <h4>Arrows</h4><p>Press the arrow button, then drag from one card to another: the arrow starts from the corner or the middle of a side closest to where you press, and lands on the closest point of the other card. A card can have as many arrows as you like, in and out. Click an arrow to reverse or delete it. Press the button again or Esc to stop drawing.</p>
-<h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
+<h4>Freeze</h4><p>The lock button turns the whole board read only: the background turns light blue, every button disappears except the board name, which still opens the list of boxes, and nothing can be moved, edited or deleted by mistake. You can still move around and zoom. Unlock brings you back to editing.</p>
 <h4>Shortcuts · board</h4><table>
 <tr><td>Double-click background</td><td>new note</td></tr><tr><td>Moon / sun (bottom left)</td><td>dark mode / light mode</td></tr><tr><td>Drag background · Space+drag</td><td>move around</td></tr>
 <tr><td>Alt/⌥+scroll · pinch</td><td>zoom</td></tr><tr><td>Shift+click · Shift+drag</td><td>select several cards</td></tr>
@@ -1413,7 +1479,8 @@ function ctxBuild(){
  if(isMedia(it)){
   if(it.type==="img"&&!(cropEdit&&cropEdit.id===it.id))btn("crop","Crop",()=>{ctxHide();startCrop(it)});
   if(PLAYING.has(it.id))btn("no","Stop and close the player",()=>stopInline(it));
-  btn("link",it.type==="yt"?"Open on YouTube":it.type==="emb"?"Open on Vimeo":web?"Open the original page":it.name?"Open the file in a new tab":"Open the pasted copy in a new tab",()=>openSrc(it));
+  btn("link",it.pin||it.page?"Open on "+shortName(it):it.type==="yt"?"Open on YouTube":it.type==="emb"?"Open on Vimeo":web?"Open the original page":it.name?"Open the file in a new tab":"Open the pasted copy in a new tab",()=>openSrc(it));
+  if(it.pin&&it.type==="vid")btn("dl","Open the video file in a new tab: save it from there (⋮ → Download), then drop it on the board to keep it in the board folder",()=>window.open(it.url,"_blank","noopener"));
   if(it.name)btn("name","Copy the file name, to find it in Finder or Spotlight",b=>copyName(it,b));
  }
  if(it.type==="vid"&&!it.url&&(it.blob||files.get(it.id)||it.pf)&&!items.some(a=>a.type==="aud"&&a.lnk===it.id))btn("music","Use its audio: an audio card with the sound of this video, linked to it",()=>{ctxHide();useAudio(it)});
@@ -1509,6 +1576,8 @@ function offInfo(){const u=WEBURL||(BD&&BD.web)||"";
 const WEB=/^https?:$/.test(location.protocol),PLAYING=new Set();
 WEBURL=WEB?location.origin+location.pathname:(window.BOARD&&window.BOARD.web)||"";if(!WEB)document.body.classList.add("offline");
 function playInline(it){
+ if(it.type==="ig"||it.type==="tt"){const c=els.get(it.id),b=c&&c.querySelector(".igw,.ttw");if(!b||c.classList.contains("playing"))return;const pl=b.querySelector(".play");pl&&pl.remove();
+  b.insertAdjacentHTML("beforeend",'<div class="vgrip" title="Drag to move the card"></div><div class="vstop" title="Done">'+IC.no+'</div>');c.classList.add("playing");PLAYING.add(it.id);if(it.type==="tt"){const f=b.querySelector("iframe");f.src=ttSrc(it,true)}if(CX===it.id)ctxBuild();return}
  const vid=it.type==="emb"&&/video\/(\d+)/.exec(it.url||"");
  if(!WEB){window.open(it.type==="yt"?"https://www.youtube.com/watch?v="+it.yt:vid?"https://vimeo.com/"+vid[1]:it.url,"yt"+it.id,"popup,width=720,height=440");return}
  const c=els.get(it.id),b=c&&c.querySelector(".yt");if(!b)return;
@@ -1530,7 +1599,7 @@ addEventListener("message",e=>{
 });
 /* non-destructive crop: only the window proportions are saved, never a copy of the image */
 const svgI=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,
-IC={fb:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6v12l-8-6z"/><rect x="5" y="6" width="2.6" height="12" rx="1"/></svg>',ff:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 6v12l8-6z"/><rect x="16.4" y="6" width="2.6" height="12" rx="1"/></svg>',chain:svgI('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'),plus:svgI('<path d="M12 5v14"/><path d="M5 12h14"/>'),music:svgI('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),hand:svgI('<path d="M18 11V6a2 2 0 0 0-4 0v1"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>'),cut:svgI('<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M20 4 8.2 15.8"/><path d="M14.5 14.5 20 20"/><path d="M8.2 8.2 12 12"/>'),arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),undo:svgI('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'),redo:svgI('<path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/>'),moon:svgI('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/>'),sun:svgI('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
+IC={dl:svgI('<path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/>'),fb:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6v12l-8-6z"/><rect x="5" y="6" width="2.6" height="12" rx="1"/></svg>',ff:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 6v12l8-6z"/><rect x="16.4" y="6" width="2.6" height="12" rx="1"/></svg>',chain:svgI('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'),plus:svgI('<path d="M12 5v14"/><path d="M5 12h14"/>'),music:svgI('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),hand:svgI('<path d="M18 11V6a2 2 0 0 0-4 0v1"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>'),cut:svgI('<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M20 4 8.2 15.8"/><path d="M14.5 14.5 20 20"/><path d="M8.2 8.2 12 12"/>'),arrow:svgI('<path d="M5 19 19 5"/><path d="M9 5h10v10"/>'),swap:svgI('<path d="M7 7h12l-3-3"/><path d="M17 17H5l3 3"/>'),lock:svgI('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),undo:svgI('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'),redo:svgI('<path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/>'),moon:svgI('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/>'),sun:svgI('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),book:svgI('<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M4 19V5"/><path d="M8 7h7"/>'),focus:svgI('<circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>'),edit:svgI('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),play:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.5"/></svg>',link:svgI('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),name:svgI('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>'),cmt:svgI('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),crop:svgI('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>'),ok:svgI('<path d="M20 6 9 17l-5-5"/>'),dup:svgI('<rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h7"/>'),del:svgI('<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>'),no:svgI('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),all:svgI('<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>')};
 function startCrop(it){
  if(VIEW||it.type!=="img")return;
  if(cropEdit)cancelCrop();
@@ -1587,10 +1656,10 @@ const sec=x=>(Math.round(x*100)/100).toLocaleString("en-US",{maximumFractionDigi
 const cl=i=>i.blocks?{...i,beats:i.beats&&[...i.beats],blocks:i.blocks.map(b=>({...b})),aus:i.aus&&i.aus.map(a=>({...a})),au:i.au&&{...i.au}}:{...i};
 let ED=null,dropEl=null,HM="";
 function dirty(){SV.forEach(v=>v.last=-1);if(ED)ED.dt=1}
-function srcOf(it){if(it.url)return it.url;const b=it.blob||files.get(it.id);if(!b)return it.pf&&!BADPF.has(it.pf)?"media/"+it.pf:null;if(!ou.has(b))ou.set(b,URL.createObjectURL(b));return ou.get(b)}
+function srcOf(it){if(it.url)return it.url;const b=it.blob||files.get(it.id);if(!b)return it.pf&&!BADPF.has(it.pf)?mURL(it.pf):null;if(!ou.has(b))ou.set(b,URL.createObjectURL(b));return ou.get(b)}
 function imgOf(it){const s=srcOf(it);if(!s)return null;let m=ic.get(s);if(!m){m=new Image();m.referrerPolicy="no-referrer";m.decoding="async";m.onload=m.onerror=dirty;m.src=s;ic.set(s,m)}return m}
 const refOf=b=>b&&b.ref?items.find(i=>i.id===b.ref)||null:null;
-const MED=t=>/^(img|vid|yt|emb)$/.test(t||"");
+const MED=t=>/^(img|vid|yt|emb|pin|ig|tt)$/.test(t||"");
 const isPh=b=>{const r=refOf(b);return!r||!MED(r.type)};
 function bState(b){const r=refOf(b);if(!r)return"Reference removed";if(!MED(r.type))return"Not an image or a video";if((r.type==="img"||r.type==="vid")&&!srcOf(r))return"File not linked"+(r.name?": "+r.name:"");return""}
 function redraw(){SV.forEach(v=>v.last=-1);if(ED)ED.lf=-1}
@@ -1621,7 +1690,7 @@ function gifOf(r){
  (async()=>{try{
   let buf=null;const f=r.blob||files.get(r.id);
   if(f)buf=await f.arrayBuffer();
-  else if(r.pf&&PD){const md=await PD.getDirectoryHandle("media");buf=await(await(await md.getFileHandle(r.pf)).getFile()).arrayBuffer()}
+  else if(r.pf&&PD){const md=await PD.getDirectoryHandle("media");buf=await(await mFile(md,r.pf)).arrayBuffer()}
   else if(r.url&&/^https?:/i.test(r.url))buf=await(await fetch(r.url)).arrayBuffer();
   if(!buf)return;
   const dec=new ImageDecoder({data:buf,type:"image/gif"});await dec.tracks.ready;try{await dec.completed}catch(e){}
@@ -1652,6 +1721,8 @@ function paint(cx,W,H,b,L){
   if(L){const v=liveOf(L.key,s);vsync(v,(b.vin||0)+L.lt,L.play);if(v.readyState>=2&&v.videoWidth){bg("#000");cover(v,v.videoWidth,v.videoHeight)}else{const c=!v.error&&thumbOf(s,b.vin||0);if(c){bg("#000");cover(c,c.width,c.height)}else{bg(CV("--ph"));msg(cx,W,H,v.error?"Video can't be loaded":"Loading video…")}}}
   else{const c=thumbOf(s,b.vin||0);if(c){bg("#000");cover(c,c.width,c.height)}else{bg(CV("--ph"));if(!tvOf(s).ok)msg(cx,W,H,"Video can't be loaded")}}
   return}
+ if(r.type==="ig"||r.type==="tt"){const n=shortName(r);bg(CV("--ph"));msg(cx,W,H,n==="TikTok"?"TikTok video":"Instagram post");tag(cx,W,H,n+" · reference only, opens on "+n);return}
+ if(r.type==="pin"){const m=r.url&&imgOf(r);bg(CV("--ph"));if(m&&m.complete&&m.naturalWidth){bg("#000");cover(m,m.naturalWidth,m.naturalHeight)}else msg(cx,W,H,"Pinterest video");tag(cx,W,H,"Pinterest · reference only, opens on Pinterest");return}
  if(r.type==="yt"){const m=ytImg(r.yt);bg("#000");if(m.complete&&m.naturalWidth>120)cover(m,m.naturalWidth,m.naturalHeight*(m._f?.75:1),0,m._f?m.naturalHeight*.125:0);tag(cx,W,H,"YouTube · reference only, doesn't play");return}
  bg(CV("--ph"));msg(cx,W,H,"Vimeo video · reference only")}
 function at(it,f){let a=0;for(let i=0;i<it.blocks.length;i++){const b=it.blocks[i],n=fr(it,b);if(f<a+n)return{b,i,s:a,n};a+=n}return null}
@@ -1732,6 +1803,7 @@ function edCenter(){if(!ED||!ED.c)return;const it=ED.it,w=ED.c.offsetWidth,h=ED.
  s=Math.min(1,(innerWidth-48)/w,(innerHeight-T-B)/h);view.s=s;view.x=Math.round(innerWidth/2-(it.x+w/2)*s);view.y=Math.round(T+(innerHeight-T-B-h*s)/2-it.y*s);apply()}
 function openEd(id){
  if(ED){if(ED.id===id)return;closeEd()}
+ secHide();
  const it=items.find(i=>i.id===id);if(!it||it.type!=="seq")return;if(cropEdit)cancelCrop();
  const a=document.activeElement;a&&a.blur&&a.blur();
  ED={id,it,c:null,f:0,f0:0,t0:0,play:false,ppf:null,sel:it.blocks[0]?it.blocks[0].id:null,dr:null,dt:1,lf:-1,pv:{...view},di:null,dpb:null};
@@ -1871,8 +1943,8 @@ function edPanel(){
  edLinkRow(P,r);if(r&&(r.type==="vid"||isGif(r))&&!st)edVidRow(P,b,r);
 }
 function setFit(b,v){if(v)b.fit=true;else delete b.fit;edAll();save();dirty()}
-function edLinkRow(P,r){if(!r||(r.type!=="yt"&&r.type!=="emb"))return;const a=document.createElement("a");a.className="vlk";a.target="_blank";a.rel="noopener";
- a.href=r.type==="yt"?"https://www.youtube.com/watch?v="+r.yt:r.url;a.textContent="Open on "+(r.type==="yt"?"YouTube":"Vimeo")+" ↗";a.title="Reference only: this video does not play in the sequence";P.append(a)}
+function edLinkRow(P,r){if(!r||(r.type!=="yt"&&r.type!=="emb"&&r.type!=="pin"&&r.type!=="ig"&&r.type!=="tt"))return;const a=document.createElement("a");a.className="vlk";a.target="_blank";a.rel="noopener";
+ a.href=r.pin||r.page||(r.type==="yt"?"https://www.youtube.com/watch?v="+r.yt:r.url);a.textContent="Open on "+(r.pin||r.page?shortName(r):r.type==="yt"?"YouTube":"Vimeo")+" ↗";a.title="Reference only: this video does not play in the sequence";P.append(a)}
 function edVidRow(P,b,r){
  const gif=isGif(r),G=gif&&gifOf(r),gs=gif&&GD.get(gKey(r)),s=srcOf(r),o=gif?null:tvOf(s),du=gif?(G?G.dur:NaN):o.dur,row=document.createElement("div");row.className="vst";P.append(row);
  if(!(du>0)){row.innerHTML=`<span class="pm">${gif?(!window.ImageDecoder?"Choosing a part of a GIF needs Chrome or Edge":gs&&gs.done?"This GIF can't be read frame by frame here: it plays as a still image":"Reading the GIF…"):o.ok?"Loading video…":"Video can't be loaded"}</span>`;return}
@@ -1959,19 +2031,86 @@ Q.qpl.onclick=edPlay;Q.qpr.onclick=()=>edStep(-1);Q.qnx.onclick=()=>edStep(1);
 Q.qzi.onclick=()=>edZoom(1.4);Q.qzo.onclick=()=>edZoom(1/1.4);Q.qok.onclick=closeEd;
 Q.qlk.onclick=edLink;Q.qau.onclick=edAudFile;Q.qfit.onclick=edFit;Q.qfi.onclick=edFile;
 document.querySelectorAll(".tb,.ett,.etp").forEach(t=>t.addEventListener("click",e=>{const b=e.target.closest("button");b&&b.blur()}));
+/* sections: the list of boxes under the board name; a click frames the box and makes it flash */
+const SECB=$("#secb"),SECM=$("#secm");
+function secHide(){SECM.hidden=true;SECB.classList.remove("on")}
+function secShow(){
+ const bx=order(items.filter(i=>i.type==="box"&&els.get(i.id)));SECM.replaceChildren();
+ if(!bx.length){const m=document.createElement("div");m.className="sme";m.textContent="No boxes yet. Use + Box to draw one: it will show up here.";SECM.append(m)}
+ bx.forEach(it=>{const b=document.createElement("button"),c=document.createElement("span");c.className="schip bc"+((it.col||0)%4)+(it.title?"":" unt");c.textContent=it.title||"Untitled box";b.title="Go to "+(it.title||"this box");b.append(c);b.onclick=e=>{e.stopPropagation();secHide();secGo(it)};SECM.append(b)});
+ SECM.hidden=false;SECB.classList.add("on")}
+function secGo(it){const e=els.get(it.id);if(!e)return;ctxHide();
+ const lb=e.querySelector(".bxh"),lh=lb?lb.offsetHeight:0,w=it.w,h=it.bh+lh,T=80,B=80,
+  s=Math.min(1,(innerWidth-96)/w,(innerHeight-T-B)/h);
+ camAnim();view.s=s;view.x=Math.round(innerWidth/2-(it.x+w/2)*s);view.y=Math.round(T+(innerHeight-T-B-h*s)/2-(it.y-lh)*s);apply();
+ setTimeout(()=>flash(it.id),380)}
+SECB.onclick=e=>{e.stopPropagation();SECM.hidden?secShow():secHide()};
+SECM.addEventListener("pointerdown",e=>e.stopPropagation());
+addEventListener("pointerdown",e=>{if(!SECM.hidden&&!SECM.contains(e.target)&&!SECB.contains(e.target))secHide()},true);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!SECM.hidden){secHide();e.preventDefault();e.stopImmediatePropagation()}},true);
 /* package */
 async function wr(d,n,t){const w=await(await d.getFileHandle(n,{create:true})).createWritable();await w.write(t);await w.close()}
 function ser(i){
- const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh,pz:i.pz,vin:i.vin,clip:i.clip,vfps:i.vfps,shots:i.shots,lnk:i.lnk,ain:i.ain};
+ const o={t:i.type,lk:i.lk,hid:i.hid,fp:i.fp,col:i.col,x:i.x,y:i.y,w:i.w,z:i.z,cap:i.cap||"",text:i.text||"",ar:i.ar,yt:i.yt,cr:i.cr,ia:i.ia,id:i.id,bh:i.bh,title:i.title,nh:i.nh,pz:i.pz,vin:i.vin,clip:i.clip,vfps:i.vfps,shots:i.shots,lnk:i.lnk,ain:i.ain,pin:i.pin,thumb:i.thumb,page:i.page,ih:i.ih,tt:i.tt};
  if(i.type==="arr"){o.a=i.a;o.b=i.b;o.pa=i.pa;o.pb=i.pb}
  if(i.type==="seq"&&i.aus)o.aus=i.aus.map(a=>({...a}));
  if(i.type==="seq"&&i.beats&&i.beats.length)o.beats=[...i.beats];
  if(i.type==="seq"){o.fps=i.fps;o.fmt=i.fmt;o.ew=i.ew;o.blocks=i.blocks.map(b=>({ref:b.ref,d:b.d,note:b.note||"",vin:b.vin,fit:b.fit}))}
  return o}
 const isMedia=i=>i.type!=="txt"&&i.type!=="seq"&&i.type!=="box"&&i.type!=="arr";
+/* files in media/ can sit in a folder named after their box: paths like "Typography/003_ref.jpg" */
+const mSeg=pf=>pf.split("/"),mURL=pf=>"media/"+mSeg(pf).map(encodeURIComponent).join("/");
+async function mDir(md,parts,create){let d=md;for(const q of parts)d=await d.getDirectoryHandle(q,create?{create:true}:undefined);return d}
+async function mFile(md,pf){const s=mSeg(pf),n=s.pop();return await(await(await mDir(md,s)).getFileHandle(n)).getFile()}
+async function mPut(md,pf,blob){const s=mSeg(pf),n=s.pop(),w=await(await(await mDir(md,s,true)).getFileHandle(n,{create:true})).createWritable();if(blob.stream)await blob.stream().pipeTo(w);else{await w.write(blob);await w.close()}}
+async function mDel(md,pf){const s=mSeg(pf),n=s.pop();try{await(await mDir(md,s)).removeEntry(n)}catch(e){}}
+async function mList(md,pre=""){const out=[];for await(const[n,h]of md.entries()){if(n[0]===".")continue;if(h.kind==="file")out.push(pre+n);else if(!pre)out.push(...await mList(h,n+"/"))}return out}
+async function mPrune(md){const ds=[];for await(const[n,h]of md.entries())if(h.kind==="directory")ds.push([n,h]);
+ for(const[n,h]of ds){let full=false;for await(const[m]of h.entries()){if(m[0]!=="."){full=true;break}}if(!full)try{await md.removeEntry(n,{recursive:true})}catch(e){}}}
+/* sorting the files by box: on request (Purge, or the message when a board opens), media/ gets one folder per box.
+   a file used in several boxes is copied into each of them; the links of each box go in its Links.txt */
+let ORG=null,ORGBUSY=false;
+function orgPlan(){
+ const bx=order(items.filter(i=>i.type==="box"&&els.get(i.id))),area=b=>b.w*b.bh,own=new Map(),fn=new Map(),rank=new Map();
+ bx.forEach((b,k)=>{const n=(b.title||"").replace(/[\\/:*?"<>|\u0000-\u001f]+/g,"-").replace(/^[.\s]+|[.\s]+$/g,"").slice(0,80)||"Untitled box";fn.set(b.id,n);if(!rank.has(n))rank.set(n,k);
+  inBox(b).forEach(i=>{if(i.type==="box")return;const c=own.get(i.id);if(!c||area(b)<area(c))own.set(i.id,b)})});
+ const fold=i=>{const b=own.get(i.id);return b?fn.get(b.id):""},grp=new Map(),links=new Map();
+ items.forEach(i=>{if(!isMedia(i))return;const f=fold(i);
+  if(i.url||i.pin||i.page){const m=i.type==="emb"&&/video\/(\d+)/.exec(i.url),u=i.pin?i.pin:i.page?i.page:i.type==="yt"?"https://www.youtube.com/watch?v="+i.yt:m?"https://vimeo.com/"+m[1]:i.url;
+   if(!links.has(f))links.set(f,[]);const L=links.get(f);if(!L.some(x=>x.u===u))L.push({t:(i.cap||"").trim()||shortName(i),u});return}
+  if(!i.pf||BADPF.has(i.pf))return;if(!grp.has(i.pf))grp.set(i.pf,{its:[],fs:new Set()});const g=grp.get(i.pf);g.its.push(i);g.fs.add(f)});
+ const moves=[],copies=[],keep=[],lt=[];
+ grp.forEach((g,pf)=>{const base=pf.split("/").pop(),fs=[...g.fs].filter(Boolean).sort((a,b)=>rank.get(a)-rank.get(b)),tgt=(fs[0]?fs[0]+"/":"")+base;
+  moves.push({pf,tgt,its:g.its});fs.slice(1).forEach(f=>{copies.push({src:tgt,to:f+"/"+base});keep.push(f+"/"+base)})});
+ links.forEach((L,f)=>{const p=(f?f+"/":"")+"Links.txt";lt.push({p,txt:(f?"Links in the box “"+f+"”":"Links not in a box")+"\n\n"+L.map(x=>x.t+"\n"+x.u).join("\n\n")+"\n"});keep.push(p)});
+ const sig=JSON.stringify([moves.map(m=>m.tgt).sort(),copies.map(c=>c.to).sort(),lt.map(l=>l.p+"\n"+l.txt).sort()]);
+ return{moves,copies,lt,keep,sig,boxed:moves.some(m=>m.tgt.includes("/"))||lt.some(l=>l.p.includes("/"))}}
+function orgNeeded(){if(!PD)return false;const P=orgPlan();if(!P.boxed&&!(ORG&&ORG.sig))return false;return P.moves.some(m=>m.pf!==m.tgt)||!ORG||ORG.sig!==P.sig}
+const ORGQ="Sort the files into one folder per box?";
+function orgAsk(){setTimeout(()=>{if(orgNeeded())toast("The files in the board folder don't follow the boxes anymore. "+ORGQ,[["Sort into folders",organize],["Not now",()=>{}]])},1500)}
+async function organize(){
+ if(!PD){toast("Save the board first: the files are sorted inside its folder.");return}
+ if(ORGBUSY)return;toast("Sorting the files into folders…");
+ await savePkg(true);while(pkBusy)await new Promise(r=>setTimeout(r,100));if(!PD)return;
+ ORGBUSY=true;let nf=0;
+ try{const md=await PD.getDirectoryHandle("media",{create:true}),P=orgPlan(),re=new Set();
+  for(const m of P.moves){if(m.pf===m.tgt)continue;let f;try{f=await mFile(md,m.pf)}catch(e){continue}
+   await mPut(md,m.tgt,f);const g=await mFile(md,m.tgt);
+   items.forEach(i=>{if(i.pf===m.pf){i.pf=m.tgt;files.set(i.id,g);re.add(i)}});hist.forEach(h=>h.s.forEach(q=>{if(q.pf===m.pf)q.pf=m.tgt}));
+   await mDel(md,m.pf)}
+  for(const c of P.copies){let need=true;try{need=(await mFile(md,c.to)).size!==(await mFile(md,c.src)).size}catch(e){}if(need)await mPut(md,c.to,await mFile(md,c.src))}
+  for(const l of P.lt)await mPut(md,l.p,new Blob([l.txt],{type:"text/plain"}));
+  const keep=new Set(P.keep);items.forEach(i=>i.pf&&keep.add(i.pf));hist.forEach(h=>h.s.forEach(q=>q.pf&&keep.add(q.pf)));
+  for(const n of await mList(md))if(!keep.has(n)&&(n.includes("/")||n==="Links.txt"))await mDel(md,n);
+  await mPrune(md);
+  ORG={sig:P.sig,keep:P.keep};nf=new Set(P.moves.map(m=>m.tgt).concat(P.keep).filter(x=>x.includes("/")).map(x=>x.split("/")[0])).size;
+  re.forEach(i=>{AP.delete(i.id);if(els.get(i.id))mount(i)});dirty();
+ }catch(e){ORGBUSY=false;toast("The files couldn't be sorted ("+e.message+"). Nothing on the board changed.");return}
+ ORGBUSY=false;await savePkg(true);
+ toast(nf?`Files sorted: ${nf} folder${nf>1?"s":""} inside media, one per box. The links are in Links.txt.`:"Files sorted: no box holds files, so they stay in the media folder.")}
 /* boards are folders: board.js + media/ + a copy of the program (moodboard.html) */
 function showName(){$("#bt").textContent=BNAME||"Moodboard";document.title=(BNAME?BNAME+" · ":"")+"Moodboard"}
-function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,vin:o.vin,clip:o.clip,vfps:o.vfps,shots:o.shots,lnk:o.lnk,ain:o.ain,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,aus:o.aus,beats:o.beats,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
+function fromO(o){const it={id:o.id||uid(),type:o.t,lk:o.lk,hid:o.hid,fp:o.fp,col:o.col,a:o.a,b:o.b,pa:o.pa,pb:o.pb,x:o.x,y:o.y,w:o.w,z:o.z||0,bh:o.bh,title:o.title,nh:o.nh,cap:o.cap||"",text:o.text,ar:o.ar,yt:o.yt,cr:o.cr,ia:o.ia,pz:o.pz,vin:o.vin,clip:o.clip,vfps:o.vfps,shots:o.shots,lnk:o.lnk,ain:o.ain,pin:o.pin,thumb:o.thumb,page:o.page,ih:o.ih,tt:o.tt,name:o.name,fps:o.fps,fmt:o.fmt,ew:o.ew,au:o.au,aus:o.aus,beats:o.beats,blocks:o.blocks&&o.blocks.map(b=>({...b,id:uid()}))};
  if(o.src){if(/^(https?|blob):/i.test(o.src))it.url=o.src;else it.pf=o.src.replace(/^media\//,"")}
  Object.keys(it).forEach(k=>it[k]===undefined&&delete it[k]);return it}
 function fixOld(i){if(i.url&&!/^(https?|blob):/i.test(i.url)){i.pf=i.url.replace(/^media\//,"");delete i.url}
@@ -1982,7 +2121,7 @@ async function loadItems(list,dir){
  items=list.map(fixOld);Z=Math.max(0,...items.map(i=>i.z||0));
  const md=dir&&await dir.getDirectoryHandle("media").catch(()=>null);
  for(const i of items){
-  if(i.pf&&md){try{files.set(i.id,await(await md.getFileHandle(i.pf)).getFile())}catch(e){BADPF.add(i.pf)}}
+  if(i.pf&&md){try{files.set(i.id,await mFile(md,i.pf))}catch(e){BADPF.add(i.pf)}}
   else if(i.h){try{if(await i.h.queryPermission({mode:"read"})==="granted")files.set(i.id,await i.h.getFile())}catch(e){}}
   mount(i)}
  select(null);empty();
@@ -1999,8 +2138,10 @@ ${WEBURL?"Online version: "+WEBURL+" (press Open and choose this folder).\n":""}
 What is in this folder:
   ${nm}   the program
   board.js   the board (positions, notes, boxes, arrows, sequences)
-  media/     the files placed on the board
+  media/     the files placed on the board; after sorting, one folder per box
+             (named like the box), with Links.txt for the links
 Keep them together and do not rename board.js or the media folder.
+You can look inside media and copy files from it, but do not move or rename them.
 `}
 async function writeProgram(){
  if(!PD||PRG)return;
@@ -2017,7 +2158,7 @@ function pkgDirty(){if(!PD){pkStat(PID?"Connect folder to save":"Save",items.len
 async function pkgInit(){
  if(!window.showDirectoryPicker){const b=$("#sv");pkStat(IOS?"Folders: computer only":"Saving needs Chrome or Edge","err");b.title=FSMSG;b.disabled=true;return}
  const h=await get("pkgdir:"+PID);
- if(h){try{if(await h.queryPermission({mode:"readwrite"})==="granted"){PD=h;await writeProgram();pkStat("Saved","ok");pkClean();return}}catch(e){}}
+ if(h){try{if(await h.queryPermission({mode:"readwrite"})==="granted"){PD=h;await writeProgram();pkStat("Saved","ok");pkClean();orgAsk();return}}catch(e){}}
  pkStat("Connect folder to save","warn");
 }
 /* a board opened from its own moodboard.html: reconnect to its folder */
@@ -2029,7 +2170,7 @@ async function pkgConnect(){
    let B=null;try{B=await readB(h)}catch(e){}
    if(!B&&!confirm("This folder doesn't contain a board (board.js is missing). Save the board here anyway?"))return;
    if(B&&BD&&BD.pid&&B.pid!==BD.pid&&!confirm("This folder contains a different board. Replace it with this one?"))return}
-  PD=h;put("pkgdir:"+PID,h);await writeProgram();await savePkg(true);
+  PD=h;put("pkgdir:"+PID,h);await writeProgram();await savePkg(true);orgAsk();
  }catch(e){if(e.name!=="AbortError")pkStat("Not saved · retry","err")}
 }
 /* Save on a board that has never been saved: creates its folder */
@@ -2041,7 +2182,7 @@ async function saveNew(){
  let dir=null;try{dir=await root.getDirectoryHandle(nm)}catch(e){}
  if(dir&&!confirm(`A folder called “${nm}” already exists here. Save this board into it, replacing what it contains?`))return;
  try{dir=dir||await root.getDirectoryHandle(nm,{create:true});
-  PD=dir;PID=uid()+uid();BT=undefined;BNAME=nm;PRG=false;showName();put("pkgdir:"+PID,PD);
+  PD=dir;PID=uid()+uid();BT=undefined;ORG=null;BNAME=nm;PRG=false;showName();put("pkgdir:"+PID,PD);
   await writeProgram();await savePkg(true);drop("draft");drop("items");
   toast(`Saved in the folder “${nm}”. From now on every change is saved there automatically.`);
  }catch(e){pkStat("Not saved · retry","err")}
@@ -2057,9 +2198,10 @@ async function openBoard(){
   else{toast(d.name==="media"?"That is the media folder: choose the board folder that contains it (the one with board.js and the .html file named like the folder).":"No board in “"+d.name+"”: choose the folder that contains board.js and the .html file named like it.");return}
   try{B=await readB(d)}catch(e){toast("The board in “"+d.name+"” can't be read: "+e.message);return}}
  if(!PD&&!PID&&items.length&&!confirm("The current board isn't saved. Open the other board anyway? (The current one stays recoverable the next time you open the program.)"))return;
- await loadItems(B.items.map(fromO),d);
+ await loadItems(B.items.map(fromO),d);ORG=B.org||null;
  PD=d;PID=B.pid||uid()+uid();BT=B.t;BNAME=B.name||d.name;PRG=false;showName();put("pkgdir:"+PID,d);
  view=B.view||view;apply();empty();commit();await writeProgram();if(!B.pid)await savePkg(true);else{pkStat("Saved","ok");pkClean()}
+ orgAsk();
 }
 function toast(t,btns){const st=$("#st");st.hidden=false;st.innerHTML="";const p=document.createElement("span");p.textContent=t;st.append(p);
  if(btns){btns.forEach(([l,f])=>{const b=document.createElement("button");b.textContent=l;b.onclick=e=>{e.stopPropagation();st.hidden=true;f()};st.append(b)});st.onclick=null}
@@ -2071,7 +2213,7 @@ async function savePkg(force){
   if(cur&&BT!==undefined&&cur.t!==BT){
    if(!confirm("This board was changed somewhere else (another tab or another person) after you opened it. Replace those changes with your version?\n\nCancel stops saving here, so you can reopen the board and check it.")){PD=null;pkStat("Changed elsewhere · not saved","err");pkBusy=false;return}}
   const md=await PD.getDirectoryHandle("media",{create:true}),names=new Set();let k=0;
-  for await(const[n,h]of md.entries())if(h.kind==="file"){names.add(n);const m=/^(\d+)_/.exec(n);if(m)k=Math.max(k,+m[1])}
+  for(const n of await mList(md)){names.add(n);const m=/^(\d+)_/.exec(n.split("/").pop());if(m)k=Math.max(k,+m[1])}
   /* cards that show the same file (clips of one video, duplicates) share one copy in media */
   const byF=new Map();items.forEach(i=>{const f=files.get(i.id)||i.blob;if(f&&i.pf&&names.has(i.pf)&&!byF.has(f))byF.set(f,i.pf)});
   const out=[];
@@ -2082,24 +2224,24 @@ async function savePkg(force){
     else{const f=files.get(i.id)||i.blob;
      if(f&&(!i.pf||!names.has(i.pf))){
       const base=i.name||("pasted."+((f.type.split("/")[1]||"bin").replace("svg+xml","svg"))),same=byF.get(f),fn=same||i.pf||String(++k).padStart(3,"0")+"_"+base.replace(/[^\w.\-]+/g,"_");
-      if(!same){await f.stream().pipeTo(await(await md.getFileHandle(fn,{create:true})).createWritable());names.add(fn);BADPF.delete(fn);byF.set(f,fn)}
+      if(!same){await mPut(md,fn,f);names.add(fn);BADPF.delete(fn);byF.set(f,fn)}
       const had=!!i.pf;i.pf=fn;i.name=base;delete i.h;delete i.blob;files.set(i.id,f);
       if(!had)hist.forEach(h=>h.s.forEach(q=>{if(q.id===i.id&&!q.pf&&!q.url){q.pf=fn;q.name=base;delete q.h;delete q.blob}}))}
      if(i.pf)o.src="media/"+i.pf}
     if(i.name)o.name=i.name}
    out.push(o)}
-  const txt=JSON.stringify({items:out,view,BNAME});
-  if(force||txt!==pkLast){const t=Date.now();await wr(PD,"board.js","window.BOARD="+JSON.stringify({v:2,pid:PID,name:BNAME,t,web:WEBURL,view,items:out})+";");pkLast=txt;BT=t;put("pkg:"+PID,{base:BT,items,view})}
+  const txt=JSON.stringify({items:out,view,BNAME,ORG});
+  if(force||txt!==pkLast){const t=Date.now();await wr(PD,"board.js","window.BOARD="+JSON.stringify({v:2,pid:PID,name:BNAME,t,web:WEBURL,org:ORG||undefined,view,items:out})+";");pkLast=txt;BT=t;put("pkg:"+PID,{base:BT,items,view})}
   await pkClean(md);pkStat("Saved","ok");
  }catch(e){pkStat("Not saved · retry","err")}
  pkBusy=false;if(pkAgain){pkAgain=false;savePkg()}
 }
 /* keeps in media/ only the files used by the board (or by the recent undo steps) */
 async function pkClean(md){
- if(!PD)return;try{md=md||await PD.getDirectoryHandle("media",{create:true});
-  const used=new Set(),add=l=>l.forEach(i=>{if(i.pf)used.add(i.pf)});add(items);hist.forEach(h=>add(h.s));
-  const del=[];for await(const[n,h]of md.entries())if(h.kind==="file"&&!used.has(n))del.push(n);
-  for(const n of del)await md.removeEntry(n);return del.length
+ if(!PD||ORGBUSY)return;try{md=md||await PD.getDirectoryHandle("media",{create:true});
+  const used=new Set(ORG&&ORG.keep||[]),add=l=>l.forEach(i=>{if(i.pf)used.add(i.pf)});add(items);hist.forEach(h=>add(h.s));
+  const del=(await mList(md)).filter(n=>!used.has(n));
+  for(const n of del)await mDel(md,n);await mPrune(md);return del.length
  }catch(e){return 0}
 }
 addEventListener("focus",()=>{if(PD)pkClean()});
@@ -2116,7 +2258,7 @@ $("#zo").onclick=()=>zoomAt(innerWidth/2,innerHeight/2,.8);
 $("#fb").onclick=fit;$("#bl").onclick=()=>{const t=prompt("Paste one or more links (images, videos, YouTube, Vimeo), separated by a space");if(!t)return;const b=p(innerWidth/2,innerHeight/2);(async()=>{let i=0;for(const u of t.split(/\s+/).filter(u=>/^https?:/i.test(u))){await addURL(u,{x:b.x+24*i,y:b.y+24*i});i++}})()};$("#bx").onclick=()=>{if(ARM)arrMode(false);newBox()};$("#ba").onclick=()=>{if(BXD)boxMode(false);arrMode(!ARM)};$("#bs").onclick=newSeq;$("#im").onclick=openBoard;
 (async()=>{
  showName();
- if(PKG){
+ if(PKG){ORG=BD.org||null;
   let dr=await get("pkg:"+PID);if(dr&&dr.base!==BD.t)dr=null;
   await loadItems(dr?dr.items:BD.items.map(fromO),null);const v=dr?dr.view:BD.view;if(v)view=v;
   apply();empty();commit();pkgInit();
