@@ -251,6 +251,7 @@ body.frozen .rz,body.frozen .eg,body.frozen .sqed,body.frozen .yt .play,body.fro
 /* Instagram posts: the official embed inside the card; click it to use it (play a reel, swipe a carousel) */
 .yt.igw{background:#fff;aspect-ratio:auto}
 .yt.igw iframe{display:block;width:100%;height:100%;border:0;border-radius:0}
+.card.playing>.vpb.igo{display:none}
 /* TikTok: the official player, drawn at the size TikTok needs (330x586) and scaled to the card */
 .yt.ttw{background:#000;aspect-ratio:330/586}
 .yt.ttw iframe{position:absolute;left:0;top:0;width:330px;height:586px;border:0;border-radius:0;transform-origin:0 0}
@@ -803,7 +804,9 @@ const IGRX=/^https?:\/\/(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([
 function igOf(u){const m=IGRX.exec(u);if(!m)return null;const k=/^reel/i.test(m[1])?"reel":m[1].toLowerCase(),page=`https://www.instagram.com/${k}/${m[2]}/`;return{page,embed:page+"embed/"}}
 function igCard(c,it){const b=document.createElement("div");b.className="yt igw";b.style.height=(it.ih||540)+"px";
  const f=document.createElement("iframe");f.src=it.url;f.loading="lazy";f.allow="autoplay; encrypted-media; picture-in-picture";f.referrerPolicy="strict-origin-when-cross-origin";f.title="Instagram post";b.append(f);
- if(!VIEW)b.insertAdjacentHTML("beforeend",'<div class="play" title="Click to use the post here (play, swipe)" style="background:none"></div>');c.append(b);capEl(c,it)}
+ if(!VIEW)b.insertAdjacentHTML("beforeend",'<div class="play" title="Click to use the post here (play, swipe)" style="background:none"></div>');c.append(b);capEl(c,it);
+ const pb=document.createElement("button");pb.className="vpb pz igo";pb.title="Watch it on Instagram (opens in a new tab)";pb.innerHTML=IC.arrow;
+ pb.onpointerdown=e=>e.stopPropagation();pb.onclick=e=>{e.stopPropagation();window.open(it.page,"_blank","noopener")};c.append(pb)}
 /* the Instagram embed tells its height: the card follows it */
 addEventListener("message",e=>{if(!/(^|\.)instagram\.com$/.test((()=>{try{return new URL(e.origin).hostname}catch(x){return""}})()))return;
  let d;try{d=typeof e.data==="string"?JSON.parse(e.data):e.data}catch(x){return}if(!d||d.type!=="MEASURE"||!d.details||!(d.details.height>50))return;
@@ -1435,7 +1438,7 @@ function help(){
 h.addEventListener("pointerdown",e=>e.stopPropagation());
 }
 const HELP=`<div class="hh"><b>How Moodboard works</b><button class="hx" title="Close (Esc)">×</button></div><div class="hb">
-<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo, Pinterest, Instagram, TikTok) anywhere. A TikTok video plays muted and in a loop; click it for sound and controls (or to accept TikTok's cookie notice), the × at the top right gives the card back. An Instagram post shows up as Instagram shows it on other sites: click it to play a reel or swipe a carousel, the × at the top right gives the card back. A Pinterest video plays in the card like any video link; when Pinterest doesn't hand over the video, the card shows its first frame and a button with an arrow that opens the pin. Its menu can open the video file in a new tab, to download it and drop it on the board. Double-click the background to write a note: it takes the width of the nearest card. Drag a note by its top strip. Click a card to see its menu (crop, open the source, cut a video into clips, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
+<h4>The board</h4><p>Drop or paste images, videos, GIFs, HEIC photos and links (YouTube, Vimeo, Pinterest, Instagram, TikTok) anywhere. A TikTok video plays muted and in a loop; click it for sound and controls (or to accept TikTok's cookie notice), the × at the top right gives the card back. An Instagram post shows up as Instagram shows it on other sites: click it to play a reel or swipe a carousel, the × at the top right gives the card back. Instagram lets a video play only once there: after that it shows "Watch again on Instagram" (or nothing). The button with the arrow at the top right opens the post on Instagram. A Pinterest video plays in the card like any video link; when Pinterest doesn't hand over the video, the card shows its first frame and a button with an arrow that opens the pin. Its menu can open the video file in a new tab, to download it and drop it on the board. Double-click the background to write a note: it takes the width of the nearest card. Drag a note by its top strip. Click a card to see its menu (crop, open the source, cut a video into clips, comment, duplicate, delete): it stays open while you move around the board, until you click the background or press Esc. If you add a file or a link that is already on the board, the program highlights the existing card and asks whether to add it again. Deleting a card used in a sequence asks whether to remove it from the sequence too or keep it there only.</p>
 <h4>Boxes</h4><p>+ Box, then drag on the board to draw a box behind the cards. Double-click its title to rename it. To find a section again, click the board name at the top left: the list of boxes opens, click one to fly to it. Every new box gets one of the four studio colour pairs at random: all four come out before any repeats, and never twice in a row. Dragging a box by its title moves the cards inside it too.</p>
 <h4>Snapping</h4><p>Start moving or resizing a card, then hold Shift: its edges and centre stick to those of the other cards, and a blue guide shows where. Let go of Shift to move freely again. In the timeline of a sequence it is the other way round: when you change the length of a block (picture or sound) its edge always sticks to the cuts of the other row, the playhead, the end of the sequence and the natural end of the video or sound, and a yellow line shows where; hold Shift to change it freely, frame by frame.</p>
 <h4>On iPad and touch screens</h4><p>One finger moves cards, resizes them from the edges and moves the board on the background; two fingers move the board and pinch to zoom (on the timeline of a sequence they scroll and zoom the timeline). A double tap works as a double-click. On the left, Shift and Alt stay on until you tap them again and act like the keys (select several cards, drag to duplicate, change a length freely…); below them: undo, redo, duplicate, delete. On iPad no browser can open or save board folders: what you do stays in that browser.</p>
@@ -1587,7 +1590,9 @@ function playInline(it){
  b.replaceChildren(f);b.insertAdjacentHTML("beforeend",'<div class="vgrip" title="Drag to move the card"></div><div class="vstop" title="Stop and close the player">'+IC.no+'</div>');
  c.classList.add("playing");PLAYING.add(it.id);if(CX===it.id)ctxBuild();
 }
-function stopInline(it){PLAYING.delete(it.id);mount(it);if(CX===it.id)ctxBuild()}
+function stopInline(it){PLAYING.delete(it.id);
+ if(it.type==="ig"){const c=els.get(it.id),b=c&&c.querySelector(".igw");if(c&&b){c.classList.remove("playing");b.querySelectorAll(".vgrip,.vstop").forEach(x=>x.remove());b.insertAdjacentHTML("beforeend",'<div class="play" title="Click to use the post here (play, swipe)" style="background:none"></div>')}if(CX===it.id)ctxBuild();return}
+ mount(it);if(CX===it.id)ctxBuild()}
 /* YouTube tells the page when a video can't be embedded (its owner blocked it): show a way out */
 addEventListener("message",e=>{
  if(!/youtube(-nocookie)?\.com$/.test((()=>{try{return new URL(e.origin).hostname}catch(x){return""}})()))return;
